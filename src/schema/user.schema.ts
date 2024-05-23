@@ -15,13 +15,13 @@ export class User {
   city: string;
 
   @Prop()
-  isAdmin: string;
+  isAdmin: boolean;
 
   @Prop()
-  isVisible: string;
+  isVisible: boolean;
 
   @Prop()
-  isActive: string;
+  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
