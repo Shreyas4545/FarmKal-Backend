@@ -8,14 +8,13 @@ import { UserService } from './service/userService/user.service';
 import { CategoryController } from './controller/categoryController/category.controller';
 import { CategoryService } from './service/categoryService/category.service';
 import { ResponseCompo } from './utils/response';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://farmkalDB:farmkaldb123@cluster0.md9tqb0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-      {
-        dbName: 'farmkalDB',
-      },
-    ),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_URL, {
+      dbName: 'farmkalDB',
+    }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AppController, UserController, CategoryController],
