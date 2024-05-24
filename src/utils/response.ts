@@ -11,11 +11,11 @@ export class ResponseCompo {
     });
   }
 
-  errorResponse(@Res() res, responseDto: ResponseDto, error: any) {
+  errorResponse(@Res() res, responseDto: ResponseDto, data: any) {
     return res.status(responseDto.statusCode).json({
       success: false,
       message: responseDto.message,
-      error: error || '',
+      error: data || '',
     });
   }
 }

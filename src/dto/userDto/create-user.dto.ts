@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class createUserDto {
   @IsString()
@@ -17,15 +17,15 @@ export class createUserDto {
   @IsNotEmpty()
   readonly city: string;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
   readonly isAdmin: boolean;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
   readonly isVisible: boolean;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
   readonly isActive: boolean;
 }

@@ -7,11 +7,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Put('/:id')
-  updateFunction(): string {
-    return 'Success';
+    return 'Hi! Welcome to FarmKal Server';
   }
 }
