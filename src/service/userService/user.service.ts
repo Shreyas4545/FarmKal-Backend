@@ -16,7 +16,7 @@ export class UserService {
   }
 
   async getUser(id: string): Promise<IUser | any> {
-    const user = await this.userModel
+    const user: any = await this.userModel
       .findById(id)
       .exec()
       .catch((err) => {
@@ -45,7 +45,7 @@ export class UserService {
       obj.isActive = isActive;
     }
 
-    const users = await this.userModel.find(obj).catch((err) => {
+    const users: any = await this.userModel.find(obj).catch((err) => {
       console.log(err);
     });
 
@@ -82,7 +82,7 @@ export class UserService {
       obj.isActive = isActive;
     }
 
-    const updatedUser = this.userModel
+    const updatedUser: any = this.userModel
       .updateOne({ _id: id }, obj, { new: true })
       .exec()
       .catch((err) => {

@@ -42,7 +42,7 @@ export class UserController {
         );
       }
 
-      const newUser = await this.userService.createUser(createUserDto);
+      const newUser: any = await this.userService.createUser(createUserDto);
 
       return this.responseCompo.successResponse(
         response,
@@ -68,7 +68,7 @@ export class UserController {
   @Get('/get/:id')
   async getUser(@Res() response, @Param('id') userId: string) {
     try {
-      const user = await this.userService.getUser(userId);
+      const user: any = await this.userService.getUser(userId);
 
       if (!user) {
         return this.responseCompo.errorResponse(
@@ -105,7 +105,7 @@ export class UserController {
   @Get('/getUsers')
   async getUsers(@Res() response, @Query() data: any) {
     try {
-      const users = await this.userService.getUsers(data);
+      const users: any = await this.userService.getUsers(data);
       return this.responseCompo.successResponse(
         response,
         {
@@ -134,7 +134,7 @@ export class UserController {
     @Body() updateUserDto: updateUserDto,
   ) {
     try {
-      const updatedUser = await this.userService.updateUsers(
+      const updatedUser: any = await this.userService.updateUsers(
         userId,
         updateUserDto,
       );
