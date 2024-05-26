@@ -12,6 +12,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createUserDto } from 'src/dto/userDto/create-user.dto';
 import { ResponseCompo } from 'src/utils/response';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateUserDto } from 'src/dto/userDto/update-user.dto';
@@ -21,6 +22,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly responseCompo: ResponseCompo,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('/create')
@@ -147,6 +149,68 @@ export class UserController {
           message: 'Successfully Update User',
         },
         updatedUser,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(
+        response,
+        {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        },
+        err,
+      );
+    }
+  }
+
+  @Post('/login')
+  async login(@Res() response, @Body() data: any) {
+    try {
+      if (!data.phone || !data.otp) {
+        return this.responseCompo.errorResponse(
+          response,
+          {
+            statusCode: HttpStatus.NOT_ACCEPTABLE,
+            message: 'Phone and Password are mandatory',
+          },
+          '',
+        );
+      }
+
+      let user: any = await this.userService.getUsers(data);
+
+      if (!user) {
+        return this.responseCompo.errorResponse(
+          response,
+          {
+            statusCode: HttpStatus.NOT_FOUND,
+            message: 'No user found with given phone number',
+          },
+          '',
+        );
+      }
+
+      user = { ...user[0]?._doc, otp: data?.otp };
+      const userDetails = await this.userService.login(user);
+
+      if (!userDetails) {
+        return this.responseCompo.errorResponse(
+          response,
+          {
+            statusCode: HttpStatus.UNAUTHORIZED,
+            message: 'Incorrect Otp! Please Try Again',
+          },
+          '',
+        );
+      }
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'User Logged In Successfully',
+        },
+        userDetails,
       );
     } catch (err) {
       console.log(err);

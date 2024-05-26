@@ -1,18 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { IUser } from 'src/interface/user.interface';
 import { createUserDto } from 'src/dto/userDto/create-user.dto';
 import { updateUserDto } from 'src/dto/userDto/update-user.dto';
+import { ConfigService } from '@nestjs/config';
+import { OtpService } from '../otp/otp.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<IUser>) {}
+  constructor(
+    @InjectModel('User') private userModel: Model<IUser>,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    private otpService: OtpService,
+  ) {}
 
-  async createUser(createUserDto: createUserDto): Promise<IUser | any> {
-    const newUser = await new this.userModel(createUserDto);
+  async createUser(createUserDto: createUserDto): Promise<IUser> {
+    const newUser = new this.userModel(createUserDto);
 
-    return newUser.save();
+    return await newUser.save();
   }
 
   async getUser(id: string): Promise<IUser | any> {
@@ -45,9 +53,12 @@ export class UserService {
       obj.isActive = isActive;
     }
 
-    const users: any = await this.userModel.find(obj).catch((err) => {
-      console.log(err);
-    });
+    const users: any = await this.userModel
+      .find(obj)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
 
     return users;
   }
@@ -90,5 +101,19 @@ export class UserService {
       });
 
     return updatedUser;
+  }
+
+  async login(user: any): Promise<string | boolean> {
+    if (!(await this.otpService.verifyOtp(user))) {
+      return false;
+    }
+
+    const payload = { phone: user.phone, isAdmin: user?.isAdmin };
+    const access_token = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: '60m',
+    });
+
+    return access_token;
   }
 }
