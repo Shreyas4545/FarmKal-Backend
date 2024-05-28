@@ -14,6 +14,8 @@ import { OtpService } from './service/otp/otp.service';
 import { OtpController } from './controller/otp/otp.controller';
 import { OtpSchema } from './schema/otp.schema';
 import { SmsService } from './service/sms/sms.service';
+import { JwtGenerate } from './utils/jwt.token';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +42,7 @@ import { SmsService } from './service/sms/sms.service';
     ResponseCompo,
     JwtService,
     OtpService,
+    JwtGenerate,
     SmsService,
   ],
 })

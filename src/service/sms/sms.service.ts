@@ -6,7 +6,7 @@ export class SmsService {
   //   private readonly apiKey = process.env.FAST2SMS_API_KEY;
 
   private readonly apiKey =
-    'VGc9NzFShehLbtDyvWGCvSHfu3aytLYihetB9GlKy8AerxjdaNc91HwNIiWT';
+    'tK4HRpNLloODRua8oSJcmRVKBddiZ1kmfP8qvdtLxi0DHAY7ullChPY6UeuI';
 
   async sendSms(phone: number, message: string): Promise<any> {
     try {

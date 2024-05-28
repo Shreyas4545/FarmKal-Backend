@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { IUser } from 'src/interface/user.interface';
 import { createUserDto } from 'src/dto/userDto/create-user.dto';
 import { updateUserDto } from 'src/dto/userDto/update-user.dto';
-import { ConfigService } from '@nestjs/config';
 import { OtpService } from '../otp/otp.service';
+import { JwtGenerate } from 'src/utils/jwt.token';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<IUser>,
-    private jwtService: JwtService,
-    private configService: ConfigService,
+    private jwtService: JwtGenerate,
     private otpService: OtpService,
   ) {}
 
   async createUser(createUserDto: createUserDto): Promise<IUser> {
-    const newUser = new this.userModel(createUserDto);
-
+    const newUser: any = new this.userModel(createUserDto);
     return await newUser.save();
   }
 
@@ -40,6 +37,7 @@ export class UserService {
     if (phone) {
       obj.phone = phone;
     }
+
     if (city) {
       obj.city = new RegExp(`^${city}$`, 'i');
     }
@@ -94,7 +92,7 @@ export class UserService {
     }
 
     const updatedUser: any = this.userModel
-      .updateOne({ _id: id }, obj, { new: true })
+      .findOneAndUpdate({ _id: id }, obj, { new: true })
       .exec()
       .catch((err) => {
         console.log(err);
@@ -109,10 +107,11 @@ export class UserService {
     }
 
     const payload = { phone: user.phone, isAdmin: user?.isAdmin };
-    const access_token = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_SECRET'),
-      expiresIn: '60m',
-    });
+    const access_token: any = this.jwtService
+      .generateToken(payload)
+      .catch((err) => {
+        console.log(err);
+      });
 
     return access_token;
   }

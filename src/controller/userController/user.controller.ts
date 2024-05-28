@@ -35,14 +35,10 @@ export class UserController {
         });
 
       if (existingUser.length > 0) {
-        return this.responseCompo.errorResponse(
-          response,
-          {
-            statusCode: HttpStatus.CONFLICT,
-            message: 'You are already Registered, Please login to continue!',
-          },
-          existingUser,
-        );
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.CONFLICT,
+          message: 'You are already Registered, Please login to continue!',
+        });
       }
 
       const newUser: any = await this.userService.createUser(createUserDto);
@@ -57,14 +53,10 @@ export class UserController {
       );
     } catch (err) {
       console.log(err);
-      return this.responseCompo.errorResponse(
-        response,
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        },
-        err,
-      );
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
     }
   }
 
@@ -74,14 +66,10 @@ export class UserController {
       const user: any = await this.userService.getUser(userId);
 
       if (!user) {
-        return this.responseCompo.errorResponse(
-          response,
-          {
-            statusCode: HttpStatus.NOT_FOUND,
-            message: 'Error! User Not Found',
-          },
-          '',
-        );
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'Error! User Not Found',
+        });
       }
 
       return this.responseCompo.successResponse(
@@ -94,14 +82,10 @@ export class UserController {
       );
     } catch (err) {
       console.log(err);
-      return this.responseCompo.errorResponse(
-        response,
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        },
-        err,
-      );
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
     }
   }
 
@@ -119,14 +103,10 @@ export class UserController {
       );
     } catch (err) {
       console.log(err);
-      return this.responseCompo.errorResponse(
-        response,
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        },
-        err,
-      );
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
     }
   }
 
@@ -152,57 +132,41 @@ export class UserController {
       );
     } catch (err) {
       console.log(err);
-      return this.responseCompo.errorResponse(
-        response,
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        },
-        err,
-      );
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
     }
   }
 
   @Post('/login')
   async login(@Res() response, @Body() data: any) {
     try {
-      if (!data.phone || !data.otp) {
-        return this.responseCompo.errorResponse(
-          response,
-          {
-            statusCode: HttpStatus.NOT_ACCEPTABLE,
-            message: 'Phone and Password are mandatory',
-          },
-          '',
-        );
+      if (!data.phone) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_ACCEPTABLE,
+          message: 'Phone and Password are mandatory',
+        });
       }
 
-      let user: any = await this.userService.getUsers(data);
+      const user: any = await this.userService.getUsers(data);
 
       if (!user) {
-        return this.responseCompo.errorResponse(
-          response,
-          {
-            statusCode: HttpStatus.NOT_FOUND,
-            message: 'No user found with given phone number',
-          },
-          '',
-        );
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'No user found with given phone number',
+        });
       }
 
-      user = { ...user[0]?._doc, otp: data?.otp };
-      const userDetails = await this.userService.login(user);
+      // user = { ...user[0]?._doc, otp: data?.otp };
+      // const access_token = await this.userService.login(user);
 
-      if (!userDetails) {
-        return this.responseCompo.errorResponse(
-          response,
-          {
-            statusCode: HttpStatus.UNAUTHORIZED,
-            message: 'Incorrect Otp! Please Try Again',
-          },
-          '',
-        );
-      }
+      // if (!access_token) {
+      //   return this.responseCompo.errorResponse(response, {
+      //     statusCode: HttpStatus.UNAUTHORIZED,
+      //     message: 'Incorrect Otp! Please Try Again',
+      //   });
+      // }
 
       return this.responseCompo.successResponse(
         response,
@@ -210,18 +174,15 @@ export class UserController {
           statusCode: HttpStatus.OK,
           message: 'User Logged In Successfully',
         },
-        userDetails,
+        // { accesstoken: access_token, ...user },
+        user[0],
       );
     } catch (err) {
       console.log(err);
-      return this.responseCompo.errorResponse(
-        response,
-        {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        },
-        err,
-      );
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
     }
   }
 }
