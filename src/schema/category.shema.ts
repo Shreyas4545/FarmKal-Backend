@@ -15,4 +15,4 @@ export class User {
   isActive: boolean;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const CategorySchema = SchemaFactory.createForClass(User);

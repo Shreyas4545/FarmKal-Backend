@@ -12,7 +12,6 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createUserDto } from 'src/dto/userDto/create-user.dto';
 import { ResponseCompo } from 'src/utils/response';
-import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateUserDto } from 'src/dto/userDto/update-user.dto';
@@ -22,7 +21,6 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly responseCompo: ResponseCompo,
-    private readonly jwtService: JwtService,
   ) {}
 
   @Post('/create')

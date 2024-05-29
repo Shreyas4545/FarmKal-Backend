@@ -15,6 +15,7 @@ import { OtpController } from './controller/otp/otp.controller';
 import { OtpSchema } from './schema/otp.schema';
 import { SmsService } from './service/sms/sms.service';
 import { JwtGenerate } from './utils/jwt.token';
+import { CategorySchema } from './schema/category.shema';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtGenerate } from './utils/jwt.token';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'OTP', schema: OtpSchema },
+      { name: 'Category', schema: CategorySchema },
     ]),
   ],
   controllers: [
