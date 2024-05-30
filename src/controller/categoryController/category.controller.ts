@@ -56,7 +56,7 @@ export class CategoryController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Categories',
         },
-        category?.length > 1 ? category : category[0],
+        category,
       );
     } catch (err) {
       console.log(err);
