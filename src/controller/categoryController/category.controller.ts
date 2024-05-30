@@ -1,5 +1,6 @@
 import { CategoryService } from 'src/service/categoryService/category.service';
 import { CategoryDTO } from 'src/dto/categoryDto/create-category-dto';
+import { updateCategoryDto } from 'src/dto/categoryDto/update-category-dto';
 import {
   Body,
   Controller,
@@ -44,19 +45,46 @@ export class CategoryController {
   @Get('/getCategory')
   async getCategory(
     @Res() response,
-    @Param('id') id: string,
+    @Query('id') id: string,
     @Body() data: any,
   ) {
     try {
       const category: any = await this.categoryService.getCategory(id, data);
-      console.log(category);
       return this.responseCompo.successResponse(
         response,
         {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Categories',
         },
-        category,
+        category?.length > 1 ? category : category[0],
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Put('/updateCategory/:id')
+  async updateCategory(
+    @Res() response,
+    @Param('id') id: string,
+    @Body() data: updateCategoryDto,
+  ) {
+    try {
+      const updatedCategory: any = await this.categoryService.updateCategory(
+        id,
+        data,
+      );
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Updated Category',
+        },
+        updatedCategory,
       );
     } catch (err) {
       console.log(err);
