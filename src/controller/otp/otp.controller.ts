@@ -13,7 +13,7 @@ import {
 import { OtpDTO } from 'src/dto/otpDto/create-otp-dto';
 import { ResponseCompo } from 'src/utils/response';
 
-@Controller('otp')
+@Controller('api/otp')
 export class OtpController {
   constructor(
     private readonly otpService: OtpService,

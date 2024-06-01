@@ -16,7 +16,7 @@ import { UserService } from 'src/service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateUserDto } from 'src/dto/userDto/update-user.dto';
 
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(
     private readonly userService: UserService,

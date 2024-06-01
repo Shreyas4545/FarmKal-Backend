@@ -1,0 +1,77 @@
+import { Injectable } from '@nestjs/common';
+import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
+import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { IBrand } from 'src/interface/brand.interface';
+
+@Injectable()
+export class BrandsService {
+  constructor(@InjectModel('Brand') private brandModel: Model<IBrand>) {}
+
+  async createBrand(data: createBrandDTO): Promise<IBrand> {
+    const newBrand: any = new this.brandModel(data);
+    return await newBrand.save();
+  }
+
+  async getBrand(id: string, data: any): Promise<IBrand[]> {
+    const obj: any = {};
+    const { name, categoryId, isActive } = data;
+    if (id) {
+      obj._id = id;
+    }
+
+    if (categoryId) {
+      obj.categoryId = categoryId;
+    }
+
+    if (name) {
+      obj.name = name;
+    }
+
+    if (isActive) {
+      obj.isActive = isActive;
+    }
+
+    const brand: any = await this.brandModel
+      .find(obj)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+    return brand;
+  }
+
+  async updateBrand(id: string, data: updateBrandDto): Promise<IBrand> {
+    const obj: any = {};
+    const { name, categoryId, description, isActive } = data;
+
+    if (id) {
+      obj._id = id;
+    }
+
+    if (name) {
+      obj.name = name;
+    }
+
+    if (categoryId) {
+      obj.categoryId = categoryId;
+    }
+
+    if (description) {
+      obj.description = description;
+    }
+
+    if (isActive) {
+      obj.isActive = isActive;
+    }
+
+    const updatedBrand: any = await this.brandModel
+      .findOneAndUpdate({ _id: id }, obj, { new: true })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+    return updatedBrand;
+  }
+}

@@ -20,8 +20,15 @@ export class createUserDto {
   readonly phone: string;
 
   @IsString()
+  readonly state: string;
+
+  @IsString()
   @IsNotEmpty()
-  readonly city: string;
+  readonly district: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly village: string;
 
   @IsBoolean()
   @IsNotEmpty()

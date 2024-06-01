@@ -66,27 +66,50 @@ export class UserService {
     updateUserDto: updateUserDto,
   ): Promise<IUser | any> {
     const obj: any = {};
-    const { name, email, phone, city, isAdmin, isActive, isVisible } =
-      updateUserDto;
+    const {
+      name,
+      email,
+      phone,
+      state,
+      district,
+      village,
+      isAdmin,
+      isActive,
+      isVisible,
+    } = updateUserDto;
 
     if (name) {
       obj.name = name;
     }
+
     if (email) {
       obj.email = email;
     }
+
     if (phone) {
       obj.phone = phone;
     }
-    if (city) {
-      obj.city = city;
+
+    if (state) {
+      obj.state = state;
     }
+
+    if (district) {
+      obj.district = district;
+    }
+
+    if (village) {
+      obj.village = village;
+    }
+
     if (isAdmin) {
       obj.isAdmin = isAdmin;
     }
+
     if (isVisible) {
       obj.isVisible = isVisible;
     }
+
     if (isActive) {
       obj.isActive = isActive;
     }

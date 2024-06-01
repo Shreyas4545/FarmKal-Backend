@@ -7,7 +7,11 @@ export interface IUser extends Document {
 
   readonly phone: string;
 
-  readonly city: string;
+  readonly state: string;
+
+  readonly district: string;
+
+  readonly village: string;
 
   readonly isAdmin: boolean;
 

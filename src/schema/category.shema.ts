@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ versionKey: false })
-export class User {
+export class Category {
   @Prop()
   name: string;
 
@@ -15,4 +15,4 @@ export class User {
   isActive: boolean;
 }
 
-export const CategorySchema = SchemaFactory.createForClass(User);
+export const CategorySchema = SchemaFactory.createForClass(Category);

@@ -12,7 +12,13 @@ export class User {
   phone: number;
 
   @Prop()
-  city: string;
+  state: string;
+
+  @Prop()
+  district: string;
+
+  @Prop()
+  village: string;
 
   @Prop()
   isAdmin: boolean;

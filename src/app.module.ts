@@ -16,7 +16,11 @@ import { OtpSchema } from './schema/otp.schema';
 import { SmsService } from './service/sms/sms.service';
 import { JwtGenerate } from './utils/jwt.token';
 import { CategorySchema } from './schema/category.shema';
-
+import { BrandsService } from './service/brands/brands.service';
+import { BrandsController } from './controller/brands/brands.controller';
+import { ProductController } from './controller/product/product.controller';
+import { ProductService } from './service/product/product.service';
+import { BrandSchema } from './schema/brand.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +32,7 @@ import { CategorySchema } from './schema/category.shema';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'OTP', schema: OtpSchema },
+      { name: 'Brand', schema: BrandSchema },
       { name: 'Category', schema: CategorySchema },
     ]),
   ],
@@ -36,6 +41,8 @@ import { CategorySchema } from './schema/category.shema';
     UserController,
     CategoryController,
     OtpController,
+    BrandsController,
+    ProductController,
   ],
   providers: [
     AppService,
@@ -46,6 +53,8 @@ import { CategorySchema } from './schema/category.shema';
     OtpService,
     JwtGenerate,
     SmsService,
+    BrandsService,
+    ProductService,
   ],
 })
 export class AppModule {}

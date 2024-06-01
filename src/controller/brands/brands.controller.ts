@@ -1,37 +1,37 @@
-import { CategoryService } from 'src/service/categoryService/category.service';
-import { CategoryDTO } from 'src/dto/categoryDto/create-category-dto';
-import { updateCategoryDto } from 'src/dto/categoryDto/update-category-dto';
 import {
-  Body,
   Controller,
+  Post,
   Get,
+  Put,
+  Res,
+  Body,
   HttpStatus,
   Param,
-  Post,
-  Put,
   Query,
-  Res,
 } from '@nestjs/common';
+import { BrandsService } from 'src/service/brands/brands.service';
+import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
+import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
 import { ResponseCompo } from 'src/utils/response';
-@Controller('api/category')
-export class CategoryController {
+
+@Controller('api/brands')
+export class BrandsController {
   constructor(
-    private readonly categoryService: CategoryService,
+    private readonly brandService: BrandsService,
     private readonly responseCompo: ResponseCompo,
   ) {}
 
   @Post('/create')
-  async createCategory(@Res() response, @Body() data: CategoryDTO) {
+  async createBrand(@Res() response, @Body() data: createBrandDTO) {
     try {
-      const newCategory: any = await this.categoryService.createCategory(data);
-
+      const newBrand: any = await this.brandService.createBrand(data);
       return this.responseCompo.successResponse(
         response,
         {
           statusCode: HttpStatus.CREATED,
-          message: 'Successfully Created Category',
+          message: 'Successfully Created Brand',
         },
-        newCategory,
+        newBrand,
       );
     } catch (err) {
       console.log(err);
@@ -42,21 +42,17 @@ export class CategoryController {
     }
   }
 
-  @Get('/getCategory')
-  async getCategory(
-    @Res() response,
-    @Query('id') id: string,
-    @Body() data: any,
-  ) {
+  @Get('/getBrands')
+  async get(@Res() response, @Query('id') id: string, @Body() data: any) {
     try {
-      const category: any = await this.categoryService.getCategory(id, data);
+      const brands: any = await this.brandService.getBrand(id, data);
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.OK,
-          message: 'Successfully Sent Categories',
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Sent Brand',
         },
-        category,
+        brands,
       );
     } catch (err) {
       console.log(err);
@@ -67,24 +63,21 @@ export class CategoryController {
     }
   }
 
-  @Put('/updateCategory/:id')
-  async updateCategory(
+  @Put('/updateBrand/:id')
+  async updateBrand(
     @Res() response,
     @Param('id') id: string,
-    @Body() data: updateCategoryDto,
+    @Body() data: updateBrandDto,
   ) {
     try {
-      const updatedCategory: any = await this.categoryService.updateCategory(
-        id,
-        data,
-      );
+      const updatedBrand = await this.brandService.updateBrand(id, data);
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.OK,
-          message: 'Successfully Updated Category',
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Updated Brand',
         },
-        updatedCategory,
+        updatedBrand,
       );
     } catch (err) {
       console.log(err);
