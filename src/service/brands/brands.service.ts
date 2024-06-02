@@ -4,10 +4,14 @@ import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IBrand } from 'src/interface/brand.interface';
+import { ICategory } from 'src/interface/category.interface';
 
 @Injectable()
 export class BrandsService {
-  constructor(@InjectModel('Brand') private brandModel: Model<IBrand>) {}
+  constructor(
+    @InjectModel('Brand') private brandModel: Model<IBrand>,
+    @InjectModel('Category') private categoryModel: Model<ICategory>,
+  ) {}
 
   async createBrand(data: createBrandDTO): Promise<IBrand> {
     const newBrand: any = new this.brandModel(data);
@@ -73,5 +77,33 @@ export class BrandsService {
         console.log(err);
       });
     return updatedBrand;
+  }
+
+  async getCategoriesWithBrands(): Promise<any> {
+    const categoriesWithBrands = await this.categoryModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'brands',
+            let: { categoryId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [{ $toObjectId: '$categoryId' }, '$$categoryId'],
+                  },
+                },
+              },
+            ],
+            as: 'brands',
+          },
+        },
+      ])
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return categoriesWithBrands;
   }
 }

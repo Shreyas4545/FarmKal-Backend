@@ -5,7 +5,7 @@ import { CategorySchema } from './category.shema';
 @Schema({ versionKey: false })
 export class Brand {
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
-  categoryId: string;
+  categoryId: Types.ObjectId;
 
   @Prop()
   name: string;

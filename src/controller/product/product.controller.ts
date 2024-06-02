@@ -13,6 +13,7 @@ import { BrandsService } from 'src/service/brands/brands.service';
 import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
 import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
 import { ResponseCompo } from 'src/utils/response';
+import { response } from 'express';
 
 @Controller('api/products')
 export class ProductController {
