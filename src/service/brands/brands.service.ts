@@ -46,7 +46,7 @@ export class BrandsService {
     return brand;
   }
 
-  async updateBrand(id: string, data: updateBrandDto): Promise<IBrand> {
+  async updateBrand(id: string, data: any): Promise<IBrand> {
     const obj: any = {};
     const { name, categoryId, description, isActive } = data;
 

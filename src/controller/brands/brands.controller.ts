@@ -5,6 +5,8 @@ import {
   Put,
   Res,
   Body,
+  UseInterceptors,
+  UploadedFile,
   HttpStatus,
   Param,
   Query,
@@ -13,18 +15,28 @@ import { BrandsService } from 'src/service/brands/brands.service';
 import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
 import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
 import { ResponseCompo } from 'src/utils/response';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FirebaseService } from 'src/utils/imageUpload';
 
 @Controller('api/brands')
 export class BrandsController {
   constructor(
     private readonly brandService: BrandsService,
     private readonly responseCompo: ResponseCompo,
+    private readonly firebaseService: FirebaseService,
   ) {}
 
   @Post('/create')
-  async createBrand(@Res() response, @Body() data: createBrandDTO) {
+  @UseInterceptors(FileInterceptor('file'))
+  async createBrand(
+    @Res() response,
+    @Body() data: createBrandDTO,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     try {
-      const newBrand: any = await this.brandService.createBrand(data);
+      const fileUrl: string = await this.firebaseService.uploadFile(file);
+      let newBrand: any = { ...data, image: fileUrl };
+      newBrand = await this.brandService.createBrand(newBrand);
       return this.responseCompo.successResponse(
         response,
         {

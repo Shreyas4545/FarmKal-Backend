@@ -18,7 +18,6 @@ import { ResponseCompo } from 'src/utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from 'src/utils/imageUpload';
 @Controller('api/category')
-@UseInterceptors(FileInterceptor('file'))
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
@@ -27,14 +26,14 @@ export class CategoryController {
   ) {}
 
   @Post('/create')
+  @UseInterceptors(FileInterceptor('file'))
   async createCategory(
     @Res() response,
     @Body() data: CategoryDTO,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      console.log('hello');
-      const fileUrl = await this.firebaseService.uploadFile(file);
+      const fileUrl: string = await this.firebaseService.uploadFile(file);
       let newCategory: any = { ...data, image: fileUrl };
       newCategory = await this.categoryService.createCategory(newCategory);
 
