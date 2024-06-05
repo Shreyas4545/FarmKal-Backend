@@ -6,10 +6,4 @@ export class CategoryDTO {
 
   @IsString()
   readonly description: string;
-
-  @IsString()
-  readonly image: string;
-
-  @IsBoolean()
-  readonly isActive: boolean;
 }

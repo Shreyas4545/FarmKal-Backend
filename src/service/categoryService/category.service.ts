@@ -11,7 +11,6 @@ export class CategoryService {
   ) {}
 
   async createCategory(data: CategoryDTO): Promise<ICategory | any> {
-    console.log(data);
     const newCategory: any = new this.categoryModel(data);
     return await newCategory.save();
   }
@@ -56,7 +55,7 @@ export class CategoryService {
 
   async updateCategory(
     id: string,
-    data: updateCategoryDto,
+    data: any,
   ): Promise<ICategory | ICategory[] | any> {
     const { name, description, image, isActive } = data;
 

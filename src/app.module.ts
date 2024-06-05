@@ -21,6 +21,7 @@ import { BrandsController } from './controller/brands/brands.controller';
 import { ProductController } from './controller/product/product.controller';
 import { ProductService } from './service/product/product.service';
 import { BrandSchema } from './schema/brand.schema';
+import { FirebaseService } from './utils/imageUpload';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -54,6 +55,7 @@ import { BrandSchema } from './schema/brand.schema';
     JwtGenerate,
     SmsService,
     BrandsService,
+    FirebaseService,
     ProductService,
   ],
 })
