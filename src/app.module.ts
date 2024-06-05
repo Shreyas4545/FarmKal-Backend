@@ -22,8 +22,9 @@ import { ProductController } from './controller/product/product.controller';
 import { ProductService } from './service/product/product.service';
 import { BrandSchema } from './schema/brand.schema';
 import { FirebaseService } from './utils/imageUpload';
-import { LocationsService } from './service/locations/locations.service';
+import { LocationService } from './service/locations/locations.service';
 import { LocationsController } from './controller/locations/locations.controller';
+import { LocationSchema } from './schema/location.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,6 +38,7 @@ import { LocationsController } from './controller/locations/locations.controller
       { name: 'OTP', schema: OtpSchema },
       { name: 'Brand', schema: BrandSchema },
       { name: 'Category', schema: CategorySchema },
+      { name: 'Location', schema: LocationSchema },
     ]),
   ],
   controllers: [
@@ -60,7 +62,7 @@ import { LocationsController } from './controller/locations/locations.controller
     BrandsService,
     FirebaseService,
     ProductService,
-    LocationsService,
+    LocationService,
   ],
 })
 export class AppModule {}
