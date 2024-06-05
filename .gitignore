@@ -22,6 +22,7 @@ Api's.txt
 dbSchema.txt
 first_2_weeks.txt
 .env
+.env.test
 # IDEs and editors
 /.idea
 .project
