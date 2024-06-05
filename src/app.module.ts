@@ -22,6 +22,8 @@ import { ProductController } from './controller/product/product.controller';
 import { ProductService } from './service/product/product.service';
 import { BrandSchema } from './schema/brand.schema';
 import { FirebaseService } from './utils/imageUpload';
+import { LocationsService } from './service/locations/locations.service';
+import { LocationsController } from './controller/locations/locations.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -44,6 +46,7 @@ import { FirebaseService } from './utils/imageUpload';
     OtpController,
     BrandsController,
     ProductController,
+    LocationsController,
   ],
   providers: [
     AppService,
@@ -57,6 +60,7 @@ import { FirebaseService } from './utils/imageUpload';
     BrandsService,
     FirebaseService,
     ProductService,
+    LocationsService,
   ],
 })
 export class AppModule {}
