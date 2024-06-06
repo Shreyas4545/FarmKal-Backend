@@ -21,6 +21,7 @@ lerna-debug.log*
 Api's.txt
 dbSchema.txt
 first_2_weeks.txt
+#.env
 .env
 .env.test
 # IDEs and editors
