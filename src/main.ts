@@ -8,7 +8,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Use the ConfigService to get the port
-  const port = configService.get<number>('PORT') || 6000;
+  const port = process.env.PORT || 10000;
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(port);
