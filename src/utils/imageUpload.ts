@@ -8,12 +8,17 @@ export class FirebaseService {
   private logger: Logger = new Logger('FirebaseService');
 
   constructor() {
-    const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+    // const firebaseConfig =
+    //   process.env.FIREBASE_CONFIG != undefined
+    //     ? JSON.parse(process.env.FIREBASE_CONFIG)
+    //     : '';
 
-    admin.initializeApp({
-      credential: admin.credential.cert(firebaseConfig),
-      storageBucket: 'gs://farm7-e6457.appspot.com',
-    });
+    const firebaseConfig = process.env.FIREBASE_CONFIG;
+
+    // admin.initializeApp({
+    //   credential: admin.credential.cert(firebaseConfig),
+    //   storageBucket: 'gs://farm7-e6457.appspot.com',
+    // });
   }
 
   async uploadFile(file: Express.Multer.File): Promise<string> {

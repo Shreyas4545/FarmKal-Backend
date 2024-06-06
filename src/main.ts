@@ -1,17 +1,17 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
 
-  // Use the ConfigService to get the port
-  const port = process.env.PORT || 10000;
+  // Use the PORT environment variable provided by Render
+  const port = process.env.PORT || 3000;
+  const host = '0.0.0.0';
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await app.listen(port, host);
+  console.log(`Application is running on: http://${host}:${port}`);
 }
+
 bootstrap();
