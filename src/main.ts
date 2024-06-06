@@ -11,7 +11,7 @@ async function bootstrap() {
   const port = process.env.PORT || 10000;
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(port);
+  await app.listen(10000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
