@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createUserDto } from 'src/dto/userDto/create-user.dto';
+import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { ResponseCompo } from 'src/utils/response';
 import { UserService } from 'src/service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
