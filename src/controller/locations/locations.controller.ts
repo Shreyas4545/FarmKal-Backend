@@ -1,5 +1,5 @@
-import { LocationService } from 'src/service/locations/locations.service';
-import { LocationDTO } from 'src/dto/locationDto/createLocation.dto';
+import { LocationService } from '../../service/locations/locations.service';
+import { LocationDTO } from '../../dto/locationDto/createLocation.dto';
 import {
   Body,
   Controller,
@@ -13,9 +13,9 @@ import {
   UploadedFile,
   Res,
 } from '@nestjs/common';
-import { ResponseCompo } from 'src/utils/response';
+import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FirebaseService } from 'src/utils/imageUpload';
+import { FirebaseService } from '../../utils/imageUpload';
 @Controller('api/location')
 export class LocationsController {
   constructor(

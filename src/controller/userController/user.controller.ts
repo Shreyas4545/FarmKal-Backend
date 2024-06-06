@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createUserDto } from '../../dto/userDto/create-user.dto';
-import { ResponseCompo } from 'src/utils/response';
-import { UserService } from 'src/service/userService/user.service';
+import { ResponseCompo } from '../../utils/response';
+import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { updateUserDto } from 'src/dto/userDto/update-user.dto';
+import { updateUserDto } from '../../dto/userDto/update-user.dto';
 
 @Controller('api/user')
 export class UserController {

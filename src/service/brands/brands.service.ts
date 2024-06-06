@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
-import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
+import { updateBrandDto } from '../../dto/brandDto/update-brand-dto';
+import { createBrandDTO } from '../../dto/brandDto/create-brand.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IBrand } from 'src/interface/brand.interface';
-import { ICategory } from 'src/interface/category.interface';
+import { IBrand } from '../../interface/brand.interface';
+import { ICategory } from '../../interface/category.interface';
 
 @Injectable()
 export class BrandsService {

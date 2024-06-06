@@ -11,12 +11,12 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { BrandsService } from 'src/service/brands/brands.service';
-import { updateBrandDto } from 'src/dto/brandDto/update-brand-dto';
-import { createBrandDTO } from 'src/dto/brandDto/create-brand.dto';
-import { ResponseCompo } from 'src/utils/response';
+import { BrandsService } from '../../service/brands/brands.service';
+import { updateBrandDto } from '../../dto/brandDto/update-brand-dto';
+import { createBrandDTO } from '../../dto/brandDto/create-brand.dto';
+import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FirebaseService } from 'src/utils/imageUpload';
+import { FirebaseService } from '../../utils/imageUpload';
 
 @Controller('api/brands')
 export class BrandsController {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ICategory } from 'src/interface/category.interface';
-import { CategoryDTO } from 'src/dto/categoryDto/create-category-dto';
-import { updateCategoryDto } from 'src/dto/categoryDto/update-category-dto';
+import { ICategory } from '../../interface/category.interface';
+import { CategoryDTO } from '../../dto/categoryDto/create-category-dto';
+import { updateCategoryDto } from '../../dto/categoryDto/update-category-dto';
 @Injectable()
 export class CategoryService {
   constructor(

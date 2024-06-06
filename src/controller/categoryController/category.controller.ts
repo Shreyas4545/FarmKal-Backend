@@ -1,6 +1,6 @@
-import { CategoryService } from 'src/service/categoryService/category.service';
-import { CategoryDTO } from 'src/dto/categoryDto/create-category-dto';
-import { updateCategoryDto } from 'src/dto/categoryDto/update-category-dto';
+import { CategoryService } from '../../service/categoryService/category.service';
+import { CategoryDTO } from '../../dto/categoryDto/create-category-dto';
+import { updateCategoryDto } from '../../dto/categoryDto/update-category-dto';
 import {
   Body,
   Controller,
@@ -14,9 +14,9 @@ import {
   UploadedFile,
   Res,
 } from '@nestjs/common';
-import { ResponseCompo } from 'src/utils/response';
+import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FirebaseService } from 'src/utils/imageUpload';
+import { FirebaseService } from '../../utils/imageUpload';
 @Controller('api/category')
 export class CategoryController {
   constructor(

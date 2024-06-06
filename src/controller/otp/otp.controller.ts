@@ -1,4 +1,4 @@
-import { OtpService } from 'src/service/otp/otp.service';
+import { OtpService } from '../../service/otp/otp.service';
 import {
   Body,
   Controller,
@@ -10,8 +10,8 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { OtpDTO } from 'src/dto/otpDto/create-otp-dto';
-import { ResponseCompo } from 'src/utils/response';
+import { OtpDTO } from '../../dto/otpDto/create-otp-dto';
+import { ResponseCompo } from '../../utils/response';
 
 @Controller('api/otp')
 export class OtpController {

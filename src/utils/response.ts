@@ -1,4 +1,4 @@
-import { ResponseDto } from 'src/dto/responseDto/response.dto';
+import { ResponseDto } from '../dto/responseDto/response.dto';
 import { Injectable, Res } from '@nestjs/common';
 
 @Injectable()
