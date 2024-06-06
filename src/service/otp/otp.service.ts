@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { OtpDTO } from 'src/dto/otpDto/create-otp-dto';
-import { IOtp } from 'src/interface/otp.interface';
+import { OtpDTO } from '../../dto/otpDto/create-otp-dto';
+import { IOtp } from '../../interface/otp.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ReadOtpDTO } from 'src/dto/otpDto/read-otp-Dto';
-import { SmsService } from '../sms/sms.service';
+import { ReadOtpDTO } from '../../dto/otpDto/read-otp-Dto';
+// import { SmsService } from '../sms/sms.service';
 
 @Injectable()
 export class OtpService {
   constructor(
-    @InjectModel('OTP') private otpModel: Model<IOtp>,
-    private readonly smsService: SmsService,
+    @InjectModel('OTP') private otpModel: Model<IOtp>, // private readonly smsService: SmsService,
   ) {}
   async sendOtp(data: OtpDTO): Promise<IOtp | any> {
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -19,10 +18,10 @@ export class OtpService {
       otp: otp,
     };
 
-    const sms = await this.smsService.sendSms(
-      data?.phone,
-      'Welcome to FarmKal! Please Enter Otp to Login',
-    );
+    // const sms = await this.smsService.sendSms(
+    //   data?.phone,
+    //   'Welcome to FarmKal! Please Enter Otp to Login',
+    // );
 
     const newOtp = await this.otpModel
       .findOneAndUpdate(

@@ -13,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { OtpService } from './service/otp/otp.service';
 import { OtpController } from './controller/otp/otp.controller';
 import { OtpSchema } from './schema/otp.schema';
-import { SmsService } from './service/sms/sms.service';
+// import { SmsService } from './service/sms/sms.service';
 import { JwtGenerate } from './utils/jwt.token';
 import { CategorySchema } from './schema/category.shema';
 import { BrandsService } from './service/brands/brands.service';
@@ -58,7 +58,7 @@ import { LocationSchema } from './schema/location.schema';
     JwtService,
     OtpService,
     JwtGenerate,
-    SmsService,
+    // SmsService,
     BrandsService,
     FirebaseService,
     ProductService,
