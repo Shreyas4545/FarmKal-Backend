@@ -18,7 +18,7 @@ export class LocationService {
     id: string,
     data: any,
   ): Promise<ILocation | ILocation[] | any> {
-    const { name, description, image, isActive } = data;
+    const { name, description, type, image, isActive } = data;
 
     const obj: any = {};
 
@@ -42,6 +42,10 @@ export class LocationService {
       obj.isActive = isActive;
     }
 
+    if (type) {
+      obj.type = new RegExp(`^${type}$`, 'i');
+    }
+
     const locations = await this.locationModel
       .find(obj)
       .exec()
@@ -56,7 +60,7 @@ export class LocationService {
     id: string,
     data: any,
   ): Promise<ILocation | ILocation[] | any> {
-    const { name, description, image, isActive } = data;
+    const { name, description, image, type, isActive } = data;
 
     const obj: any = {};
 
@@ -66,6 +70,10 @@ export class LocationService {
 
     if (description) {
       obj.description = description;
+    }
+
+    if (type) {
+      obj.type = type;
     }
 
     if (image) {

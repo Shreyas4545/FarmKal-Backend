@@ -10,6 +10,12 @@ export class Location {
 
   @Prop()
   type: string;
+
+  @Prop()
+  image: string;
+
+  @Prop()
+  isActive: boolean;
 }
 
 export const LocationSchema = SchemaFactory.createForClass(Location);

@@ -34,6 +34,7 @@ export class LocationsController {
     try {
       const fileUrl: string = await this.firebaseService.uploadFile(file);
       let newLocation: any = { ...data, image: fileUrl };
+      console.log(newLocation);
       newLocation = await this.locationService.createLocation(newLocation);
 
       return this.responseCompo.successResponse(
