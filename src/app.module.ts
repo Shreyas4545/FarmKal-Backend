@@ -25,6 +25,10 @@ import { FirebaseService } from './utils/imageUpload';
 import { LocationService } from './service/locations/locations.service';
 import { LocationsController } from './controller/locations/locations.controller';
 import { LocationSchema } from './schema/location.schema';
+import { ModelsController } from './controller/models/models.controller';
+import { ModelsService } from './service/models/models.service';
+import { ProductSchema } from './schema/product.schema';
+import { ModelSchema } from './schema/model.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,6 +43,8 @@ import { LocationSchema } from './schema/location.schema';
       { name: 'Brand', schema: BrandSchema },
       { name: 'Category', schema: CategorySchema },
       { name: 'Location', schema: LocationSchema },
+      { name: 'Model', schema: ModelSchema },
+      { name: 'Product', schema: ProductSchema },
     ]),
   ],
   controllers: [
@@ -49,6 +55,7 @@ import { LocationSchema } from './schema/location.schema';
     BrandsController,
     ProductController,
     LocationsController,
+    ModelsController,
   ],
   providers: [
     AppService,
@@ -63,6 +70,7 @@ import { LocationSchema } from './schema/location.schema';
     FirebaseService,
     ProductService,
     LocationService,
+    ModelsService,
   ],
 })
 export class AppModule {}
