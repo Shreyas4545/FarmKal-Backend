@@ -38,7 +38,7 @@ export class LocationService {
       obj.image = image;
     }
 
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 

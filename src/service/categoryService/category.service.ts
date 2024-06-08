@@ -39,7 +39,7 @@ export class CategoryService {
       obj.image = image;
     }
 
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 

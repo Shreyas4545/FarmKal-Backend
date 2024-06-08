@@ -29,6 +29,7 @@ export class ProductService {
 
     const obj: any = {};
 
+    console.log(isActive);
     if (id) {
       obj._id = id;
     }
@@ -49,7 +50,7 @@ export class ProductService {
       obj.brandId = brandId;
     }
 
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 

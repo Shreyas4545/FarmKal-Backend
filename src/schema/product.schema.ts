@@ -18,10 +18,10 @@ export class Product {
   modelId: string;
 
   @Prop()
-  price: string;
+  price: number;
 
   @Prop()
-  manufacturingYear: string;
+  manufacturingYear: number;
 
   @Prop()
   isActive: boolean;

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { updateBrandDto } from '../../dto/brandDto/update-brand-dto';
 import { createBrandDTO } from '../../dto/brandDto/create-brand.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -33,7 +32,7 @@ export class BrandsService {
       obj.name = name;
     }
 
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 

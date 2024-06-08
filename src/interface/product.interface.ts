@@ -1,7 +1,7 @@
 import { Document, Types } from 'mongoose';
 
 export interface IProduct extends Document {
-  readonly price: string;
+  readonly price: number;
 
   readonly modelId: Types.ObjectId;
 
@@ -13,7 +13,7 @@ export interface IProduct extends Document {
 
   readonly additionalFields: Record<string, any>;
 
-  readonly manufacturingYear: string;
+  readonly manufacturingYear: number;
 
   readonly isActive: boolean;
 }

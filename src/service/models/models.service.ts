@@ -21,6 +21,8 @@ export class ModelsService {
       obj._id = id;
     }
 
+    console.log(brandId);
+
     if (categoryId) {
       obj.categoryId = categoryId;
     }
@@ -37,7 +39,7 @@ export class ModelsService {
       obj.description = description;
     }
 
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 

@@ -47,7 +47,7 @@ export class UserService {
     if (isVisible) {
       obj.isVisible = isVisible;
     }
-    if (isActive) {
+    if (isActive || isActive === false) {
       obj.isActive = isActive;
     }
 
