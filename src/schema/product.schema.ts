@@ -3,19 +3,20 @@ import { Types, Schema as MongooseSchema } from 'mongoose';
 import { CategorySchema } from './category.shema';
 import { BrandSchema } from './brand.schema';
 import { LocationSchema } from './location.schema';
+import { Type } from '@nestjs/common';
 @Schema({ versionKey: false })
 export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
-  categoryId: string;
+  categoryId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Brand', required: true })
-  brandId: string;
+  brandId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Location', required: true })
-  locationId: string;
+  locationId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Model', required: true })
-  modelId: string;
+  modelId: Types.ObjectId;
 
   @Prop()
   price: number;

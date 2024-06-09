@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, model } from 'mongoose';
 import { IProduct } from 'src/interface/product.interface';
 import { createProductDTO } from 'src/dto/productDto/createProduct.dto';
 @Injectable()
@@ -29,7 +29,6 @@ export class ProductService {
 
     const obj: any = {};
 
-    console.log(isActive);
     if (id) {
       obj._id = id;
     }
@@ -67,12 +66,78 @@ export class ProductService {
     }
 
     const products: any = await this.productModel
-      .find(obj)
+      .aggregate([
+        {
+          $addFields: {
+            categoryId: { $toObjectId: '$categoryId' },
+            brandId: { $toObjectId: '$brandId' },
+            locationId: { $toObjectId: '$locationId' },
+            modelId: { $toObjectId: '$modelId' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'categoryDetails',
+          },
+        },
+        {
+          $unwind: '$categoryDetails',
+        },
+        {
+          $lookup: {
+            from: 'brands',
+            localField: 'brandId',
+            foreignField: '_id',
+            as: 'brandDetails',
+          },
+        },
+        {
+          $unwind: '$brandDetails',
+        },
+        {
+          $lookup: {
+            from: 'locations',
+            localField: 'locationId',
+            foreignField: '_id',
+            as: 'locationDetails',
+          },
+        },
+        {
+          $unwind: '$locationDetails',
+        },
+        {
+          $lookup: {
+            from: 'models',
+            localField: 'modelId',
+            foreignField: '_id',
+            as: 'modelDetails',
+          },
+        },
+        {
+          $unwind: '$modelDetails',
+        },
+        {
+          $project: {
+            price,
+            manufacturingYear,
+            isActive,
+            additionalFields,
+            categoryDetails: 1,
+            brandDetails: 1,
+            locationDetails: 1,
+            modelDetails: 1,
+          },
+        },
+      ])
       .exec()
       .catch((err) => {
         console.log(err);
       });
 
+    console.log(products);
     return products;
   }
 
