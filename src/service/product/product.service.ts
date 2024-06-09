@@ -121,10 +121,10 @@ export class ProductService {
         },
         {
           $project: {
-            price,
-            manufacturingYear,
-            isActive,
-            additionalFields,
+            price: 1,
+            manufacturingYear: 1,
+            isActive: 1,
+            additionalFields: 1,
             categoryDetails: 1,
             brandDetails: 1,
             locationDetails: 1,
