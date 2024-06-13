@@ -25,6 +25,7 @@ export class ProductService {
       modelId,
       manufacturingYear,
       isActive,
+      userId,
     } = data;
 
     const obj: any = {};
@@ -63,6 +64,10 @@ export class ProductService {
 
     if (locationId) {
       obj.locationId = locationId;
+    }
+
+    if (userId) {
+      obj.userId = userId;
     }
 
     const products: any = await this.productModel
@@ -154,6 +159,7 @@ export class ProductService {
       modelId,
       manufacturingYear,
       isActive,
+      userId,
     } = data;
 
     const obj: any = {};
@@ -180,6 +186,10 @@ export class ProductService {
 
     if (modelId) {
       obj.modelId = modelId;
+    }
+
+    if (userId) {
+      obj.userId = userId;
     }
 
     if (manufacturingYear) {

@@ -13,6 +13,9 @@ export class createProductDTO {
   @IsMongoId()
   readonly modelId: string;
 
+  @IsMongoId()
+  readonly userId: string;
+
   @IsNumber()
   readonly price: number;
 

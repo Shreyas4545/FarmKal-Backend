@@ -18,6 +18,9 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Model', required: true })
   modelId: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
+
   @Prop()
   price: number;
 

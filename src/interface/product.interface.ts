@@ -11,6 +11,8 @@ export interface IProduct extends Document {
 
   readonly locationId: Types.ObjectId;
 
+  readonly userId: Types.ObjectId;
+
   readonly additionalFields: Record<string, any>;
 
   readonly manufacturingYear: number;
