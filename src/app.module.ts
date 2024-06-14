@@ -29,6 +29,9 @@ import { ModelsController } from './controller/models/models.controller';
 import { ModelsService } from './service/models/models.service';
 import { ProductSchema } from './schema/product.schema';
 import { ModelSchema } from './schema/model.schema';
+import { AppVersionController } from './controller/app-version/app-version.controller';
+import { AppVersionService } from './service/appVersion/app-version.service';
+import { AppVersionSchema } from './schema/appVersion.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -45,6 +48,7 @@ import { ModelSchema } from './schema/model.schema';
       { name: 'Location', schema: LocationSchema },
       { name: 'Model', schema: ModelSchema },
       { name: 'Product', schema: ProductSchema },
+      { name: 'appVersion', schema: AppVersionSchema },
     ]),
   ],
   controllers: [
@@ -56,6 +60,7 @@ import { ModelSchema } from './schema/model.schema';
     ProductController,
     LocationsController,
     ModelsController,
+    AppVersionController,
   ],
   providers: [
     AppService,
@@ -71,6 +76,7 @@ import { ModelSchema } from './schema/model.schema';
     ProductService,
     LocationService,
     ModelsService,
+    AppVersionService,
   ],
 })
 export class AppModule {}
