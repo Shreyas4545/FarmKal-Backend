@@ -3,7 +3,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ versionKey: false })
 export class Location {
   @Prop()
-  name: string;
+  city: string;
+
+  @Prop()
+  state: string;
+
+  @Prop()
+  country: string;
 
   @Prop()
   description: string;

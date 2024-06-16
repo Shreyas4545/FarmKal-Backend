@@ -3,13 +3,64 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IProduct } from 'src/interface/product.interface';
 import { createProductDTO } from 'src/dto/productDto/createProduct.dto';
+import { ILocation } from 'src/interface/location.interface';
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel('Product') private productModel: Model<IProduct>) {}
+  constructor(
+    @InjectModel('Product') private productModel: Model<IProduct>,
+    @InjectModel('Location') private locationModel: Model<ILocation>,
+  ) {}
 
   async createProduct(data: createProductDTO): Promise<IProduct | any> {
-    const newProduct: any = new this.productModel(data);
-    return await newProduct.save();
+    const {
+      categoryId,
+      brandId,
+      modelId,
+      price,
+      manufacturingYear,
+      userId,
+      isActive,
+      additionalFields,
+      city,
+      state,
+      country,
+    } = data;
+
+    let { locationId } = data;
+
+    if (!locationId) {
+      const newLocation = {
+        city: city,
+        state: state,
+        country: country,
+        isActive: true,
+        description: 'City in Rajasthan',
+        type: 'City',
+        image:
+          'https://storage.googleapis.com/farm7-e6457.appspot.com/images/e2f2decf-986f-44b3-9377-dc7e3fbde743-.png',
+      };
+
+      const addedLocation = await new this.locationModel(newLocation).save();
+      console.log(addedLocation);
+      locationId = addedLocation?._id.toString();
+    }
+
+    console.log(typeof locationId);
+
+    let newProduct: any = {
+      categoryId: categoryId,
+      userId: userId,
+      brandId: brandId,
+      locationId: locationId,
+      modelId: modelId,
+      price: price,
+      manufacturingYear: manufacturingYear,
+      isActive: isActive,
+      additionalFields: additionalFields,
+    };
+
+    newProduct = await new this.productModel(newProduct).save();
+    return newProduct;
   }
 
   async getProduct(

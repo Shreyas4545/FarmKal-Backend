@@ -1,4 +1,11 @@
-import { IsBoolean, IsMongoId, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsMongoId,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class createProductDTO {
   @IsMongoId()
@@ -7,6 +14,7 @@ export class createProductDTO {
   @IsMongoId()
   readonly brandId: string;
 
+  @IsOptional()
   @IsMongoId()
   readonly locationId: string;
 
@@ -16,9 +24,27 @@ export class createProductDTO {
   @IsMongoId()
   readonly userId: string;
 
+  @IsOptional()
+  @IsString()
+  readonly city: string;
+
+  @IsOptional()
+  @IsString()
+  readonly state: string;
+
+  @IsOptional()
+  @IsString()
+  readonly country: string;
+
   @IsNumber()
   readonly price: number;
 
   @IsNumber()
   readonly manufacturingYear: number;
+
+  @IsBoolean()
+  readonly isActive: boolean;
+
+  @IsObject()
+  readonly additionalFields?: Record<string, any>;
 }
