@@ -41,11 +41,8 @@ export class ProductService {
       };
 
       const addedLocation = await new this.locationModel(newLocation).save();
-      console.log(addedLocation);
       locationId = addedLocation?._id.toString();
     }
-
-    console.log(typeof locationId);
 
     let newProduct: any = {
       categoryId: categoryId,
@@ -129,6 +126,7 @@ export class ProductService {
             brandId: { $toObjectId: '$brandId' },
             locationId: { $toObjectId: '$locationId' },
             modelId: { $toObjectId: '$modelId' },
+            userId: { $toObjectId: '$userId' },
           },
         },
         {
@@ -176,6 +174,17 @@ export class ProductService {
           $unwind: '$modelDetails',
         },
         {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $unwind: '$userDetails',
+        },
+        {
           $project: {
             price: 1,
             manufacturingYear: 1,
@@ -185,6 +194,7 @@ export class ProductService {
             brandDetails: 1,
             locationDetails: 1,
             modelDetails: 1,
+            userDetails: 1,
           },
         },
       ])
@@ -193,7 +203,6 @@ export class ProductService {
         console.log(err);
       });
 
-    console.log(products);
     return products;
   }
 
