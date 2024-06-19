@@ -24,11 +24,11 @@ export class createUserDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly district: string;
+  readonly city: string;
 
   @IsString()
   @IsNotEmpty()
-  readonly village: string;
+  readonly country: string;
 
   @IsBoolean()
   @IsNotEmpty()

@@ -9,9 +9,9 @@ export interface IUser extends Document {
 
   readonly state: string;
 
-  readonly district: string;
+  readonly city: string;
 
-  readonly village: string;
+  readonly country: string;
 
   readonly isAdmin: boolean;
 

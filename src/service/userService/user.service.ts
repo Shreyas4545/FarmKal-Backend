@@ -71,8 +71,8 @@ export class UserService {
       email,
       phone,
       state,
-      district,
-      village,
+      city,
+      country,
       isAdmin,
       isActive,
       isVisible,
@@ -94,12 +94,12 @@ export class UserService {
       obj.state = state;
     }
 
-    if (district) {
-      obj.district = district;
+    if (city) {
+      obj.city = city;
     }
 
-    if (village) {
-      obj.village = village;
+    if (country) {
+      obj.country = country;
     }
 
     if (isAdmin) {

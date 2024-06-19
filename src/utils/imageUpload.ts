@@ -13,8 +13,6 @@ export class FirebaseService {
         ? JSON.parse(process.env.FIREBASE_CONFIG)
         : '';
 
-    // const firebaseConfig = process.env.FIREBASE_CONFIG;
-
     admin.initializeApp({
       credential: admin.credential.cert(firebaseConfig),
       storageBucket: 'gs://farm7-e6457.appspot.com',

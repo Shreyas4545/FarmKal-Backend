@@ -15,10 +15,10 @@ export class User {
   state: string;
 
   @Prop()
-  district: string;
+  city: string;
 
   @Prop()
-  village: string;
+  country: string;
 
   @Prop()
   isAdmin: boolean;

@@ -32,6 +32,9 @@ import { ModelSchema } from './schema/model.schema';
 import { AppVersionController } from './controller/app-version/app-version.controller';
 import { AppVersionService } from './service/appVersion/app-version.service';
 import { AppVersionSchema } from './schema/appVersion.schema';
+import { SocialContentController } from './controller/social-content/social-content.controller';
+import { SocialContentService } from './service/social-content/social-content.service';
+import { SocialContentSchema } from './schema/socialContent.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -48,6 +51,7 @@ import { AppVersionSchema } from './schema/appVersion.schema';
       { name: 'Location', schema: LocationSchema },
       { name: 'Model', schema: ModelSchema },
       { name: 'Product', schema: ProductSchema },
+      { name: 'Socialcontent', schema: SocialContentSchema },
       { name: 'appVersion', schema: AppVersionSchema },
     ]),
   ],
@@ -61,6 +65,7 @@ import { AppVersionSchema } from './schema/appVersion.schema';
     LocationsController,
     ModelsController,
     AppVersionController,
+    SocialContentController,
   ],
   providers: [
     AppService,
@@ -77,6 +82,7 @@ import { AppVersionSchema } from './schema/appVersion.schema';
     LocationService,
     ModelsService,
     AppVersionService,
+    SocialContentService,
   ],
 })
 export class AppModule {}
