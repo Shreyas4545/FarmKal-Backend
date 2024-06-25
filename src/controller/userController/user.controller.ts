@@ -112,13 +112,10 @@ export class UserController {
   async updateUsers(
     @Res() response,
     @Param('id') userId: string,
-    @Body() updateUserDto: updateUserDto,
+    @Body() data: any,
   ) {
     try {
-      const updatedUser: any = await this.userService.updateUsers(
-        userId,
-        updateUserDto,
-      );
+      const updatedUser: any = await this.userService.updateUsers(userId, data);
 
       return this.responseCompo.successResponse(
         response,

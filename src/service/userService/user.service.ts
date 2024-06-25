@@ -61,10 +61,7 @@ export class UserService {
     return users;
   }
 
-  async updateUsers(
-    id: string,
-    updateUserDto: updateUserDto,
-  ): Promise<IUser | any> {
+  async updateUsers(id: string, data: any): Promise<IUser | any> {
     const obj: any = {};
     const {
       name,
@@ -76,7 +73,7 @@ export class UserService {
       isAdmin,
       isActive,
       isVisible,
-    } = updateUserDto;
+    } = data;
 
     if (name) {
       obj.name = name;
@@ -110,7 +107,7 @@ export class UserService {
       obj.isVisible = isVisible;
     }
 
-    if (isActive) {
+    if (isActive || isActive == false) {
       obj.isActive = isActive;
     }
 
