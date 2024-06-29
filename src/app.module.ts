@@ -35,6 +35,10 @@ import { AppVersionSchema } from './schema/appVersion.schema';
 import { SocialContentController } from './controller/social-content/social-content.controller';
 import { SocialContentService } from './service/social-content/social-content.service';
 import { SocialContentSchema } from './schema/socialContent.schema';
+import { ChatGateway } from './utils/chat.gateway';
+import { ProductImagesSchema } from './schema/productListingImagesSchema';
+import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
+import { ProductListingImagesService } from './service/product-listing-images/product-listing-images.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -53,6 +57,7 @@ import { SocialContentSchema } from './schema/socialContent.schema';
       { name: 'Product', schema: ProductSchema },
       { name: 'Socialcontent', schema: SocialContentSchema },
       { name: 'appVersion', schema: AppVersionSchema },
+      { name: 'ProductImages', schema: ProductImagesSchema },
     ]),
   ],
   controllers: [
@@ -66,6 +71,7 @@ import { SocialContentSchema } from './schema/socialContent.schema';
     ModelsController,
     AppVersionController,
     SocialContentController,
+    ProductListingImagesController,
   ],
   providers: [
     AppService,
@@ -83,6 +89,8 @@ import { SocialContentSchema } from './schema/socialContent.schema';
     ModelsService,
     AppVersionService,
     SocialContentService,
+    ChatGateway,
+    ProductListingImagesService,
   ],
 })
 export class AppModule {}

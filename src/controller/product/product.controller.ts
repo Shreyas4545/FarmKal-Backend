@@ -7,24 +7,54 @@ import {
   Body,
   HttpStatus,
   Param,
+  UploadedFiles,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from '../../service/product/product.service';
 import { updateProductDTO } from '../../dto/productDto/update-product-dto';
 import { createProductDTO } from '../../dto/productDto/createProduct.dto';
 import { ResponseCompo } from '../../utils/response';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { FirebaseService } from '../../utils/imageUpload';
+import { ProductListingImagesService } from 'src/service/product-listing-images/product-listing-images.service';
 
 @Controller('api/products')
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
     private readonly responseCompo: ResponseCompo,
+    private readonly firebaseService: FirebaseService,
+    private readonly imagesService: ProductListingImagesService,
   ) {}
 
   @Post('/create')
-  async createProduct(@Res() response, @Body() data: createProductDTO) {
+  @UseInterceptors(FilesInterceptor('file'))
+  async createProduct(
+    @Res() response,
+    @Body() data: createProductDTO,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
     try {
-      const newProduct: any = await this.productService.createProduct(data);
+      const imgData = [];
+      let newProduct: any = await this.productService.createProduct(data);
+      const imageUrls: string[] = await Promise.all(
+        files?.map(async (item, key) => this.firebaseService.uploadFile(item)),
+      );
+
+      imageUrls?.map((item, key) => {
+        imgData.push({
+          productId: newProduct?._id,
+          imageUrl: item,
+        });
+      });
+
+      const productListedImages = await this.imagesService.addMultipleImage(
+        'ProductImages',
+        imgData,
+      );
+
+      newProduct = { ...newProduct, images: productListedImages };
       return this.responseCompo.successResponse(
         response,
         {
