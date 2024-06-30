@@ -24,6 +24,9 @@ export class createProductDTO {
   @IsMongoId()
   readonly userId: string;
 
+  @IsMongoId()
+  readonly: string;
+
   @IsOptional()
   @IsString()
   readonly city: string;
@@ -42,9 +45,7 @@ export class createProductDTO {
   @IsNumber()
   readonly manufacturingYear: number;
 
-  @IsBoolean()
-  readonly isActive: boolean;
-
   @IsObject()
+  @IsOptional()
   readonly additionalFields?: Record<string, any>;
 }

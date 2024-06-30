@@ -29,13 +29,19 @@ export class ProductController {
   ) {}
 
   @Post('/create')
-  @UseInterceptors(FilesInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   async createProduct(
     @Res() response,
-    @Body() data: createProductDTO,
+    @Body() data: any,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     try {
+      if (files.length == 0) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'Invalid',
+        });
+      }
       const imgData = [];
       let newProduct: any = await this.productService.createProduct(data);
       const imageUrls: string[] = await Promise.all(
@@ -44,7 +50,7 @@ export class ProductController {
 
       imageUrls?.map((item, key) => {
         imgData.push({
-          productId: newProduct?._id,
+          productId: newProduct?._id.toString(),
           imageUrl: item,
         });
       });

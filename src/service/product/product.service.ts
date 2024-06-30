@@ -11,7 +11,7 @@ export class ProductService {
     @InjectModel('Location') private locationModel: Model<ILocation>,
   ) {}
 
-  async createProduct(data: createProductDTO): Promise<IProduct | any> {
+  async createProduct(data: any): Promise<IProduct | any> {
     const {
       categoryId,
       brandId,

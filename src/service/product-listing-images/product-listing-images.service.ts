@@ -13,9 +13,7 @@ export class ProductListingImagesService {
 
   async addMultipleImage(modelType: string, data: any[]): Promise<any[]> {
     const currentModel: Model<any> = this.modelMap.get(modelType);
-    const images: any = await currentModel.insertMany(
-      data?.map((item, key) => ({ item })),
-    );
+    const images: any = await currentModel.insertMany(data);
     return images;
   }
 }
