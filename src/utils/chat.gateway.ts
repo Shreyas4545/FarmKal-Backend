@@ -16,7 +16,7 @@ export class ChatGateway {
     @MessageBody() message: string,
     @MessageBody() sender: string,
   ): void {
-    console.log('Changes here', message, sender);
+    console.log(message, sender);
     this.server.emit('message', { message, sender });
   }
 }
