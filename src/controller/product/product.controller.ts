@@ -60,7 +60,7 @@ export class ProductController {
         imgData,
       );
 
-      newProduct = { ...newProduct, images: productListedImages };
+      newProduct = { ...newProduct._doc, images: productListedImages };
       return this.responseCompo.successResponse(
         response,
         {
