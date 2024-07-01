@@ -35,7 +35,7 @@ import { AppVersionSchema } from './schema/appVersion.schema';
 import { SocialContentController } from './controller/social-content/social-content.controller';
 import { SocialContentService } from './service/social-content/social-content.service';
 import { SocialContentSchema } from './schema/socialContent.schema';
-import { ChatGateway } from './utils/chat.gateway';
+// import { ChatGateway } from './utils/chat.gateway';
 import { ProductImagesSchema } from './schema/productListingImagesSchema';
 import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
 import { ProductListingImagesService } from './service/product-listing-images/product-listing-images.service';
@@ -89,7 +89,7 @@ import { ProductListingImagesService } from './service/product-listing-images/pr
     ModelsService,
     AppVersionService,
     SocialContentService,
-    ChatGateway,
+    // ChatGateway,
     ProductListingImagesService,
   ],
 })

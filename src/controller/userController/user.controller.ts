@@ -15,14 +15,13 @@ import { ResponseCompo } from '../../utils/response';
 import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateUserDto } from '../../dto/userDto/update-user.dto';
-import { ChatGateway } from 'src/utils/chat.gateway';
+// import { ChatGateway } from 'src/utils/chat.gateway';
 
 @Controller('api/user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly responseCompo: ResponseCompo,
-    private readonly chatService: ChatGateway,
   ) {}
 
   @Post('/create')
@@ -183,8 +182,8 @@ export class UserController {
     }
   }
 
-  @Get('/getChat')
-  async handleChat(@Res() response, @Body() data: any) {
-    this.chatService.handleMessage(data, 'A');
-  }
+  // @Get('/getChat')
+  // async handleChat(@Res() response, @Body() data: any) {
+  //   this.chatService.handleMessage(data, 'A');
+  // }
 }
