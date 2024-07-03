@@ -32,26 +32,33 @@ export class ProductService {
     let { locationId } = data;
 
     if (!locationId) {
-      // const existingLocation:any = await this.locationModel.findOne({
-      //   city:city,
+      const existingLocation: any = await this.locationModel
+        .findOne({
+          city: city,
+          state: state,
+          country: country,
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-      // }).catch((err)=>{
-      //   console.log(err);
-      // })
+      if (existingLocation) {
+        locationId = existingLocation?._id.toString();
+      } else {
+        const newLocation = {
+          city: city,
+          state: state,
+          country: country,
+          isActive: true,
+          description: 'City in Rajasthan',
+          type: 'City',
+          image:
+            'https://storage.googleapis.com/farm7-e6457.appspot.com/images/e2f2decf-986f-44b3-9377-dc7e3fbde743-.png',
+        };
 
-      const newLocation = {
-        city: city,
-        state: state,
-        country: country,
-        isActive: true,
-        description: 'City in Rajasthan',
-        type: 'City',
-        image:
-          'https://storage.googleapis.com/farm7-e6457.appspot.com/images/e2f2decf-986f-44b3-9377-dc7e3fbde743-.png',
-      };
-
-      const addedLocation = await new this.locationModel(newLocation).save();
-      locationId = addedLocation?._id.toString();
+        const addedLocation = await new this.locationModel(newLocation).save();
+        locationId = addedLocation?._id.toString();
+      }
     }
 
     let newProduct: any = {
@@ -137,6 +144,15 @@ export class ProductService {
             locationId: { $toObjectId: '$locationId' },
             modelId: { $toObjectId: '$modelId' },
             userId: { $toObjectId: '$userId' },
+            productID: { $toString: '$_id' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'productimages',
+            localField: 'productID',
+            foreignField: 'productId',
+            as: 'productImages',
           },
         },
         {
@@ -205,6 +221,7 @@ export class ProductService {
             locationDetails: 1,
             modelDetails: 1,
             userDetails: 1,
+            productImages: 1,
           },
         },
       ])
