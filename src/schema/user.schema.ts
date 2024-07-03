@@ -24,6 +24,9 @@ export class User {
   isAdmin: boolean;
 
   @Prop()
+  image: string;
+
+  @Prop()
   isVisible: boolean;
 
   @Prop()

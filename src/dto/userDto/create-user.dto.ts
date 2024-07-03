@@ -15,30 +15,23 @@ export class createUserDto {
   @IsOptional()
   readonly email: string;
 
+  @IsString()
+  @IsOptional()
+  readonly image: string;
+
   @IsNumber()
   @IsNotEmpty()
-  readonly phone: string;
+  readonly phone: number;
 
   @IsString()
+  @IsOptional()
   readonly state: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly city: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly country: string;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly isAdmin: boolean;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly isVisible: boolean;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly isActive: boolean;
 }

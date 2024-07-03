@@ -6,26 +6,34 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   Query,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { ResponseCompo } from '../../utils/response';
 import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { updateUserDto } from '../../dto/userDto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FirebaseService } from '../../utils/imageUpload';
 // import { ChatGateway } from 'src/utils/chat.gateway';
-
 @Controller('api/user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
+    private readonly firebaseService: FirebaseService,
     private readonly responseCompo: ResponseCompo,
   ) {}
 
   @Post('/create')
-  async createUser(@Res() response, @Body() createUserDto: createUserDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async createUser(
+    @Res() response,
+    @Body() createUserDto: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     try {
       const existingUser: any = await this.userService
         .getUsers({ phone: createUserDto.phone })
@@ -40,7 +48,13 @@ export class UserController {
         });
       }
 
-      const newUser: any = await this.userService.createUser(createUserDto);
+      let fileUrl = '';
+      if (file) {
+        fileUrl = await this.firebaseService.uploadFile(file);
+      }
+
+      let newUser: any = { ...createUserDto, image: fileUrl };
+      newUser = await this.userService.createUser(newUser);
 
       return this.responseCompo.successResponse(
         response,
@@ -110,13 +124,25 @@ export class UserController {
   }
 
   @Put('/updateUser/:id')
+  @UseInterceptors(FileInterceptor('file'))
   async updateUsers(
     @Res() response,
     @Param('id') userId: string,
     @Body() data: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const updatedUser: any = await this.userService.updateUsers(userId, data);
+      let updatedData = { ...data };
+      if (file) {
+        updatedData = {
+          ...updatedData,
+          image: await this.firebaseService.uploadFile(file),
+        };
+      }
+      const updatedUser: any = await this.userService.updateUsers(
+        userId,
+        updatedData,
+      );
 
       return this.responseCompo.successResponse(
         response,

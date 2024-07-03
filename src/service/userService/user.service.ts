@@ -69,6 +69,7 @@ export class UserService {
       phone,
       state,
       city,
+      image,
       country,
       isAdmin,
       isActive,
@@ -81,6 +82,9 @@ export class UserService {
 
     if (email) {
       obj.email = email;
+    }
+    if (image) {
+      obj.image = image;
     }
 
     if (phone) {
