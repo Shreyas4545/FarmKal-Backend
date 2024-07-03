@@ -18,6 +18,7 @@ import { ResponseCompo } from '../../utils/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { ProductListingImagesService } from 'src/service/product-listing-images/product-listing-images.service';
+import { response } from 'express';
 
 @Controller('api/products')
 export class ProductController {
@@ -114,6 +115,27 @@ export class ProductController {
           message: 'Successfully Updated Product',
         },
         updatedProduct,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/getChatgptRes')
+  async getChatGptRes(@Res() response, @Body() data: any) {
+    try {
+      const apiRes: any = await this.productService.chatGptRes(data);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Sent Products',
+        },
+        apiRes,
       );
     } catch (err) {
       console.log(err);

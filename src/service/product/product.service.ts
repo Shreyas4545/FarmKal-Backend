@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IProduct } from 'src/interface/product.interface';
-import { createProductDTO } from 'src/dto/productDto/createProduct.dto';
 import { ILocation } from 'src/interface/location.interface';
+import axios from 'axios';
+import Groq from 'groq-sdk';
 @Injectable()
 export class ProductService {
+  // private groq = new Groq();
+
   constructor(
     @InjectModel('Product') private productModel: Model<IProduct>,
     @InjectModel('Location') private locationModel: Model<ILocation>,
@@ -29,6 +32,13 @@ export class ProductService {
     let { locationId } = data;
 
     if (!locationId) {
+      // const existingLocation:any = await this.locationModel.findOne({
+      //   city:city,
+
+      // }).catch((err)=>{
+      //   console.log(err);
+      // })
+
       const newLocation = {
         city: city,
         state: state,
@@ -268,5 +278,16 @@ export class ProductService {
       });
 
     return updatedProduct;
+  }
+
+  async getChatResponse(prompt: string): Promise<any> {
+    try {
+      console.log('Hi');
+    } catch (error) {
+      console.error(error);
+      throw new Error(
+        `Error fetching data from Hugging Face API: ${error.message}`,
+      );
+    }
   }
 }
