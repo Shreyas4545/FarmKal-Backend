@@ -125,6 +125,22 @@ export class UserService {
     return updatedUser;
   }
 
+  async addImage(id: string, data: any): Promise<IUser | any> {
+    const obj: any = {};
+    const { image } = data;
+
+    obj.image = image;
+
+    const updatedUser: any = this.userModel
+      .findOneAndUpdate({ _id: id }, obj, { new: true })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return updatedUser;
+  }
+
   async login(user: any): Promise<string | boolean> {
     if (!(await this.otpService.verifyOtp(user))) {
       return false;

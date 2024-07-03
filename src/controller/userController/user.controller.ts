@@ -161,6 +161,40 @@ export class UserController {
     }
   }
 
+  @Put('/addImage/:id')
+  @UseInterceptors(FileInterceptor('file'))
+  async addImage(
+    @Res() response,
+    @Param('id') userId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      const updatedData: any = {
+        image: await this.firebaseService.uploadFile(file),
+      };
+
+      const updatedUser: any = await this.userService.addImage(
+        userId,
+        updatedData,
+      );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Update User',
+        },
+        updatedUser,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
   @Post('/login')
   async login(@Res() response, @Body() data: any) {
     try {
