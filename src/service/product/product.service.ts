@@ -7,8 +7,9 @@ import axios from 'axios';
 import Groq from 'groq-sdk';
 @Injectable()
 export class ProductService {
-  // private groq = new Groq();
-
+  private groq = new Groq({
+    apiKey: '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',
+  });
   constructor(
     @InjectModel('Product') private productModel: Model<IProduct>,
     @InjectModel('Location') private locationModel: Model<ILocation>,
@@ -297,9 +298,32 @@ export class ProductService {
     return updatedProduct;
   }
 
-  async getChatResponse(prompt: string): Promise<any> {
+  async getChatResponse(data: any): Promise<any> {
+    const { prompt } = data;
     try {
-      console.log('Hi');
+      const chatCompletion = await this.groq.chat.completions.create({
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        model: 'mixtral-8x7b-32768',
+        temperature: 1,
+        max_tokens: 1024,
+        top_p: 1,
+        stream: true,
+        stop: null,
+      });
+
+      let finalData = '';
+
+      for await (const chunk of chatCompletion) {
+        finalData += chunk.choices[0]?.delta?.content;
+        // process.stdout.write(chunk.choices[0]?.delta?.content || '');
+      }
+
+      return finalData;
     } catch (error) {
       console.error(error);
       throw new Error(

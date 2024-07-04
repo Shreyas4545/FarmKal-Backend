@@ -125,7 +125,7 @@ export class ProductController {
     }
   }
 
-  @Post('/getChatgptRes')
+  @Get('/getChatgptRes')
   async getChatGptRes(@Res() response, @Body() data: any) {
     try {
       const apiRes: any = await this.productService.getChatResponse(data);
