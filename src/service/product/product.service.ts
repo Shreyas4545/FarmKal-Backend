@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IProduct } from 'src/interface/product.interface';
 import { ILocation } from 'src/interface/location.interface';
-import axios from 'axios';
 import Groq from 'groq-sdk';
 @Injectable()
 export class ProductService {
