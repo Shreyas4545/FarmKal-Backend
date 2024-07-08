@@ -11,8 +11,6 @@ import {
   Res,
   UseInterceptors,
 } from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { ResponseCompo } from '../../utils/response';
 import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

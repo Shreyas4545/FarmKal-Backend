@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IUser } from '../../interface/user.interface';
 import { createUserDto } from '../../dto/userDto/create-user.dto';
-import { updateUserDto } from '../../dto/userDto/update-user.dto';
 import { OtpService } from '../otp/otp.service';
 import { JwtGenerate } from '../../utils/jwt.token';
 

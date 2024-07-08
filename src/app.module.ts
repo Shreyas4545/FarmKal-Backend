@@ -35,10 +35,15 @@ import { AppVersionSchema } from './schema/appVersion.schema';
 import { SocialContentController } from './controller/social-content/social-content.controller';
 import { SocialContentService } from './service/social-content/social-content.service';
 import { SocialContentSchema } from './schema/socialContent.schema';
-// import { ChatGateway } from './utils/chat.gateway';
+import { WebsocketsGateway } from './utils/chat.gateway';
 import { ProductImagesSchema } from './schema/productListingImagesSchema';
 import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
 import { ProductListingImagesService } from './service/product-listing-images/product-listing-images.service';
+import { ConversationsController } from './controller/conversations/conversations.controller';
+import { ConversationsService } from './service/conversations/conversations.service';
+import { ConversationSchema } from './schema/conversation.schema';
+import { MessageSchema } from './schema/messages.schema';
+import { MessagesService } from './service/messages/messages.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -58,6 +63,8 @@ import { ProductListingImagesService } from './service/product-listing-images/pr
       { name: 'Socialcontent', schema: SocialContentSchema },
       { name: 'appVersion', schema: AppVersionSchema },
       { name: 'ProductImages', schema: ProductImagesSchema },
+      { name: 'Conversation', schema: ConversationSchema },
+      { name: 'Message', schema: MessageSchema },
     ]),
   ],
   controllers: [
@@ -72,6 +79,7 @@ import { ProductListingImagesService } from './service/product-listing-images/pr
     AppVersionController,
     SocialContentController,
     ProductListingImagesController,
+    ConversationsController,
   ],
   providers: [
     AppService,
@@ -89,8 +97,10 @@ import { ProductListingImagesService } from './service/product-listing-images/pr
     ModelsService,
     AppVersionService,
     SocialContentService,
-    // ChatGateway,
+    WebsocketsGateway,
     ProductListingImagesService,
+    ConversationsService,
+    MessagesService,
   ],
 })
 export class AppModule {}
