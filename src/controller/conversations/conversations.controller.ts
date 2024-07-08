@@ -18,7 +18,6 @@ import { MessagesService } from '../../service/messages/messages.service';
 import { IConversation } from '../../interface/conversation.interface';
 import { createMessageDto } from '../../dto/conversationDto/message.dto';
 import { IMessage } from '../../interface/message.interface';
-import { response } from 'express';
 
 @Controller('api/conversations')
 export class ConversationsController {

@@ -1,4 +1,4 @@
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface IConversation extends Document {
   readonly _id: Types.ObjectId;

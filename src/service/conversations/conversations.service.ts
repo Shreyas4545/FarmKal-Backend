@@ -2,14 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IConversation } from '../../interface/conversation.interface';
-import { IMessage } from '../../interface/message.interface';
-
 @Injectable()
 export class ConversationsService {
   constructor(
     @InjectModel('Conversation')
     private conversationModel: Model<IConversation>,
-    @InjectModel('Message') private messageModel: Model<IMessage>,
   ) {}
 
   async createConversation(data: any): Promise<IConversation> {
