@@ -171,7 +171,7 @@ export class ConversationsController {
     @Query('userId2') userId2: string,
   ) {
     try {
-      const checkConversation: IConversation =
+      const checkConversation: IConversation[] | any =
         await this.conversationService.checkConversationExistence(
           userId1,
           userId2,
@@ -182,7 +182,7 @@ export class ConversationsController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Conversation',
         },
-        checkConversation[0],
+        checkConversation?.length > 0 ? 1 : null,
       );
     } catch (err) {
       console.log(err);
