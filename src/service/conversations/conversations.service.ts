@@ -43,7 +43,11 @@ export class ConversationsService {
         },
         {
           $project: {
-            participants: 1,
+            participants: {
+              _id: 1,
+              name: 1,
+              image: 1,
+            },
             lastMessage: 1,
             lastMessageAt: 1,
             isActive: 1,
