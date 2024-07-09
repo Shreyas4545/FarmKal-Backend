@@ -174,7 +174,7 @@ export class ConversationsController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Conversation',
         },
-        checkConversation,
+        checkConversation[0],
       );
     } catch (err) {
       console.log(err);
