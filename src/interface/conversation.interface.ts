@@ -5,7 +5,10 @@ export interface IConversation extends Document {
 
   readonly isActive: boolean;
 
-  readonly participants: Array<string>;
+  readonly participants: Array<Types.ObjectId>;
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  readonly lastMessage: Object;
 
   readonly createdAt: Date;
 

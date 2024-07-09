@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ versionKey: false })
 export class Conversation {
@@ -6,10 +7,16 @@ export class Conversation {
   adminOnly: boolean;
 
   @Prop()
-  participants: Array<string>;
+  participants: Array<Types.ObjectId>;
 
   @Prop()
   createdAt: Date;
+
+  @Prop({ type: MongooseSchema.Types.Mixed })
+  lastMessage: {
+    message: string;
+    senderId: Types.ObjectId;
+  };
 
   @Prop()
   lastMessageAt: Date;

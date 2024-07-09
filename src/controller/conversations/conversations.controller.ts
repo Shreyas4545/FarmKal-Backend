@@ -48,6 +48,10 @@ export class ConversationsController {
         const conversation: IConversation =
           await this.conversationService.updateConversation(conversationId, {
             users: messageInfo?.senderId,
+            lastMessage: {
+              message: messageInfo?.message,
+              senderId: messageInfo?.senderId,
+            },
           });
 
         messageObj.conversationId = conversation?._id;
@@ -57,6 +61,10 @@ export class ConversationsController {
           participants: [messageInfo?.senderId],
           createdAt: new Date(),
           lastMessageAt: new Date(),
+          lastMessage: {
+            message: messageInfo?.message,
+            senderId: messageInfo?.senderId,
+          },
           isActive: true,
         };
         const conversation: IConversation =

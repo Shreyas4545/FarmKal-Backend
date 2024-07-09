@@ -15,9 +15,47 @@ export class ConversationsService {
   }
 
   async getConversations(id: string): Promise<any> {
-    const conversations: IConversation[] = await this.conversationModel
-      .find({ participants: id })
-      .exec();
+    const conversations: IConversation[] | any = await this.conversationModel
+      .aggregate([
+        {
+          $match: {
+            participants: id,
+          },
+        },
+        {
+          $addFields: {
+            participantsObjectIds: {
+              $map: {
+                input: '$participants',
+                as: 'participant',
+                in: { $toObjectId: '$$participant' },
+              },
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'participantsObjectIds',
+            foreignField: '_id',
+            as: 'participants',
+          },
+        },
+        {
+          $project: {
+            participants: 1,
+            lastMessage: 1,
+            lastMessageAt: 1,
+            isActive: 1,
+            adminOnly: 1,
+            createdAt: 1,
+          },
+        },
+      ])
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
 
     return conversations;
   }
@@ -34,6 +72,10 @@ export class ConversationsService {
 
     if (data?.adminOnly != undefined) {
       newData.adminOnly = data?.adminOnly;
+    }
+
+    if (data?.lastMessage != undefined) {
+      newData.lastMessage = data?.lastMessage;
     }
 
     const updatedConversation: any = await this.conversationModel
