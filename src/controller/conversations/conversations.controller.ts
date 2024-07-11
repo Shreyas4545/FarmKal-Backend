@@ -182,7 +182,7 @@ export class ConversationsController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Conversation',
         },
-        checkConversation?.length > 0 ? 1 : null,
+        checkConversation[0],
       );
     } catch (err) {
       console.log(err);
