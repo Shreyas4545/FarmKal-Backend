@@ -12,6 +12,9 @@ export class createMessageDto {
   @IsMongoId()
   readonly senderId: string;
 
+  @IsMongoId()
+  readonly receiverId: string;
+
   @IsString()
   readonly message: string;
 }

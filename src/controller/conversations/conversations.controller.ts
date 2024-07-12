@@ -58,7 +58,7 @@ export class ConversationsController {
       } else {
         const conversationObj: any = {
           adminOnly: messageInfo?.adminOnly || false,
-          participants: [messageInfo?.senderId],
+          participants: [messageInfo?.senderId, messageInfo?.receiverId],
           createdAt: new Date(),
           lastMessageAt: new Date(),
           lastMessage: {
