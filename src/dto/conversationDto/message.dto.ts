@@ -13,6 +13,7 @@ export class createMessageDto {
   readonly senderId: string;
 
   @IsMongoId()
+  @IsOptional()
   readonly receiverId: string;
 
   @IsString()

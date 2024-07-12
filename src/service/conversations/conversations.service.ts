@@ -92,6 +92,7 @@ export class ConversationsService {
       .catch((err) => {
         console.log(err);
       });
+
     return updatedConversation;
   }
 

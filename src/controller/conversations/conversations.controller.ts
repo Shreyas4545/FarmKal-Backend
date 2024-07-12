@@ -53,7 +53,6 @@ export class ConversationsController {
               senderId: messageInfo?.senderId,
             },
           });
-
         messageObj.conversationId = conversation?._id;
       } else {
         const conversationObj: any = {
