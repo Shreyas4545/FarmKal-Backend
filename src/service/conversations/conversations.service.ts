@@ -101,9 +101,46 @@ export class ConversationsService {
     userId2: string,
   ): Promise<IConversation> {
     const existingConversation: any = await this.conversationModel
-      .find({
-        $and: [{ participants: userId1 }, { participants: userId2 }],
-      })
+      .aggregate([
+        {
+          $match: {
+            participants: [userId1, userId2],
+          },
+        },
+        {
+          $addFields: {
+            participantsObjectIds: {
+              $map: {
+                input: '$participants',
+                as: 'participant',
+                in: { $toObjectId: '$$participant' },
+              },
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'participantsObjectIds',
+            foreignField: '_id',
+            as: 'participants',
+          },
+        },
+        {
+          $project: {
+            participants: {
+              _id: 1,
+              name: 1,
+              image: 1,
+            },
+            lastMessage: 1,
+            lastMessageAt: 1,
+            isActive: 1,
+            adminOnly: 1,
+            createdAt: 1,
+          },
+        },
+      ])
       .exec()
       .catch((err) => {
         console.log(err);
