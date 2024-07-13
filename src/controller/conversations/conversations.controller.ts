@@ -44,15 +44,19 @@ export class ConversationsController {
         seconds: currentDate.getSeconds(),
       };
 
+      let conversation: any = {};
+
       if (conversationId) {
-        const conversation: IConversation =
-          await this.conversationService.updateConversation(conversationId, {
+        conversation = await this.conversationService.updateConversation(
+          conversationId,
+          {
             users: messageInfo?.senderId,
             lastMessage: {
               message: messageInfo?.message,
               senderId: messageInfo?.senderId,
             },
-          });
+          },
+        );
         messageObj.conversationId = conversation?._id;
       } else {
         const conversationObj: any = {
@@ -66,8 +70,9 @@ export class ConversationsController {
           },
           isActive: true,
         };
-        const conversation: IConversation =
-          await this.conversationService.createConversation(conversationObj);
+        conversation = await this.conversationService.createConversation(
+          conversationObj,
+        );
 
         messageObj.conversationId = conversation?._id;
       }
@@ -75,13 +80,14 @@ export class ConversationsController {
       const message: IMessage = await this.messageService.createMessage(
         messageObj,
       );
+
       return this.responseCompo.successResponse(
         response,
         {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Message',
         },
-        message,
+        conversation,
       );
     } catch (err) {
       console.log(err);
