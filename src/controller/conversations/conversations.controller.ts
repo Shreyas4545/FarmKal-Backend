@@ -81,6 +81,13 @@ export class ConversationsController {
         messageObj,
       );
 
+      const participantsData: IConversation[] | any =
+        await this.conversationService.checkConversationExistence(
+          conversation?.participants[0],
+          conversation?.participants[1],
+        );
+
+      conversation.participants = participantsData[0]?.participants;
       return this.responseCompo.successResponse(
         response,
         {
@@ -184,7 +191,7 @@ export class ConversationsController {
       return response.status(200).json({
         success: HttpStatus.OK,
         message: 'Successfully Sent Details',
-        data: checkConversation.length > 0 ? checkConversation : null,
+        data: checkConversation.length > 0 ? checkConversation[0] : null,
       });
     } catch (err) {
       console.log(err);
