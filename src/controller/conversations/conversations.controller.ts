@@ -189,7 +189,7 @@ export class ConversationsController {
           userId2,
         );
       return response.status(200).json({
-        success: HttpStatus.OK,
+        success: true,
         message: 'Successfully Sent Details',
         data: checkConversation.length > 0 ? checkConversation[0] : null,
       });
