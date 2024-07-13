@@ -175,14 +175,11 @@ export class ConversationsController {
           userId1,
           userId2,
         );
-      return this.responseCompo.successResponse(
-        response,
-        {
-          statusCode: HttpStatus.OK,
-          message: 'Successfully Sent Conversation',
-        },
-        checkConversation[0],
-      );
+      return response.status(200).json({
+        success: HttpStatus.OK,
+        message: 'Successfully Sent Details',
+        data: checkConversation.length > 0 ? checkConversation : null,
+      });
     } catch (err) {
       console.log(err);
       return this.responseCompo.errorResponse(response, {
