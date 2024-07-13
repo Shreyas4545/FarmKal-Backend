@@ -188,6 +188,7 @@ export class ConversationsController {
           userId1,
           userId2,
         );
+      console.log('Here');
       return response.status(200).json({
         success: true,
         message: 'Successfully Sent Details',
