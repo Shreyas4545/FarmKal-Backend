@@ -8,11 +8,11 @@ export interface IConversation extends Document {
   readonly participants: Array<Types.ObjectId>;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  readonly lastMessage: Object;
+  lastMessage: Object;
 
   readonly createdAt: Date;
 
-  readonly lastMessageAt: Date;
+  lastMessageAt: Date;
 
   readonly adminOnly: boolean;
 }

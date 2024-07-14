@@ -232,13 +232,20 @@ export class ConversationsController {
         isActive: true,
       };
 
-      let conversation: IConversation =
-        await this.conversationService.createConversation(conversationObj);
+      let conversation: any = await this.conversationService.createConversation(
+        conversationObj,
+      );
 
       conversation = await this.conversationService.checkConversationExistence(
         userId1,
         userId2,
       );
+
+      conversation[0].lastMessage = {
+        message: '',
+        senderId: '',
+      };
+      conversation[0].lastMessageAt = '';
 
       return this.responseCompo.successResponse(
         response,
