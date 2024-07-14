@@ -94,7 +94,7 @@ export class ConversationsController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent Message',
         },
-        conversation,
+        conversationId ? message : conversation,
       );
     } catch (err) {
       console.log(err);
@@ -188,7 +188,6 @@ export class ConversationsController {
           userId1,
           userId2,
         );
-      console.log('Here');
       return response.status(200).json({
         success: true,
         message: 'Successfully Sent Details',
@@ -200,6 +199,57 @@ export class ConversationsController {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: `Something went wrong + ${err}`,
       });
+    }
+  }
+
+  @Post('/startConversation')
+  async startConversation(
+    @Res() response,
+    @Query('userId1') userId1: string,
+    @Query('userId2') userId2: string,
+  ) {
+    try {
+      const checkConversation: IConversation[] | any =
+        await this.conversationService.checkConversationExistence(
+          userId1,
+          userId2,
+        );
+
+      if (checkConversation?.length > 0) {
+        return this.responseCompo.successResponse(
+          response,
+          {
+            statusCode: HttpStatus.OK,
+            message: 'Conversation between these two users already exists',
+          },
+          checkConversation,
+        );
+      }
+      const conversationObj: any = {
+        adminOnly: false,
+        participants: [userId1, userId2],
+        createdAt: new Date(),
+        isActive: true,
+      };
+
+      let conversation: IConversation =
+        await this.conversationService.createConversation(conversationObj);
+
+      conversation = await this.conversationService.checkConversationExistence(
+        userId1,
+        userId2,
+      );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Created Conversation',
+        },
+        conversation,
+      );
+    } catch (err) {
+      console.log(err);
     }
   }
 }

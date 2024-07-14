@@ -44,6 +44,7 @@ import { ConversationsService } from './service/conversations/conversations.serv
 import { ConversationSchema } from './schema/conversation.schema';
 import { MessageSchema } from './schema/messages.schema';
 import { MessagesService } from './service/messages/messages.service';
+import { SocketService } from './service/socket/socket.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -101,6 +102,7 @@ import { MessagesService } from './service/messages/messages.service';
     ProductListingImagesService,
     ConversationsService,
     MessagesService,
+    SocketService,
   ],
 })
 export class AppModule {}
