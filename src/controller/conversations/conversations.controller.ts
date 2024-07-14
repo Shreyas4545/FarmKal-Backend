@@ -246,7 +246,7 @@ export class ConversationsController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Created Conversation',
         },
-        conversation,
+        conversation[0],
       );
     } catch (err) {
       console.log(err);

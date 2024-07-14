@@ -23,6 +23,7 @@ export class WebsocketsGateway
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
     this.clients.add(client);
+    return true;
   }
 
   handleDisconnect(client: Socket) {
