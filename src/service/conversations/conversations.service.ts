@@ -103,9 +103,7 @@ export class ConversationsService {
     const existingConversation: any = await this.conversationModel
       .aggregate([
         {
-          $match: {
-            participants: [userId1, userId2],
-          },
+          $match: { participants: { $all: [userId1, userId2] } },
         },
         {
           $addFields: {
