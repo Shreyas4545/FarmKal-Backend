@@ -23,6 +23,7 @@ export class WebsocketsGateway
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
     this.clients.add(client);
+    client.emit('clientConnected', { id: client.id });
   }
 
   handleDisconnect(client: Socket) {
@@ -32,13 +33,15 @@ export class WebsocketsGateway
 
   @SubscribeMessage('messageFromClient1')
   handleMessageFromClient1(client: Socket, payload: any): void {
-    console.log(`Message from client ${client.id}: ${payload}`);
-    this.server.emit('messageToClient2', payload);
+    payload = JSON.parse(payload);
+    console.log(`Message from client ${client.id}: ${payload.receiver}`);
+    this.server.emit(`${payload.receiver}`, payload?.message);
   }
 
   @SubscribeMessage('messageFromClient2')
   handleMessageFromClient2(client: Socket, payload: any): void {
+    payload = JSON.parse(payload);
     console.log(`Message from client ${client.id}: ${payload}`);
-    this.server.emit('messageToClient1', payload);
+    this.server.emit(`${payload.receiver}`, payload?.message);
   }
 }
