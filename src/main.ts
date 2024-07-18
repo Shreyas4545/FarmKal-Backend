@@ -10,6 +10,7 @@ async function bootstrap() {
   const host = '0.0.0.0';
 
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
   await app.listen(port, host);
   console.log(`Application is running on: http://${host}:${port}`);
 }

@@ -18,7 +18,7 @@ import { ResponseCompo } from '../../utils/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { ProductListingImagesService } from 'src/service/product-listing-images/product-listing-images.service';
-import { response } from 'express';
+import Ably from 'ably';
 
 @Controller('api/products')
 export class ProductController {
@@ -28,6 +28,42 @@ export class ProductController {
     private readonly firebaseService: FirebaseService,
     private readonly imagesService: ProductListingImagesService,
   ) {}
+
+  @Post('/checkAbly')
+  async check(@Res() response, @Body() data: any) {
+    console.log(data);
+    const ably = new Ably.Realtime(
+      'JpheVQ.WC1J-g:qMWX32vzYVAd1_4mQ6etSbjJ3jirOWlUxe6MF6q05vs',
+    );
+    ably.connection.once('connected', () => {
+      console.log('Connected to Ably!');
+    });
+
+    // Create a channel called 'get-started' and register a listener to subscribe to all messages with the name 'first'
+    const channel = ably.channels.get('get-started');
+
+    await channel.publish('vote', {
+      points: 1,
+      movie: data.movie,
+    });
+
+    // Close the connection to Ably after a 5 second delay
+    setTimeout(async () => {
+      ably.connection.close();
+      await ably.connection.once('closed', function () {
+        console.log('Closed the connection to Ably.');
+      });
+    }, 5000);
+
+    return this.responseCompo.successResponse(
+      response,
+      {
+        statusCode: HttpStatus.CREATED,
+        message: 'Successfully Created Product',
+      },
+      'Success',
+    );
+  }
 
   @Post('/create')
   @UseInterceptors(FilesInterceptor('files'))
