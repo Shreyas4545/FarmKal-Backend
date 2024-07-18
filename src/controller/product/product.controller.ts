@@ -59,7 +59,7 @@ export class ProductController {
       response,
       {
         statusCode: HttpStatus.CREATED,
-        message: 'Successfully Created Product',
+        message: 'Successfully Sent Message',
       },
       'Success',
     );
