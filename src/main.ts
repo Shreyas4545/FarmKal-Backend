@@ -10,7 +10,10 @@ async function bootstrap() {
   const host = '0.0.0.0';
 
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  // app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:5501'],
+  });
   await app.listen(port, host);
   console.log(`Application is running on: http://${host}:${port}`);
 }
