@@ -1,6 +1,6 @@
-import { AdsService } from 'src/service/ads/ads.service';
-import { AdsDTO } from 'src/dto/adsDto/createAds.dto';
-import { updateAdsDto } from 'src/dto/adsDto/update-ads.dto';
+import { AdsService } from '../../service/ads/ads.service';
+import { AdsDTO } from '../../dto/adsDto/createAds.dto';
+import { updateAdsDto } from '../../dto/adsDto/update-ads.dto';
 import {
   Body,
   Controller,

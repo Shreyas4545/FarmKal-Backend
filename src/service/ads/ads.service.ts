@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IAds } from 'src/interface/ads.interface';
-import { AdsDTO } from 'src/dto/adsDto/createAds.dto';
+import { IAds } from '../../interface/ads.interface';
+import { AdsDTO } from '../../dto/adsDto/createAds.dto';
 
 @Injectable()
 export class AdsService {
