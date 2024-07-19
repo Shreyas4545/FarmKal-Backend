@@ -22,9 +22,16 @@ export class FirebaseService {
   async uploadFile(file: Express.Multer.File): Promise<string> {
     try {
       const bucket = admin.storage().bucket();
-      const uniqueSuffix = `${uuidv4()}-${path.extname(file.originalname)}`;
-      const fileName = `images/${uniqueSuffix}`;
+      // const uniqueSuffix = `${uuidv4()}-${path.extname(file.originalname)}`;
+      const fileName = `images/${file.originalname}`;
       const fileUpload = bucket.file(fileName);
+
+      const [exists] = await fileUpload.exists();
+
+      if (exists) {
+        this.logger.log(`File ${fileName} already exists. Deleting it.`);
+        await fileUpload.delete();
+      }
 
       const stream = fileUpload.createWriteStream({
         metadata: {

@@ -31,7 +31,6 @@ export class ProductController {
 
   @Post('/checkAbly')
   async check(@Res() response, @Body() data: any) {
-    console.log(data);
     const ably = new Ably.Realtime(
       'JpheVQ.WC1J-g:qMWX32vzYVAd1_4mQ6etSbjJ3jirOWlUxe6MF6q05vs',
     );

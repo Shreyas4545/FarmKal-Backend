@@ -45,6 +45,9 @@ import { ConversationSchema } from './schema/conversation.schema';
 import { MessageSchema } from './schema/messages.schema';
 import { MessagesService } from './service/messages/messages.service';
 import { SocketService } from './service/socket/socket.service';
+import { adsSchema } from './schema/ads.schema';
+import { AdsController } from './controller/ads/ads.controller';
+import { AdsService } from './service/ads/ads.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -66,6 +69,7 @@ import { SocketService } from './service/socket/socket.service';
       { name: 'ProductImages', schema: ProductImagesSchema },
       { name: 'Conversation', schema: ConversationSchema },
       { name: 'Message', schema: MessageSchema },
+      { name: 'Ads', schema: adsSchema },
     ]),
   ],
   controllers: [
@@ -81,6 +85,7 @@ import { SocketService } from './service/socket/socket.service';
     SocialContentController,
     ProductListingImagesController,
     ConversationsController,
+    AdsController,
   ],
   providers: [
     AppService,
@@ -103,6 +108,7 @@ import { SocketService } from './service/socket/socket.service';
     ConversationsService,
     MessagesService,
     SocketService,
+    AdsService,
   ],
 })
 export class AppModule {}

@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ICategory } from '../../interface/category.interface';
 import { CategoryDTO } from '../../dto/categoryDto/create-category-dto';
-import { updateCategoryDto } from '../../dto/categoryDto/update-category-dto';
 @Injectable()
 export class CategoryService {
   constructor(
