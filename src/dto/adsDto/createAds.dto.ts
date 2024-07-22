@@ -6,4 +6,8 @@ export class AdsDTO {
 
   @IsString()
   readonly description: string;
+
+  @IsString()
+  @IsOptional()
+  readonly businessNumber: number;
 }

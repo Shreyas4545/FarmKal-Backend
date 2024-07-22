@@ -19,6 +19,15 @@ export class Ads {
 
   @Prop()
   daysToDisplay: number;
+
+  @Prop()
+  expiryAt: Date;
+
+  @Prop()
+  isPhoto: boolean;
+
+  @Prop()
+  businessNumber: number;
 }
 
 export const adsSchema = SchemaFactory.createForClass(Ads);

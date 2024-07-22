@@ -12,4 +12,6 @@ export interface IAds extends Document {
   readonly createdAt: Date;
 
   readonly daysToDisplay: number;
+
+  readonly isPhoto: boolean;
 }

@@ -21,6 +21,8 @@ export class SocialContentService {
       obj._id = id;
     }
 
+    obj.isActive = true;
+
     const socialContent: any = await this.socialContent
       .find(obj)
       .exec()

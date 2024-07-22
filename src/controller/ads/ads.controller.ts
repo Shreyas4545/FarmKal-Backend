@@ -30,16 +30,24 @@ export class AdsController {
   @UseInterceptors(FileInterceptor('file'))
   async createAds(
     @Res() response,
-    @Body() data: AdsDTO,
+    @Body() data: any,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
       const fileUrl: string = await this.firebaseService.uploadFile(file);
+      const currentDate: Date = new Date();
+
+      // Add 15 days to the current date
+      const newDate: Date = new Date(currentDate);
+      newDate.setDate(currentDate.getDate() + parseInt(data?.daysToDisplay));
+
       let newAd: any = {
         ...data,
         image: fileUrl,
         createdAt: new Date(),
         isActive: true,
+        isPhoto: false,
+        expiryAt: newDate,
       };
       newAd = await this.adsService.createAd(newAd);
 
