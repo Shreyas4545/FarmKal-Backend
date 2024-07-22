@@ -16,6 +16,7 @@ import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
+import { createLoginDTO } from 'src/dto/userDto/loginUser.dto';
 // import { ChatGateway } from 'src/utils/chat.gateway';
 @Controller('api/user')
 export class UserController {
@@ -194,7 +195,7 @@ export class UserController {
   }
 
   @Post('/login')
-  async login(@Res() response, @Body() data: any) {
+  async login(@Res() response, @Body() data: createLoginDTO) {
     try {
       if (!data.phone) {
         return this.responseCompo.errorResponse(response, {
@@ -203,7 +204,7 @@ export class UserController {
         });
       }
 
-      const user: any = await this.userService.getUsers(data);
+      let user: any = await this.userService.getUsers(data);
 
       if (!user) {
         return this.responseCompo.errorResponse(response, {
@@ -212,15 +213,15 @@ export class UserController {
         });
       }
 
-      // user = { ...user[0]?._doc, otp: data?.otp };
-      // const access_token = await this.userService.login(user);
+      user = { ...user[0]?._doc, otp: data?.otp };
+      const access_token: string | boolean = await this.userService.login(user);
 
-      // if (!access_token) {
-      //   return this.responseCompo.errorResponse(response, {
-      //     statusCode: HttpStatus.UNAUTHORIZED,
-      //     message: 'Incorrect Otp! Please Try Again',
-      //   });
-      // }
+      if (!access_token) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Incorrect Otp! Please Try Again',
+        });
+      }
 
       return this.responseCompo.successResponse(
         response,
@@ -228,8 +229,8 @@ export class UserController {
           statusCode: HttpStatus.OK,
           message: 'User Logged In Successfully',
         },
-        // { accesstoken: access_token, ...user },
-        user[0],
+        { accesstoken: access_token, ...user },
+        // user[0],
       );
     } catch (err) {
       console.log(err);

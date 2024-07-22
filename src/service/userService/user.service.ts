@@ -6,6 +6,10 @@ import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { OtpService } from '../otp/otp.service';
 import { JwtGenerate } from '../../utils/jwt.token';
 
+interface Login extends Document {
+  phone: number;
+  isAdmin: boolean;
+}
 @Injectable()
 export class UserService {
   constructor(
@@ -141,12 +145,12 @@ export class UserService {
   }
 
   async login(user: any): Promise<string | boolean> {
-    if (!(await this.otpService.verifyOtp(user))) {
-      return false;
-    }
+    // if (!(await this.otpService.verifyOtp(user))) {
+    //   return false;
+    // }
 
-    const payload = { phone: user.phone, isAdmin: user?.isAdmin };
-    const access_token: any = this.jwtService
+    const payload: Login | any = { phone: user.phone, isAdmin: user?.isAdmin };
+    const access_token: string | any = await this.jwtService
       .generateToken(payload)
       .catch((err) => {
         console.log(err);

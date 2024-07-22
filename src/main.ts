@@ -1,11 +1,12 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AuthInterceptor } from './Interceptors/authentication.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Use the PORT environment variable providped by Render
+  // Use the PORT environment variable provided by Vercel
   const port = process.env.PORT || 3000;
   const host = '0.0.0.0';
 

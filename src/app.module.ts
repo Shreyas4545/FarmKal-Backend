@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -48,6 +48,8 @@ import { SocketService } from './service/socket/socket.service';
 import { adsSchema } from './schema/ads.schema';
 import { AdsController } from './controller/ads/ads.controller';
 import { AdsService } from './service/ads/ads.service';
+import { AuthInterceptor } from './Interceptors/authentication.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -90,6 +92,12 @@ import { AdsService } from './service/ads/ads.service';
   providers: [
     AppService,
     UserService,
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   scope: Scope.REQUEST,
+    //   useClass: AuthInterceptor,
+    // },
+    AuthInterceptor,
     CategoryService,
     ResponseCompo,
     JwtService,

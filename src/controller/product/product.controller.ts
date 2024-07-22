@@ -13,12 +13,12 @@ import {
 } from '@nestjs/common';
 import { ProductService } from '../../service/product/product.service';
 import { updateProductDTO } from '../../dto/productDto/update-product-dto';
-import { createProductDTO } from '../../dto/productDto/createProduct.dto';
 import { ResponseCompo } from '../../utils/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
-import { ProductListingImagesService } from 'src/service/product-listing-images/product-listing-images.service';
+import { ProductListingImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import Ably from 'ably';
+import { AuthInterceptor } from '../../Interceptors/authentication.interceptor';
 
 @Controller('api/products')
 export class ProductController {
@@ -115,6 +115,7 @@ export class ProductController {
   }
 
   @Get('/getProducts')
+  // @UseInterceptors(AuthInterceptor)
   async get(@Res() response, @Query('id') id: string, @Body() data: any) {
     try {
       const products: any = await this.productService.getProduct(id, data);

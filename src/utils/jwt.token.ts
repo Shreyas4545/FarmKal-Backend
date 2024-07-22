@@ -15,4 +15,15 @@ export class JwtGenerate {
     });
     return access_token;
   }
+
+  async verifyToken(token: string): Promise<boolean | any> {
+    try {
+      const secretKey = process.env.JWT_SECRET;
+      await this.jwtService.verify(token, { secret: secretKey });
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  }
 }
