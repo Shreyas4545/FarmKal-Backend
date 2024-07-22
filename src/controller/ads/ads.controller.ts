@@ -16,7 +16,7 @@ import {
 import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
-import { IAds } from 'src/interface/ads.interface';
+import { IAds } from '../../interface/ads.interface';
 
 @Controller('api/ads')
 export class AdsController {
