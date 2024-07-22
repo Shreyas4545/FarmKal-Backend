@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IProduct } from 'src/interface/product.interface';
-import { ILocation } from 'src/interface/location.interface';
+import { IProduct } from '../../interface/product.interface';
+import { ILocation } from '../../interface/location.interface';
 import Groq from 'groq-sdk';
 @Injectable()
 export class ProductService {
