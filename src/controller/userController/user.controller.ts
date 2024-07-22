@@ -16,7 +16,7 @@ import { UserService } from '../../service/userService/user.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
-import { createLoginDTO } from 'src/dto/userDto/loginUser.dto';
+import { createLoginDTO } from '../../dto/userDto/loginUser.dto';
 // import { ChatGateway } from 'src/utils/chat.gateway';
 @Controller('api/user')
 export class UserController {
