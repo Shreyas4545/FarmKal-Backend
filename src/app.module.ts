@@ -50,6 +50,8 @@ import { AdsController } from './controller/ads/ads.controller';
 import { AdsService } from './service/ads/ads.service';
 import { AuthInterceptor } from './Interceptors/authentication.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LikesController } from './controller/likes/likes.controller';
+import { LikesService } from './service/categoryService/likes/likes.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -88,6 +90,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     ProductListingImagesController,
     ConversationsController,
     AdsController,
+    LikesController,
   ],
   providers: [
     AppService,
@@ -117,6 +120,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     MessagesService,
     SocketService,
     AdsService,
+    LikesService,
   ],
 })
 export class AppModule {}
