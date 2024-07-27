@@ -241,6 +241,24 @@ export class UserController {
     }
   }
 
+  @Post('/uploadFile')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@Res() response, @UploadedFile() file: Express.Multer.File) {
+    try {
+      const fileUrl: string = await this.firebaseService.uploadFile(file);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Image URL Sent Successfully',
+        },
+        fileUrl,
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // @Get('/getChat')
   // async handleChat(@Res() response, @Body() data: any) {
   //   this.chatService.handleMessage(data, 'A');

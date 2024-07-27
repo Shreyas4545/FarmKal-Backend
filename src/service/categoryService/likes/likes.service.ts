@@ -6,7 +6,7 @@ import { LikesDto } from '../../../dto/likesDto/likes.dto';
 
 @Injectable()
 export class LikesService {
-  constructor(@InjectModel('Socialcontent') private likeModel: Model<ILikes>) {}
+  constructor(@InjectModel('Likes') private likeModel: Model<ILikes>) {}
 
   async addLike(data: LikesDto): Promise<ILikes> {
     const like: any = new this.likeModel(data);
@@ -37,7 +37,6 @@ export class LikesService {
 
     const likes: number | any = await this.likeModel
       .find(obj)
-      .count()
       .exec()
       .catch((err) => {
         console.log(err);

@@ -52,6 +52,7 @@ import { AuthInterceptor } from './Interceptors/authentication.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LikesController } from './controller/likes/likes.controller';
 import { LikesService } from './service/categoryService/likes/likes.service';
+import { LikesSchema } from './schema/likes.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -74,6 +75,7 @@ import { LikesService } from './service/categoryService/likes/likes.service';
       { name: 'Conversation', schema: ConversationSchema },
       { name: 'Message', schema: MessageSchema },
       { name: 'Ads', schema: adsSchema },
+      { name: 'Likes', schema: LikesSchema },
     ]),
   ],
   controllers: [

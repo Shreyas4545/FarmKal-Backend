@@ -1,9 +1,8 @@
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 export class createLoginDTO {
   @IsNumber()
   @IsNotEmpty()
-  readonly phone: number;
+  readonly phone: any;
 
   @IsNumber()
   // @IsNotEmpty()

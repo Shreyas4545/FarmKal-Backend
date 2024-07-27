@@ -22,6 +22,7 @@ export class LikesController {
 
   @Post('/create')
   async createLikes(@Res() response, @Body() data: any) {
+    console.log(data);
     try {
       let newLike: any = {
         ...data,
@@ -52,14 +53,12 @@ export class LikesController {
       const totalLikes: number = await this.likesService.getTotalLikesOfPost(
         postId,
       );
-      return this.responseCompo.successResponse(
-        response,
-        {
-          statusCode: HttpStatus.OK,
-          message: 'Successfully sent likes of a post',
-        },
-        totalLikes,
-      );
+      console.log(totalLikes);
+      return response.status(200).json({
+        success: true,
+        message: 'Successfully sent likes of a post',
+        data: totalLikes ? totalLikes : 0,
+      });
     } catch (err) {
       console.log(err);
       return this.responseCompo.errorResponse(response, {
@@ -69,7 +68,7 @@ export class LikesController {
     }
   }
 
-  @Get('/getTotalLikesOfPost')
+  @Get('/getUserLikedPosts')
   async getAllUserLikedPosts(@Res() response, @Query('userId') userId: string) {
     try {
       const likesOfUser: number = await this.likesService.getAllUserLikedPosts(
