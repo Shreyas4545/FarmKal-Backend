@@ -15,7 +15,11 @@ export class SocialContentService {
     return await socialContent.save();
   }
 
-  async getContent(id: string, data: any): Promise<ISocialContent[]> {
+  async getContent(
+    id: string,
+    userId: string,
+    data: any,
+  ): Promise<ISocialContent[]> {
     const obj: any = {};
     if (id) {
       obj._id = id;
@@ -24,7 +28,54 @@ export class SocialContentService {
     obj.isActive = true;
 
     const socialContent: any = await this.socialContent
-      .find(obj)
+      .aggregate([
+        {
+          $lookup: {
+            from: 'likes',
+            let: { postId: { $toString: '$_id' } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$postId', '$$postId'] }, // Match the postId in likes
+                      { $eq: ['$userId', userId] }, // Match the userId in likes
+                    ],
+                  },
+                },
+              },
+              {
+                $project: { _id: 1 }, // Only project the _id field, we only need to know if it exists
+              },
+            ],
+            as: 'likes',
+          },
+        },
+        {
+          $addFields: {
+            postID: { $toString: '$_id' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'likes',
+            localField: 'postID',
+            foreignField: 'postId',
+            as: 'postLikes',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            image: 1,
+            description: 1,
+            isActive: 1,
+            totalLikes: { $size: '$postLikes' },
+            isLiked: { $gt: [{ $size: '$likes' }, 0] }, // Boolean field for order presence
+          },
+        },
+      ])
       .exec()
       .catch((err) => {
         console.log(err);

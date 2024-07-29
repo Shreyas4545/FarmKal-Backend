@@ -24,6 +24,20 @@ export class LikesController {
   async createLikes(@Res() response, @Body() data: any) {
     console.log(data);
     try {
+      const existingLike = await this.likesService.getLikes(
+        data?.postId,
+        data?.userId,
+      );
+      if (existingLike?.length > 0) {
+        return this.responseCompo.successResponse(
+          response,
+          {
+            statusCode: HttpStatus.CREATED,
+            message: 'Like Already Exists',
+          },
+          existingLike[0],
+        );
+      }
       let newLike: any = {
         ...data,
         createdAt: new Date(),

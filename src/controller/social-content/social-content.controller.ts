@@ -52,9 +52,18 @@ export class SocialContentController {
   }
 
   @Get('/getContent')
-  async getContent(@Res() response, @Query('id') id: string, data: any) {
+  async getContent(
+    @Res() response,
+    @Query('id') id: string,
+    @Query('userId') userId: string,
+    data: any,
+  ) {
     try {
-      const brands: any = await this.socialContentService.getContent(id, data);
+      const brands: any = await this.socialContentService.getContent(
+        id,
+        userId,
+        data,
+      );
       return this.responseCompo.successResponse(
         response,
         {

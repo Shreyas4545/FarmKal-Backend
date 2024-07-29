@@ -29,6 +29,25 @@ export class LikesService {
     return likesCount;
   }
 
+  async getLikes(postId: string, userId: string): Promise<ILikes | any> {
+    const obj: any = {};
+    if (postId) {
+      obj.postId = postId;
+    }
+
+    if (userId) {
+      obj.userId = userId;
+    }
+
+    const likes: ILikes[] | any = await this.likeModel
+      .find(obj)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+    return likes;
+  }
+
   async getAllUserLikedPosts(userId: string): Promise<number | any> {
     const obj: any = {};
     if (userId) {
