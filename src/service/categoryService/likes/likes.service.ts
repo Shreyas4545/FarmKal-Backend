@@ -63,9 +63,13 @@ export class LikesService {
     return likes;
   }
 
-  async updateLike(id: string): Promise<ILikes> {
+  async updateLike(postId: string, userId: string): Promise<ILikes> {
+    const obj: any = {
+      postId: postId,
+      userId: userId,
+    };
     const updatedLike: ILikes | any = await this.likeModel
-      .findByIdAndDelete(id)
+      .findOneAndDelete(obj)
       .exec()
       .catch((err) => {
         console.log(err);

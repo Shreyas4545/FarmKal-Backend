@@ -105,15 +105,22 @@ export class LikesController {
     }
   }
 
-  @Put('/updateLike/:id')
-  async updateLike(@Res() response, @Param('id') postId: string) {
+  @Post('/updateLike')
+  async updateLike(
+    @Res() response,
+    @Query('postId') postId: string,
+    @Query('userId') userId: string,
+  ) {
     try {
-      const updatedLike: ILikes = await this.likesService.updateLike(postId);
+      const updatedLike: ILikes = await this.likesService.updateLike(
+        postId,
+        userId,
+      );
       return this.responseCompo.successResponse(
         response,
         {
           statusCode: HttpStatus.OK,
-          message: 'Successfully updated like',
+          message: 'Successfully Deleted like',
         },
         updatedLike,
       );
