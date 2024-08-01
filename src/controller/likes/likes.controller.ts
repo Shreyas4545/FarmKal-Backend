@@ -122,7 +122,7 @@ export class LikesController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Deleted like',
         },
-        updatedLike,
+        '',
       );
     } catch (err) {
       console.log(err);
