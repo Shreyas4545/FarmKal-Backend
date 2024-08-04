@@ -70,7 +70,7 @@ export class ProductService {
       price: price,
       manufacturingYear: manufacturingYear,
       isActive: isActive,
-      additionalFields: additionalFields,
+      additionalFields: additionalFields ? additionalFields : [],
     };
 
     newProduct = await new this.productModel(newProduct).save();

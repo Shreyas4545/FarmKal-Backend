@@ -53,6 +53,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LikesController } from './controller/likes/likes.controller';
 import { LikesService } from './service/categoryService/likes/likes.service';
 import { LikesSchema } from './schema/likes.schema';
+import { UserVehiclesService } from './user-vehicles/user-vehicles.service';
+import { UserVehiclesController } from './user-vehicles/user-vehicles.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -93,6 +95,7 @@ import { LikesSchema } from './schema/likes.schema';
     ConversationsController,
     AdsController,
     LikesController,
+    UserVehiclesController,
   ],
   providers: [
     AppService,
@@ -123,6 +126,7 @@ import { LikesSchema } from './schema/likes.schema';
     SocketService,
     AdsService,
     LikesService,
+    UserVehiclesService,
   ],
 })
 export class AppModule {}

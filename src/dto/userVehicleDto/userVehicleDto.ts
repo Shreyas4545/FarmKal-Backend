@@ -7,20 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class createProductDTO {
-  @IsMongoId()
-  readonly categoryId: string;
-
-  @IsMongoId()
-  readonly brandId: string;
-
-  @IsOptional()
-  @IsMongoId()
-  readonly locationId: string;
-
-  @IsMongoId()
-  readonly modelId: string;
-
+export class createUserVehicleDTO {
   @IsMongoId()
   readonly userId: string;
 
