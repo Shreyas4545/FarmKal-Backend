@@ -53,8 +53,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LikesController } from './controller/likes/likes.controller';
 import { LikesService } from './service/categoryService/likes/likes.service';
 import { LikesSchema } from './schema/likes.schema';
-import { UserVehiclesService } from './user-vehicles/user-vehicles.service';
-import { UserVehiclesController } from './user-vehicles/user-vehicles.controller';
+import { userVehicleService } from './userVehicles/user-vehicles.service';
+import { userVehiclesController } from './controller/userVehicles/user-vehicles.controller';
+import { UserVehiclesSchema } from './schema/userVehicle.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -78,6 +79,7 @@ import { UserVehiclesController } from './user-vehicles/user-vehicles.controller
       { name: 'Message', schema: MessageSchema },
       { name: 'Ads', schema: adsSchema },
       { name: 'Likes', schema: LikesSchema },
+      { name: 'UserVehicles', schema: UserVehiclesSchema },
     ]),
   ],
   controllers: [
@@ -95,7 +97,7 @@ import { UserVehiclesController } from './user-vehicles/user-vehicles.controller
     ConversationsController,
     AdsController,
     LikesController,
-    UserVehiclesController,
+    userVehiclesController,
   ],
   providers: [
     AppService,
@@ -126,7 +128,7 @@ import { UserVehiclesController } from './user-vehicles/user-vehicles.controller
     SocketService,
     AdsService,
     LikesService,
-    UserVehiclesService,
+    userVehicleService,
   ],
 })
 export class AppModule {}

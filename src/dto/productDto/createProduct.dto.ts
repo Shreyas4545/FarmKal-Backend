@@ -24,18 +24,6 @@ export class createProductDTO {
   @IsMongoId()
   readonly userId: string;
 
-  @IsOptional()
-  @IsString()
-  readonly city: string;
-
-  @IsOptional()
-  @IsString()
-  readonly state: string;
-
-  @IsOptional()
-  @IsString()
-  readonly country: string;
-
   @IsNumber()
   readonly price: number;
 
