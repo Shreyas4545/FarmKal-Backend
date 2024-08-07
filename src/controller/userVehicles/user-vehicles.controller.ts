@@ -12,8 +12,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { userVehicleService } from 'src/userVehicles/user-vehicles.service';
-import { updateUserVehicleDTO } from 'src/dto/userVehicleDto/updateUserVehicle.dto';
+import { userVehicleService } from '../../userVehicles/user-vehicles.service';
+import { updateUserVehicleDTO } from '../../dto/userVehicleDto/updateUserVehicle.dto';
 import { ResponseCompo } from '../../utils/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
