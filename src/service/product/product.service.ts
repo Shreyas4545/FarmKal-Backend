@@ -27,6 +27,7 @@ export class ProductService {
       city,
       state,
       country,
+      description,
     } = data;
 
     let { locationId } = data;
@@ -68,6 +69,7 @@ export class ProductService {
       locationId: locationId,
       modelId: modelId,
       price: price,
+      description: description || '',
       manufacturingYear: manufacturingYear,
       isActive: isActive,
       additionalFields: additionalFields ? additionalFields : [],

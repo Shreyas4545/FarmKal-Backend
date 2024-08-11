@@ -56,8 +56,9 @@ import { LikesSchema } from './schema/likes.schema';
 import { userVehicleService } from './userVehicles/user-vehicles.service';
 import { userVehiclesController } from './controller/userVehicles/user-vehicles.controller';
 import { UserVehiclesSchema } from './schema/userVehicle.schema';
-import { ReferalsController } from './controller/referals/referals.controller';
-import { ReferalsService } from './service/referals/referals.service';
+import { referralsController } from './controller/referrals/referrals.controller';
+import { ReferralsService } from './service/referrals/referrals.service';
+import { ReferralsSchema } from './schema/referrals.Schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -82,6 +83,7 @@ import { ReferalsService } from './service/referals/referals.service';
       { name: 'Ads', schema: adsSchema },
       { name: 'Likes', schema: LikesSchema },
       { name: 'UserVehicles', schema: UserVehiclesSchema },
+      { name: 'Referrals', schema: ReferralsSchema },
     ]),
   ],
   controllers: [
@@ -100,7 +102,7 @@ import { ReferalsService } from './service/referals/referals.service';
     AdsController,
     LikesController,
     userVehiclesController,
-    ReferalsController,
+    referralsController,
   ],
   providers: [
     AppService,
@@ -132,7 +134,7 @@ import { ReferalsService } from './service/referals/referals.service';
     AdsService,
     LikesService,
     userVehicleService,
-    ReferalsService,
+    ReferralsService,
   ],
 })
 export class AppModule {}
