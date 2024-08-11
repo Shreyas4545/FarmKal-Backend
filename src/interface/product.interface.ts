@@ -17,5 +17,7 @@ export interface IProduct extends Document {
 
   readonly manufacturingYear: number;
 
+  readonly description: string;
+
   readonly isActive: boolean;
 }

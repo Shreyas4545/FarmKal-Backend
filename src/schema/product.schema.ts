@@ -24,6 +24,9 @@ export class Product {
   price: number;
 
   @Prop()
+  description: string;
+
+  @Prop()
   manufacturingYear: number;
 
   @Prop()

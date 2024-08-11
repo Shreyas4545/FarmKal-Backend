@@ -30,6 +30,10 @@ export class createProductDTO {
   @IsNumber()
   readonly manufacturingYear: number;
 
+  @IsString()
+  @IsOptional()
+  readonly description: string;
+
   @IsObject()
   @IsOptional()
   readonly additionalFields?: Record<string, any>;

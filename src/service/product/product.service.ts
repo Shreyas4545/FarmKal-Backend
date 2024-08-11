@@ -215,6 +215,7 @@ export class ProductService {
             price: 1,
             manufacturingYear: 1,
             isActive: 1,
+            description: 1,
             additionalFields: 1,
             categoryDetails: 1,
             brandDetails: 1,
@@ -246,6 +247,7 @@ export class ProductService {
       modelId,
       manufacturingYear,
       isActive,
+      description,
       userId,
     } = data;
 
@@ -285,6 +287,10 @@ export class ProductService {
 
     if (locationId) {
       obj.locationId = locationId;
+    }
+
+    if (description) {
+      obj.description = description;
     }
 
     const updatedProduct = await this.productModel

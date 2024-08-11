@@ -56,6 +56,8 @@ import { LikesSchema } from './schema/likes.schema';
 import { userVehicleService } from './userVehicles/user-vehicles.service';
 import { userVehiclesController } from './controller/userVehicles/user-vehicles.controller';
 import { UserVehiclesSchema } from './schema/userVehicle.schema';
+import { ReferalsController } from './controller/referals/referals.controller';
+import { ReferalsService } from './service/referals/referals.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -98,6 +100,7 @@ import { UserVehiclesSchema } from './schema/userVehicle.schema';
     AdsController,
     LikesController,
     userVehiclesController,
+    ReferalsController,
   ],
   providers: [
     AppService,
@@ -129,6 +132,7 @@ import { UserVehiclesSchema } from './schema/userVehicle.schema';
     AdsService,
     LikesService,
     userVehicleService,
+    ReferalsService,
   ],
 })
 export class AppModule {}
