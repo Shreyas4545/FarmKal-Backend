@@ -21,6 +21,9 @@ export class User {
   country: string;
 
   @Prop()
+  referralId: string;
+
+  @Prop()
   isAdmin: boolean;
 
   @Prop()

@@ -17,6 +17,8 @@ import { UserService } from '../../service/userService/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { createLoginDTO } from '../../dto/userDto/loginUser.dto';
+import { ReferralsService } from 'src/service/referrals/referrals.service';
+import { IReferrals } from 'src/interface/referrals.interface';
 // import { ChatGateway } from 'src/utils/chat.gateway';
 @Controller('api/user')
 export class UserController {
@@ -24,6 +26,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly firebaseService: FirebaseService,
     private readonly responseCompo: ResponseCompo,
+    private readonly referralService: ReferralsService,
   ) {}
 
   @Post('/create')
@@ -52,7 +55,38 @@ export class UserController {
         fileUrl = await this.firebaseService.uploadFile(file);
       }
 
-      let newUser: any = { ...createUserDto, image: fileUrl };
+      const characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let referralId = '';
+
+      for (let i = 0; i < 10; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        referralId += characters[randomIndex];
+      }
+
+      let newUser: any = {
+        ...createUserDto,
+        image: fileUrl,
+        referralId: referralId,
+      };
+
+      const referralObj: any = {
+        referralId: referralId,
+        personCount: 1,
+        isActive: true,
+      };
+
+      if (createUserDto?.referralId) {
+        const existingReferral: IReferrals | any =
+          await this.referralService.getReferrals(createUserDto?.referralId);
+        if (existingReferral?.length > 0) {
+          await this.referralService.update(existingReferral[0]?._id, {
+            personCount: existingReferral[0]?.personCount + 1,
+          });
+        } else {
+          await this.referralService.create(referralObj);
+        }
+      }
       newUser = await this.userService.createUser(newUser);
 
       return this.responseCompo.successResponse(

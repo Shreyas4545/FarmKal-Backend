@@ -15,6 +15,8 @@ export interface IUser extends Document {
 
   readonly isAdmin: boolean;
 
+  readonly referralId: boolean;
+
   readonly isVisible: boolean;
 
   readonly isActive: boolean;

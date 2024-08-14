@@ -3,10 +3,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ versionKey: false })
 export class Referrals {
   @Prop()
-  referalId: string;
+  referralId: string;
 
   @Prop()
-  personCount: string;
+  personCount: number;
 
   @Prop()
   isActive: boolean;

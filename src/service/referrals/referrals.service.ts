@@ -7,56 +7,48 @@ import { IReferrals } from '../../interface/referrals.interface';
 export class ReferralsService {
   constructor(
     @InjectModel('Referrals')
-    private userVehicleModel: Model<IReferrals>,
+    private referrals: Model<IReferrals>,
   ) {}
 
   async create(data: any): Promise<IReferrals | any> {
-    const { price, manufacturingYear, userId, isActive, additionalFields } =
-      data;
+    const { referralId, personCount, isActive } = data;
 
-    let newUserVehicle: any = {
-      userId: userId,
-      price: price,
-      manufacturingYear: manufacturingYear,
+    let newReferral: any = {
+      referralId: referralId,
+      personCount: personCount,
       isActive: isActive,
-      additionalFields: additionalFields ? additionalFields : [],
     };
 
-    newUserVehicle = await new this.userVehicleModel(newUserVehicle).save();
-    return newUserVehicle;
+    newReferral = await new this.referrals(newReferral).save();
+    return newReferral;
   }
 
   async getReferrals(
-    id: string,
     referralId: any,
   ): Promise<IReferrals | IReferrals[] | any> {
-    const obj: any = {};
-
-    const userVehicles: any = await this.userVehicleModel
+    const referrals: any = await this.referrals
       .aggregate([
         {
-          $addFields: {
-            userId: { $toObjectId: '$userId' },
-          },
-        },
-        {
           $lookup: {
-            from: 'users',
-            localField: 'userId',
-            foreignField: '_id',
-            as: 'userDetails',
+            from: 'users', // The users collection
+            localField: 'referralId', // Field from the referrals collection
+            foreignField: 'referralId', // Field from the users collection
+            as: 'matchedUsers', // Output array field in the result
           },
         },
         {
-          $unwind: '$userDetails',
+          $unwind: '$matchedUsers', // Unwind the matchedUsers array to get individual documents
+        },
+        {
+          $match: {
+            'matchedUsers.referralId': referralId, // Ensure there is a match
+          },
         },
         {
           $project: {
-            price: 1,
-            manufacturingYear: 1,
-            isActive: 1,
-            additionalFields: 1,
-            userDetails: 1,
+            referralId: 1, // Project the referralId from the referrals collection
+            personCount: 1,
+            matchedUsers: 1, // Project the matchedUsers details
           },
         },
       ])
@@ -65,45 +57,32 @@ export class ReferralsService {
         console.log(err);
       });
 
-    return userVehicles;
+    return referrals;
   }
 
   async update(
     id: string,
     data: any,
   ): Promise<IReferrals | IReferrals[] | any> {
-    const { additionalFields, price, manufacturingYear, isActive, userId } =
-      data;
+    const { personCount, isActive } = data;
 
     const obj: any = {};
 
-    if (additionalFields) {
-      obj.additionalFields = additionalFields;
+    if (personCount) {
+      obj.personCount = personCount;
     }
 
-    if (price) {
-      obj.price = price;
-    }
-
-    if (isActive) {
+    if (isActive != undefined) {
       obj.isActive = isActive;
     }
 
-    if (userId) {
-      obj.userId = userId;
-    }
-
-    if (manufacturingYear) {
-      obj.manufacturingYear = manufacturingYear;
-    }
-
-    const updatedUserVehicle = await this.userVehicleModel
+    const updatedReferral = await this.referrals
       .findOneAndUpdate({ _id: id }, { $set: obj }, { new: true })
       .exec()
       .catch((err) => {
         console.log(err);
       });
 
-    return updatedUserVehicle;
+    return updatedReferral;
   }
 }

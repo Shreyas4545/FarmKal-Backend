@@ -4,4 +4,8 @@ export class createReferralDTO {
   @IsString()
   @IsOptional()
   readonly referalId: string;
+
+  @IsString()
+  @IsOptional()
+  readonly personCount: number;
 }
