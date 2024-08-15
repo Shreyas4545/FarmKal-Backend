@@ -18,7 +18,7 @@ import { MessagesService } from '../../service/messages/messages.service';
 import { IConversation } from '../../interface/conversation.interface';
 import { createMessageDto } from '../../dto/conversationDto/message.dto';
 import { IMessage } from '../../interface/message.interface';
-import publishSubscribe from 'src/utils/ablyService';
+import publishSubscribe from '../../utils/ablyService';
 @Controller('api/conversations')
 export class ConversationsController {
   constructor(
