@@ -31,9 +31,12 @@ export class ProductController {
 
   @Post('/checkAbly')
   async check(@Res() response, @Body() data: any) {
+    const { conversationId } = data;
+
     const ably = new Ably.Realtime(
       'JpheVQ.WC1J-g:qMWX32vzYVAd1_4mQ6etSbjJ3jirOWlUxe6MF6q05vs',
     );
+
     ably.connection.once('connected', () => {
       console.log('Connected to Ably!');
     });
@@ -41,10 +44,11 @@ export class ProductController {
     // Create a channel called 'get-started' and register a listener to subscribe to all messages with the name 'first'
     const channel = ably.channels.get('get-started');
 
-    await channel.publish('vote', {
-      points: 1,
-      movie: data.movie,
+    await channel.subscribe(conversationId, (message) => {
+      console.log(message?.data);
     });
+
+    await channel.publish(conversationId, 'Hello Its Testing');
 
     // Close the connection to Ably after a 5 second delay
     setTimeout(async () => {
@@ -124,6 +128,35 @@ export class ProductController {
         {
           statusCode: HttpStatus.CREATED,
           message: 'Successfully Sent Products',
+        },
+        products,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getUserAddedProducts')
+  // @UseInterceptors(AuthInterceptor)
+  async getUserAddedProducts(
+    @Res() response,
+    @Query('userId') userId: string,
+    @Body() data: any,
+  ) {
+    try {
+      const products: any = await this.productService.getUserAddedProduct(
+        userId,
+        data,
+      );
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Sent User Added Products !',
         },
         products,
       );

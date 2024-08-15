@@ -236,6 +236,160 @@ export class ProductService {
     return products;
   }
 
+  async getUserAddedProduct(
+    userId: string,
+    data: any,
+  ): Promise<IProduct | IProduct[] | any> {
+    const {
+      additionalFields,
+      price,
+      categoryId,
+      brandId,
+      locationId,
+      modelId,
+      manufacturingYear,
+      isActive,
+    } = data;
+
+    const obj: any = {};
+
+    if (additionalFields) {
+      obj.additionalFields = additionalFields;
+    }
+
+    if (price) {
+      obj.price = price;
+    }
+
+    if (categoryId) {
+      obj.categoryId = categoryId;
+    }
+
+    if (brandId) {
+      obj.brandId = brandId;
+    }
+
+    if (isActive || isActive === false) {
+      obj.isActive = isActive;
+    }
+
+    if (modelId) {
+      obj.modelId = modelId;
+    }
+
+    if (manufacturingYear) {
+      obj.manufacturingYear = manufacturingYear;
+    }
+
+    if (locationId) {
+      obj.locationId = locationId;
+    }
+
+    console.log(userId);
+
+    const products: any = await this.productModel
+      .aggregate([
+        {
+          $addFields: {
+            categoryId: { $toObjectId: '$categoryId' },
+            brandId: { $toObjectId: '$brandId' },
+            locationId: { $toObjectId: '$locationId' },
+            modelId: { $toObjectId: '$modelId' },
+            userId1: { $toObjectId: '$userId' },
+            productID: { $toString: '$_id' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'productimages',
+            localField: 'productID',
+            foreignField: 'productId',
+            as: 'productImages',
+          },
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'categoryDetails',
+          },
+        },
+        {
+          $unwind: '$categoryDetails',
+        },
+        {
+          $lookup: {
+            from: 'brands',
+            localField: 'brandId',
+            foreignField: '_id',
+            as: 'brandDetails',
+          },
+        },
+        {
+          $unwind: '$brandDetails',
+        },
+        {
+          $lookup: {
+            from: 'locations',
+            localField: 'locationId',
+            foreignField: '_id',
+            as: 'locationDetails',
+          },
+        },
+        {
+          $unwind: '$locationDetails',
+        },
+        {
+          $lookup: {
+            from: 'models',
+            localField: 'modelId',
+            foreignField: '_id',
+            as: 'modelDetails',
+          },
+        },
+        {
+          $unwind: '$modelDetails',
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId1',
+            foreignField: '_id',
+            as: 'userDetails',
+          },
+        },
+        {
+          $unwind: '$userDetails',
+        },
+        {
+          $match: { userId: userId },
+        },
+        {
+          $project: {
+            price: 1,
+            manufacturingYear: 1,
+            isActive: 1,
+            description: 1,
+            additionalFields: 1,
+            categoryDetails: 1,
+            brandDetails: 1,
+            locationDetails: 1,
+            modelDetails: 1,
+            userDetails: 1,
+            productImages: 1,
+          },
+        },
+      ])
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(products);
+    return products;
+  }
+
   async updateProduct(
     id: string,
     data: any,

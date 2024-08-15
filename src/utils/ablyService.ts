@@ -1,6 +1,6 @@
 import Ably from 'ably';
 
-async function publishSubscribe() {
+export default async function publishSubscribe(conversationId) {
   // Connect to Ably with your API key
   const ably = new Ably.Realtime(
     'JpheVQ.WC1J-g:qMWX32vzYVAd1_4mQ6etSbjJ3jirOWlUxe6MF6q05vs',
@@ -11,7 +11,7 @@ async function publishSubscribe() {
 
   // Create a channel called 'get-started' and register a listener to subscribe to all messages with the name 'first'
   const channel = ably.channels.get('get-started');
-  await channel.subscribe('first', (message) => {
+  await channel.subscribe(conversationId, (message) => {
     console.log('Message received: ' + message.data);
   });
 
@@ -26,5 +26,3 @@ async function publishSubscribe() {
     });
   }, 5000);
 }
-
-publishSubscribe();
