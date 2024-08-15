@@ -71,11 +71,14 @@ export class SocialContentService {
             image: 1,
             description: 1,
             isActive: 1,
+            createdAt: 1,
+            updatedAt: 1,
             totalLikes: { $size: '$postLikes' },
             isLiked: { $gt: [{ $size: '$likes' }, 0] }, // Boolean field for order presence
           },
         },
       ])
+      .sort({ createdAt: 1 })
       .exec()
       .catch((err) => {
         console.log(err);

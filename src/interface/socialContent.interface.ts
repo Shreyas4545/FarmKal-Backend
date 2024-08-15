@@ -12,4 +12,8 @@ export interface ISocialContent extends Document {
   readonly publishedAt: Date;
 
   readonly isActive: boolean;
+
+  readonly createdAt: boolean;
+
+  readonly updatedAt: boolean;
 }

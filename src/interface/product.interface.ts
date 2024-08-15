@@ -19,5 +19,7 @@ export interface IProduct extends Document {
 
   readonly description: string;
 
+  readonly createdAt: Date;
+
   readonly isActive: boolean;
 }

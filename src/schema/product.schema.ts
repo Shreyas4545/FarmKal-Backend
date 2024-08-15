@@ -32,6 +32,12 @@ export class Product {
   @Prop()
   isActive: boolean;
 
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
+
   @Prop({ type: MongooseSchema.Types.Mixed })
   additionalFields: Record<string, any>;
 }

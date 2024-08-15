@@ -18,7 +18,7 @@ import { MessagesService } from '../../service/messages/messages.service';
 import { IConversation } from '../../interface/conversation.interface';
 import { createMessageDto } from '../../dto/conversationDto/message.dto';
 import { IMessage } from '../../interface/message.interface';
-
+import publishSubscribe from 'src/utils/ablyService';
 @Controller('api/conversations')
 export class ConversationsController {
   constructor(
@@ -58,6 +58,9 @@ export class ConversationsController {
           },
         );
         messageObj.conversationId = conversation?._id;
+
+        //configue Ably Service
+        await publishSubscribe(conversationId, messageInfo?.message);
       } else {
         const conversationObj: any = {
           adminOnly: messageInfo?.adminOnly || false,

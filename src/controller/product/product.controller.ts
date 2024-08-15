@@ -83,7 +83,8 @@ export class ProductController {
         });
       }
       const imgData = [];
-      let newProduct: any = await this.productService.createProduct(data);
+      const newData: any = { ...data, createdAt: new Date() };
+      let newProduct: any = await this.productService.createProduct(newData);
       const imageUrls: string[] = await Promise.all(
         files?.map(async (item, key) => this.firebaseService.uploadFile(item)),
       );

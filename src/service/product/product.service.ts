@@ -28,6 +28,7 @@ export class ProductService {
       state,
       country,
       description,
+      createdAt,
     } = data;
 
     let { locationId } = data;
@@ -72,6 +73,7 @@ export class ProductService {
       description: description || '',
       manufacturingYear: manufacturingYear,
       isActive: isActive,
+      createdAt: createdAt,
       additionalFields: additionalFields ? additionalFields : [],
     };
 
@@ -225,9 +227,11 @@ export class ProductService {
             modelDetails: 1,
             userDetails: 1,
             productImages: 1,
+            createdAt: 1,
           },
         },
       ])
+      .sort({ createdAt: 1 })
       .exec()
       .catch((err) => {
         console.log(err);
@@ -381,12 +385,12 @@ export class ProductService {
           },
         },
       ])
+      .sort({ createdAt: 1 })
       .exec()
       .catch((err) => {
         console.log(err);
       });
 
-    console.log(products);
     return products;
   }
 
@@ -404,6 +408,7 @@ export class ProductService {
       manufacturingYear,
       isActive,
       description,
+      updatedAt,
       userId,
     } = data;
 
@@ -447,6 +452,10 @@ export class ProductService {
 
     if (description) {
       obj.description = description;
+    }
+
+    if (updatedAt) {
+      obj.updatedAt = updatedAt;
     }
 
     const updatedProduct = await this.productModel
