@@ -19,6 +19,7 @@ import { IConversation } from '../../interface/conversation.interface';
 import { createMessageDto } from '../../dto/conversationDto/message.dto';
 import { IMessage } from '../../interface/message.interface';
 import publishSubscribe from '../../utils/ablyService';
+import oneSignal from 'src/utils/oneSignalService';
 @Controller('api/conversations')
 export class ConversationsController {
   constructor(
@@ -61,6 +62,17 @@ export class ConversationsController {
 
         //configue Ably Service
         await publishSubscribe(conversationId, messageInfo?.message);
+
+        //call One Signal Notification Service
+        await oneSignal(
+          'message',
+          '',
+          '',
+          '',
+          conversation?.participants?.filter(
+            (s: string) => s != messageInfo?.senderId,
+          ),
+        );
       } else {
         const conversationObj: any = {
           adminOnly: messageInfo?.adminOnly || false,

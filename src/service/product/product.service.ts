@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { IProduct } from '../../interface/product.interface';
 import { ILocation } from '../../interface/location.interface';
 import Groq from 'groq-sdk';
+import oneSignal from 'src/utils/oneSignalService';
 @Injectable()
 export class ProductService {
   private groq = new Groq({
@@ -78,6 +79,9 @@ export class ProductService {
     };
 
     newProduct = await new this.productModel(newProduct).save();
+
+    //call One Signal Notification Service
+    await oneSignal('product', '', '', '', '');
     return newProduct;
   }
 

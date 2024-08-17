@@ -31,7 +31,7 @@ export default async function oneSignal(
           },
           large_icon: `${socialContentImageUrl}`,
         }
-      : type == 'user'
+      : type == 'message'
       ? {
           app_id: '841b711d-335e-4f83-af31-5814a23c06b8',
           headings: {

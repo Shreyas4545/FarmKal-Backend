@@ -14,6 +14,7 @@ import { createSocialContentDto } from '../../dto/socialContentDto/create-social
 import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
+import oneSignal from 'src/utils/oneSignalService';
 
 @Controller('api/social-content')
 export class SocialContentController {
@@ -34,6 +35,9 @@ export class SocialContentController {
       const fileUrl: string = await this.firebaseService.uploadFile(file);
       let newContent: any = { ...data, image: fileUrl };
       newContent = await this.socialContentService.addContent(newContent);
+
+      //call One Signal Notification Service
+      await oneSignal('socialContent', '', '', fileUrl, '');
       return this.responseCompo.successResponse(
         response,
         {
