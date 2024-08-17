@@ -430,7 +430,7 @@ export class ProductService {
       obj.brandId = brandId;
     }
 
-    if (isActive) {
+    if (isActive != undefined) {
       obj.isActive = isActive;
     }
 
