@@ -14,7 +14,7 @@ import { createSocialContentDto } from '../../dto/socialContentDto/create-social
 import { ResponseCompo } from '../../utils/response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
-import oneSignal from 'src/utils/oneSignalService';
+import oneSignal from '../../utils/oneSignalService';
 
 @Controller('api/social-content')
 export class SocialContentController {

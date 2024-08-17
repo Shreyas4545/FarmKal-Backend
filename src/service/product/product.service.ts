@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { IProduct } from '../../interface/product.interface';
 import { ILocation } from '../../interface/location.interface';
 import Groq from 'groq-sdk';
-import oneSignal from 'src/utils/oneSignalService';
+import oneSignal from '../../utils/oneSignalService';
 @Injectable()
 export class ProductService {
   private groq = new Groq({
