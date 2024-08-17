@@ -37,7 +37,13 @@ export class SocialContentController {
       newContent = await this.socialContentService.addContent(newContent);
 
       //call One Signal Notification Service
-      await oneSignal('socialContent', '', '', fileUrl, '');
+      await oneSignal(
+        'socialContent',
+        newContent?.title,
+        'Tap to view it',
+        fileUrl,
+        '',
+      );
       return this.responseCompo.successResponse(
         response,
         {

@@ -66,8 +66,8 @@ export class ConversationsController {
         //call One Signal Notification Service
         await oneSignal(
           'message',
-          '',
-          '',
+          'New message',
+          messageInfo?.message,
           '',
           conversation?.participants?.filter(
             (s: string) => s != messageInfo?.senderId,

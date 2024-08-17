@@ -81,7 +81,13 @@ export class ProductService {
     newProduct = await new this.productModel(newProduct).save();
 
     //call One Signal Notification Service
-    await oneSignal('product', '', '', '', '');
+    await oneSignal(
+      'product',
+      'A new product was added',
+      'Tap to view it',
+      '',
+      '',
+    );
     return newProduct;
   }
 
@@ -216,6 +222,9 @@ export class ProductService {
           },
         },
         {
+          $match: { isActive: true },
+        },
+        {
           $unwind: '$userDetails',
         },
         {
@@ -230,6 +239,7 @@ export class ProductService {
             locationDetails: 1,
             modelDetails: 1,
             userDetails: 1,
+            updatedAt: 1,
             productImages: 1,
             createdAt: 1,
           },
@@ -292,8 +302,6 @@ export class ProductService {
     if (locationId) {
       obj.locationId = locationId;
     }
-
-    console.log(userId);
 
     const products: any = await this.productModel
       .aggregate([
@@ -371,7 +379,7 @@ export class ProductService {
           $unwind: '$userDetails',
         },
         {
-          $match: { userId: userId },
+          $match: { userId: userId, isActive: true },
         },
         {
           $project: {
@@ -386,6 +394,8 @@ export class ProductService {
             modelDetails: 1,
             userDetails: 1,
             productImages: 1,
+            createdAt: 1,
+            updatedAt: 1,
           },
         },
       ])
