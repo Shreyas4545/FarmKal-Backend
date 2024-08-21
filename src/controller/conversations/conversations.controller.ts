@@ -60,9 +60,6 @@ export class ConversationsController {
         );
         messageObj.conversationId = conversation?._id;
 
-        //configue Ably Service
-        await publishSubscribe(conversationId, messageInfo?.message);
-
         //call One Signal Notification Service
         await oneSignal(
           'message',
@@ -95,6 +92,9 @@ export class ConversationsController {
       const message: IMessage = await this.messageService.createMessage(
         messageObj,
       );
+
+      //configure Ably Service
+      await publishSubscribe(conversationId, message);
 
       const participantsData: IConversation[] | any =
         await this.conversationService.checkConversationExistence(

@@ -2,7 +2,7 @@ import Ably from 'ably';
 
 export default async function publishSubscribe(
   conversationId: string,
-  message: string,
+  message: any,
 ) {
   // Connect to Ably with your API key
   const ably = new Ably.Realtime(
@@ -20,6 +20,7 @@ export default async function publishSubscribe(
   // });
 
   // Publish a message with the name 'first' and the contents 'Here is my first message!'
+
   await channel.publish(conversationId, message);
 
   // Close the connection to Ably after a 5 second delay
