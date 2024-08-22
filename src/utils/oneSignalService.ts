@@ -34,6 +34,7 @@ export default async function oneSignal(
       : type == 'message'
       ? {
           app_id: '841b711d-335e-4f83-af31-5814a23c06b8',
+          android_channel_id: 'ec8a0028-26e1-4436-b14a-96ec1c3a106a',
           headings: {
             en: `${title}`,
           },
