@@ -10,13 +10,14 @@ import {
   UploadedFiles,
   Query,
   UseInterceptors,
+  Delete,
 } from '@nestjs/common';
 import { ProductService } from '../../service/product/product.service';
 import { updateProductDTO } from '../../dto/productDto/update-product-dto';
 import { ResponseCompo } from '../../utils/response';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
-import { ProductListingImagesService } from '../../service/product-listing-images/product-listing-images.service';
+import { ImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import Ably from 'ably';
 import { AuthInterceptor } from '../../Interceptors/authentication.interceptor';
 
@@ -26,7 +27,7 @@ export class ProductController {
     private readonly productService: ProductService,
     private readonly responseCompo: ResponseCompo,
     private readonly firebaseService: FirebaseService,
-    private readonly imagesService: ProductListingImagesService,
+    private readonly imagesService: ImagesService,
   ) {}
 
   @Post('/checkAbly')
@@ -206,6 +207,30 @@ export class ProductController {
           message: 'Successfully Sent Products',
         },
         apiRes,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Delete('/deleteImage/:id')
+  async deleteImage(@Res() response, @Param('id') id: string) {
+    try {
+      const deleteImage = await this.imagesService.deleteImage(
+        'ProductImages',
+        id,
+      );
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Delete Product',
+        },
+        '',
       );
     } catch (err) {
       console.log(err);

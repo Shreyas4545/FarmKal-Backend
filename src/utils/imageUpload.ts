@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { error } from 'console';
+import { exit } from 'process';
 
 @Injectable()
 export class FirebaseService {
@@ -22,7 +24,7 @@ export class FirebaseService {
   async uploadFile(file: Express.Multer.File): Promise<string> {
     try {
       const bucket = admin.storage().bucket();
-      // const uniqueSuffix = `${uuidv4()}-${path.extname(file.originalname)}`;
+
       const fileName = `images/${file.originalname}`;
       const fileUpload = bucket.file(fileName);
 
@@ -50,6 +52,26 @@ export class FirebaseService {
     } catch (error) {
       this.logger.error('Error uploading file:', error);
       throw new Error('Error uploading file');
+    }
+  }
+
+  async deleteImage(file: string): Promise<boolean> {
+    try {
+      const bucket = admin.storage().bucket();
+
+      const fileName = `images/${file}`;
+      const fileUpload = bucket.file(fileName);
+
+      const [exists] = await fileUpload.exists();
+
+      if (exists) {
+        await fileUpload.delete();
+        this.logger.log(`File ${fileName} is Deleted.`);
+      }
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
     }
   }
 }

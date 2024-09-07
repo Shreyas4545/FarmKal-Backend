@@ -38,7 +38,7 @@ import { SocialContentSchema } from './schema/socialContent.schema';
 import { WebsocketsGateway } from './utils/chat.gateway';
 import { ProductImagesSchema } from './schema/productListingImagesSchema';
 import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
-import { ProductListingImagesService } from './service/product-listing-images/product-listing-images.service';
+import { ImagesService } from './service/product-listing-images/product-listing-images.service';
 import { ConversationsController } from './controller/conversations/conversations.controller';
 import { ConversationsService } from './service/conversations/conversations.service';
 import { ConversationSchema } from './schema/conversation.schema';
@@ -127,7 +127,7 @@ import { ReferralsSchema } from './schema/referrals.Schema';
     AppVersionService,
     SocialContentService,
     WebsocketsGateway,
-    ProductListingImagesService,
+    ImagesService,
     ConversationsService,
     MessagesService,
     SocketService,
