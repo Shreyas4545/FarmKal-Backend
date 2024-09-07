@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FirebaseService } from 'src/utils/imageUpload';
+import { FirebaseService } from '../../utils/imageUpload';
 
 @Injectable()
 export class ImagesService {
