@@ -227,7 +227,7 @@ export class ProductController {
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.CREATED,
+          statusCode: HttpStatus.NO_CONTENT,
           message: 'Successfully Delete Product',
         },
         '',
