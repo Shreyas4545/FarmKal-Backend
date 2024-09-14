@@ -230,7 +230,7 @@ export class ProductController {
           statusCode: HttpStatus.OK,
           message: 'Successfully Delete Product',
         },
-        deleteImage,
+        '',
       );
     } catch (err) {
       console.log(err);
