@@ -227,10 +227,10 @@ export class ProductController {
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.NO_CONTENT,
+          statusCode: HttpStatus.OK,
           message: 'Successfully Delete Product',
         },
-        '',
+        deleteImage,
       );
     } catch (err) {
       console.log(err);
