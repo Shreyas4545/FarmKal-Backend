@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Param,
   UploadedFiles,
+  UploadedFile,
   Query,
   UseInterceptors,
   Delete,
@@ -15,7 +16,7 @@ import {
 import { ProductService } from '../../service/product/product.service';
 import { updateProductDTO } from '../../dto/productDto/update-product-dto';
 import { ResponseCompo } from '../../utils/response';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { ImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import Ably from 'ably';
@@ -110,6 +111,45 @@ export class ProductController {
           message: 'Successfully Created Product',
         },
         newProduct,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/uploadImage')
+  @UseInterceptors(FileInterceptor('file'))
+  async addImage(
+    @Res() response,
+    @Query('productId') productId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      const imageUrl = await this.firebaseService.uploadFile(file);
+
+      const arr = [
+        {
+          productId: productId,
+          imageUrl: imageUrl,
+        },
+      ];
+
+      const productImage = await this.imagesService.addMultipleImage(
+        'ProductImages',
+        arr,
+      );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Added Image',
+        },
+        productImage,
       );
     } catch (err) {
       console.log(err);
