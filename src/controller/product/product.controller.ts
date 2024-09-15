@@ -21,7 +21,6 @@ import { FirebaseService } from '../../utils/imageUpload';
 import { ImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import Ably from 'ably';
 import { AuthInterceptor } from '../../Interceptors/authentication.interceptor';
-
 @Controller('api/products')
 export class ProductController {
   constructor(
@@ -138,7 +137,7 @@ export class ProductController {
         },
       ];
 
-      const productImage = await this.imagesService.addMultipleImage(
+      const productImage: any[] = await this.imagesService.addMultipleImage(
         'ProductImages',
         arr,
       );
@@ -149,7 +148,7 @@ export class ProductController {
           statusCode: HttpStatus.CREATED,
           message: 'Successfully Added Image',
         },
-        productImage,
+        productImage[0],
       );
     } catch (err) {
       console.log(err);
