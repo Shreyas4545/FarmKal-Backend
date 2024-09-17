@@ -36,5 +36,5 @@ export class createProductDTO {
 
   @IsObject()
   @IsOptional()
-  readonly additionalFields?: Record<string, any>;
+  readonly additionalFields?: Record<string, any[]>;
 }
