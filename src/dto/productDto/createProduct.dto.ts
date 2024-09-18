@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsMongoId,
   IsNumber,
@@ -34,7 +35,7 @@ export class createProductDTO {
   @IsOptional()
   readonly description: string;
 
-  @IsObject()
+  @IsArray()
   @IsOptional()
-  readonly additionalFields?: Record<string, any[]>;
+  readonly additionalFields?: Record<string, any[]> | any[];
 }
