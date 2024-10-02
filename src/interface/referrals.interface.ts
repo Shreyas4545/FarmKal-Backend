@@ -1,9 +1,13 @@
 import { Document, Types } from 'mongoose';
 
 export interface IReferrals extends Document {
-  readonly referralId: number;
+  readonly referralOwnerId: Types.ObjectId;
 
-  readonly personCount: number;
+  readonly userId: Types.ObjectId;
 
-  readonly isActive: boolean;
+  readonly status: string;
+
+  readonly price: number;
+
+  readonly createdAt: Date;
 }

@@ -1,11 +1,18 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsMongoId } from 'class-validator';
 
 export class createReferralDTO {
-  @IsString()
-  @IsOptional()
-  readonly referalId: string;
+  @IsMongoId()
+  readonly referralOwnerId: string;
+
+  @IsMongoId()
+  readonly userId: string;
 
   @IsString()
-  @IsOptional()
-  readonly personCount: number;
+  readonly status: string;
+
+  @IsString()
+  readonly price: number;
+
+  @IsString()
+  readonly createdAt: Date;
 }

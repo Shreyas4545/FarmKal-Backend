@@ -17,8 +17,9 @@ import { UserService } from '../../service/userService/user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { createLoginDTO } from '../../dto/userDto/loginUser.dto';
-import { ReferralsService } from 'src/service/referrals/referrals.service';
-import { IReferrals } from 'src/interface/referrals.interface';
+import { ReferralsService } from '../../service/referrals/referrals.service';
+import { IReferrals } from '../../interface/referrals.interface';
+import { IUser } from '../../interface/user.interface';
 // import { ChatGateway } from 'src/utils/chat.gateway';
 @Controller('api/user')
 export class UserController {
@@ -70,24 +71,23 @@ export class UserController {
         referralId: referralId,
       };
 
-      const referralObj: any = {
-        referralId: referralId,
-        personCount: 1,
-        isActive: true,
-      };
+      newUser = await this.userService.createUser(newUser);
 
       if (createUserDto?.referralId) {
-        const existingReferral: IReferrals | any =
-          await this.referralService.getReferrals(createUserDto?.referralId);
-        if (existingReferral?.length > 0) {
-          await this.referralService.update(existingReferral[0]?._id, {
-            personCount: existingReferral[0]?.personCount + 1,
-          });
-        } else {
-          await this.referralService.create(referralObj);
-        }
+        const referralOwner: IUser = await this.userService.getUsers({
+          referralId: createUserDto?.referralId,
+        });
+
+        const referralAmount = await this.referralService.getReferralAmount();
+        const referralObj: any = {
+          referralOwnerId: referralOwner[0]?._id,
+          userId: newUser?._id,
+          price: referralAmount[0]?.price,
+          status: 'ACTIVE',
+        };
+
+        await this.referralService.create(referralObj);
       }
-      newUser = await this.userService.createUser(newUser);
 
       return this.responseCompo.successResponse(
         response,

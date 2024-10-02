@@ -50,6 +50,7 @@ import { AdsController } from './controller/ads/ads.controller';
 import { AdsService } from './service/ads/ads.service';
 import { AuthInterceptor } from './Interceptors/authentication.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ReferralAmountSchema } from './schema/referralAmount.Schema';
 import { LikesController } from './controller/likes/likes.controller';
 import { LikesService } from './service/categoryService/likes/likes.service';
 import { LikesSchema } from './schema/likes.schema';
@@ -84,6 +85,7 @@ import { ReferralsSchema } from './schema/referrals.Schema';
       { name: 'Likes', schema: LikesSchema },
       { name: 'UserVehicles', schema: UserVehiclesSchema },
       { name: 'Referrals', schema: ReferralsSchema },
+      { name: 'ReferralAmount', schema: ReferralAmountSchema },
     ]),
   ],
   controllers: [

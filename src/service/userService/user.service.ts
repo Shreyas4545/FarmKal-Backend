@@ -36,7 +36,7 @@ export class UserService {
 
   async getUsers(data: any): Promise<IUser[] | any> {
     const obj: any = {};
-    const { phone, city, isAdmin, isActive, isVisible } = data;
+    const { phone, city, isAdmin, isActive, isVisible, referralId } = data;
     if (phone) {
       obj.phone = phone;
     }
@@ -46,6 +46,9 @@ export class UserService {
     }
     if (isAdmin) {
       obj.isAdmin = isAdmin;
+    }
+    if (referralId) {
+      obj.referralId = referralId;
     }
     if (isVisible) {
       obj.isVisible = isVisible;
