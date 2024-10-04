@@ -73,9 +73,8 @@ export class ReferralsService {
         },
         {
           $project: {
-            referralOwnerId: 1, // Project the referralId from the referrals collection
-            personCount: 1,
-            phone: 1,
+            name: `$matchedUsers.name`,
+            phone: `$matchedUsers.phone`,
             price: 1,
             userId: 1,
           },
@@ -86,7 +85,13 @@ export class ReferralsService {
         console.log(err);
       });
 
-    return referrals;
+    return {
+      referralData: referrals,
+      totalAmount: referrals?.reduce(
+        (acc: number, it: any) => acc + it.price,
+        0,
+      ),
+    };
   }
 
   async update(
