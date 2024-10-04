@@ -47,10 +47,13 @@ export class referralsController {
 
   @Get('/getReferrals')
   // @UseInterceptors(AuthInterceptor)
-  async get(@Res() response, @Query('referralId') referralId: string) {
+  async get(
+    @Res() response,
+    @Query('referralOwnerId') referralOwnerId: string,
+  ) {
     try {
       const referrals: any = await this.referralsService.getReferrals(
-        referralId,
+        referralOwnerId,
       );
       return this.responseCompo.successResponse(
         response,

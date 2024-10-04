@@ -51,6 +51,11 @@ export class ReferralsService {
     const referrals: any = await this.referrals
       .aggregate([
         {
+          $addFields: {
+            referralOwnerId: { $toString: '$referralOwnerId' },
+          },
+        },
+        {
           $lookup: {
             from: 'users', // The users collection
             localField: 'userId', // Field from the referrals collection
@@ -63,14 +68,16 @@ export class ReferralsService {
         },
         {
           $match: {
-            'matchedUsers.referralOwnerId': referralOwnerId, // Ensure there is a match
+            referralOwnerId: referralOwnerId, // Ensure there is a match
           },
         },
         {
           $project: {
-            referralId: 1, // Project the referralId from the referrals collection
+            referralOwnerId: 1, // Project the referralId from the referrals collection
             personCount: 1,
-            matchedUsers: 1, // Project the matchedUsers details
+            phone: 1,
+            price: 1,
+            userId: 1,
           },
         },
       ])

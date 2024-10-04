@@ -60,6 +60,8 @@ import { UserVehiclesSchema } from './schema/userVehicle.schema';
 import { referralsController } from './controller/referrals/referrals.controller';
 import { ReferralsService } from './service/referrals/referrals.service';
 import { ReferralsSchema } from './schema/referrals.Schema';
+import { RentalController } from './controller/rental/rental.controller';
+import { RentalService } from './service/rental/rental.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -105,6 +107,7 @@ import { ReferralsSchema } from './schema/referrals.Schema';
     LikesController,
     userVehiclesController,
     referralsController,
+    RentalController,
   ],
   providers: [
     AppService,
@@ -137,6 +140,7 @@ import { ReferralsSchema } from './schema/referrals.Schema';
     LikesService,
     userVehicleService,
     ReferralsService,
+    RentalService,
   ],
 })
 export class AppModule {}
