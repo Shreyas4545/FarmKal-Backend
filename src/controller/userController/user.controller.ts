@@ -121,7 +121,7 @@ export class UserController {
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.FOUND,
+          statusCode: HttpStatus.OK,
           message: 'Successfully Found User',
         },
         user,
