@@ -77,6 +77,7 @@ export class ReferralsService {
             phone: `$matchedUsers.phone`,
             price: 1,
             userId: 1,
+            image: `$matchedUsers.image`,
           },
         },
       ])

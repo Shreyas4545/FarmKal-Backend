@@ -62,6 +62,8 @@ import { ReferralsService } from './service/referrals/referrals.service';
 import { ReferralsSchema } from './schema/referrals.Schema';
 import { RentalController } from './controller/rental/rental.controller';
 import { RentalService } from './service/rental/rental.service';
+import { RentalCategoryController } from './controller/rental-category/rental-category.controller';
+import { RentalCategoryService } from './service/rental-category/rental-category.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -108,6 +110,7 @@ import { RentalService } from './service/rental/rental.service';
     userVehiclesController,
     referralsController,
     RentalController,
+    RentalCategoryController,
   ],
   providers: [
     AppService,
@@ -141,6 +144,7 @@ import { RentalService } from './service/rental/rental.service';
     userVehicleService,
     ReferralsService,
     RentalService,
+    RentalCategoryService,
   ],
 })
 export class AppModule {}
