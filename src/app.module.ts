@@ -54,7 +54,7 @@ import { ReferralAmountSchema } from './schema/referralAmount.Schema';
 import { LikesController } from './controller/likes/likes.controller';
 import { LikesService } from './service/categoryService/likes/likes.service';
 import { LikesSchema } from './schema/likes.schema';
-import { userVehicleService } from './userVehicles/user-vehicles.service';
+import { userVehicleService } from './service/userVehicles/user-vehicles.service';
 import { userVehiclesController } from './controller/userVehicles/user-vehicles.controller';
 import { UserVehiclesSchema } from './schema/userVehicle.schema';
 import { referralsController } from './controller/referrals/referrals.controller';
@@ -64,6 +64,10 @@ import { RentalController } from './controller/rental/rental.controller';
 import { RentalService } from './service/rental/rental.service';
 import { RentalCategoryController } from './controller/rental-category/rental-category.controller';
 import { RentalCategoryService } from './service/rental-category/rental-category.service';
+import { RentalBookingsService } from './service/rental-bookings/rental-bookings.service';
+import { rentalCategorySchema } from './schema/rentalCategory.Schema';
+import { UnitMeasurementController } from './controller/unit-measurement/unit-measurement.controller';
+import { RentalBookingsController } from './controller/rental-bookings/rental-bookings.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -74,6 +78,7 @@ import { RentalCategoryService } from './service/rental-category/rental-category
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
+      { name: 'rentalCategory', schema: rentalCategorySchema },
       { name: 'OTP', schema: OtpSchema },
       { name: 'Brand', schema: BrandSchema },
       { name: 'Category', schema: CategorySchema },
@@ -111,6 +116,8 @@ import { RentalCategoryService } from './service/rental-category/rental-category
     referralsController,
     RentalController,
     RentalCategoryController,
+    RentalBookingsController,
+    UnitMeasurementController,
   ],
   providers: [
     AppService,
@@ -145,6 +152,7 @@ import { RentalCategoryService } from './service/rental-category/rental-category
     ReferralsService,
     RentalService,
     RentalCategoryService,
+    RentalBookingsService,
   ],
 })
 export class AppModule {}
