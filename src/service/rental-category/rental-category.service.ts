@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IRentalCategory } from 'src/interface/rentalCategory.interface';
-import { IUser } from 'src/interface/user.interface';
+import { IRentalCategory } from '../../interface/rentalCategory.interface';
+import { IUser } from '../../interface/user.interface';
 
 @Injectable()
 export class RentalCategoryService {
