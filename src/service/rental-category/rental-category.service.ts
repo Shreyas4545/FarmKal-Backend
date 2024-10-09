@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRentalCategory } from '../../interface/rentalCategory.interface';
-import { IUnit } from 'src/interface/IUnitMeasurement.interface';
+import { IUnit } from '../../interface/IUnitMeasurement.interface';
 
 @Injectable()
 export class RentalCategoryService {

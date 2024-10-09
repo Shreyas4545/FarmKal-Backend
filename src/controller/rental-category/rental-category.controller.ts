@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { RentalCategoryService } from 'src/service/rental-category/rental-category.service';
+import { RentalCategoryService } from '../../service/rental-category/rental-category.service';
 import { createRentalCategoryDTO } from '../../dto/rentalCategoryDto/createRentalCategoryDto';
 import { updateRentalCategoryDTO } from '../../dto/rentalCategoryDto/updateRentalCategoryDto';
 import { ResponseCompo } from '../../utils/response';
