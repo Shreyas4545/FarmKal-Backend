@@ -68,6 +68,7 @@ import { RentalBookingsService } from './service/rental-bookings/rental-bookings
 import { rentalCategorySchema } from './schema/rentalCategory.Schema';
 import { UnitMeasurementController } from './controller/unit-measurement/unit-measurement.controller';
 import { RentalBookingsController } from './controller/rental-bookings/rental-bookings.controller';
+import { unitMeasurementSchema } from './schema/unitMeasurement.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -94,6 +95,7 @@ import { RentalBookingsController } from './controller/rental-bookings/rental-bo
       { name: 'Likes', schema: LikesSchema },
       { name: 'UserVehicles', schema: UserVehiclesSchema },
       { name: 'Referrals', schema: ReferralsSchema },
+      { name: 'unitMeasurement', schema: unitMeasurementSchema },
       { name: 'ReferralAmount', schema: ReferralAmountSchema },
     ]),
   ],

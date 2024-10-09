@@ -16,7 +16,7 @@ import { createRentalCategoryDTO } from '../../dto/rentalCategoryDto/createRenta
 import { updateRentalCategoryDTO } from '../../dto/rentalCategoryDto/updateRentalCategoryDto';
 import { ResponseCompo } from '../../utils/response';
 import { FirebaseService } from '../../utils/imageUpload';
-@Controller('api/rentalCategory')
+@Controller('api/rental')
 export class RentalCategoryController {
   constructor(
     private readonly rentalCategoryService: RentalCategoryService,
@@ -24,6 +24,7 @@ export class RentalCategoryController {
     private readonly firebaseService: FirebaseService,
   ) {}
 
+  //Api's for Rental Category
   @Post('/create')
   async createRentalCategory(@Res() response, @Body() data: any) {
     try {
@@ -57,7 +58,7 @@ export class RentalCategoryController {
       return this.responseCompo.successResponse(
         response,
         {
-          statusCode: HttpStatus.CREATED,
+          statusCode: HttpStatus.OK,
           message: 'Successfully Sent Rental Categories',
         },
         rentalCategories,
@@ -87,6 +88,76 @@ export class RentalCategoryController {
           message: 'Successfully Updated Rental Category',
         },
         updateRentalService,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  //Api's for Unit Measurement
+  @Post('/createUnit')
+  async createUnit(@Res() response, @Body() data: any) {
+    try {
+      const newUnit: any = await this.rentalCategoryService.createUnit(data);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Created Unit',
+        },
+        newUnit,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getUnits')
+  // @UseInterceptors(AuthInterceptor)
+  async getUnits(@Res() response, @Query('id') id: string, @Body() data: any) {
+    try {
+      const units: any = await this.rentalCategoryService.getUnit(id, data);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Units',
+        },
+        units,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Put('/updateUnit/:id')
+  async updateUnit(
+    @Res() response,
+    @Param('id') id: string,
+    @Body() data: any,
+  ) {
+    try {
+      const updateUnit = await this.rentalCategoryService.updateUnit(id, data);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Updated Units',
+        },
+        updateUnit,
       );
     } catch (err) {
       console.log(err);
