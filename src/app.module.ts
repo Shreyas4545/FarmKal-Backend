@@ -69,6 +69,7 @@ import { rentalCategorySchema } from './schema/rentalCategory.Schema';
 import { UnitMeasurementController } from './controller/unit-measurement/unit-measurement.controller';
 import { RentalBookingsController } from './controller/rental-bookings/rental-bookings.controller';
 import { unitMeasurementSchema } from './schema/unitMeasurement.schema';
+import { rentalImagesSchema } from './schema/rentalImage.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -97,6 +98,7 @@ import { unitMeasurementSchema } from './schema/unitMeasurement.schema';
       { name: 'Referrals', schema: ReferralsSchema },
       { name: 'unitMeasurement', schema: unitMeasurementSchema },
       { name: 'ReferralAmount', schema: ReferralAmountSchema },
+      { name: 'RentalImages', schema: rentalImagesSchema },
     ]),
   ],
   controllers: [

@@ -9,10 +9,12 @@ export class ImagesService {
 
   constructor(
     @InjectModel('ProductImages') private imagesModel: Model<any>,
+    @InjectModel('RentalImages') private rentalImagesModel: Model<any>,
     private readonly firebaseService: FirebaseService,
   ) {
     this.modelMap = new Map<string, Model<any>>();
     this.modelMap.set('ProductImages', imagesModel);
+    this.modelMap.set('RentalImages', rentalImagesModel);
   }
 
   async addMultipleImage(modelType: string, data: any[]): Promise<any[]> {
