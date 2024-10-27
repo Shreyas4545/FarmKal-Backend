@@ -21,6 +21,7 @@ export class TransactionsService {
       farmerProfileID,
       crop,
       unit,
+      date,
       paymentType,
       price,
     } = data;
@@ -32,6 +33,7 @@ export class TransactionsService {
       farmerProfileID: farmerProfileID,
       crop: crop,
       unit: unit,
+      date: date,
       paymentType: paymentType,
       price: price,
       isActive: true,
