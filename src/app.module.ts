@@ -70,6 +70,11 @@ import { UnitMeasurementController } from './controller/unit-measurement/unit-me
 import { RentalBookingsController } from './controller/rental-bookings/rental-bookings.controller';
 import { unitMeasurementSchema } from './schema/unitMeasurement.schema';
 import { rentalImagesSchema } from './schema/rentalImage.schema';
+import { TransactionsController } from './controller/transactions/transactions.controller';
+import { TransactionSchema } from './schema/transaction.schema';
+import { TransactionsService } from './service/transactions/transactions.service';
+import { FramerProfileController } from './framer-profile/framer-profile.controller';
+import { FarmerProfileSchema } from './schema/farmerProfile.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -99,6 +104,8 @@ import { rentalImagesSchema } from './schema/rentalImage.schema';
       { name: 'unitMeasurement', schema: unitMeasurementSchema },
       { name: 'ReferralAmount', schema: ReferralAmountSchema },
       { name: 'RentalImages', schema: rentalImagesSchema },
+      { name: 'Transactions', schema: TransactionSchema },
+      { name: 'FarmerProfile', schema: FarmerProfileSchema },
     ]),
   ],
   controllers: [
@@ -122,6 +129,8 @@ import { rentalImagesSchema } from './schema/rentalImage.schema';
     RentalCategoryController,
     RentalBookingsController,
     UnitMeasurementController,
+    TransactionsController,
+    FramerProfileController,
   ],
   providers: [
     AppService,
@@ -157,6 +166,7 @@ import { rentalImagesSchema } from './schema/rentalImage.schema';
     RentalService,
     RentalCategoryService,
     RentalBookingsService,
+    TransactionsService,
   ],
 })
 export class AppModule {}

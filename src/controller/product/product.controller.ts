@@ -87,7 +87,9 @@ export class ProductController {
       const newData: any = { ...data, createdAt: new Date() };
       let newProduct: any = await this.productService.createProduct(newData);
       const imageUrls: string[] = await Promise.all(
-        files?.map(async (item, key) => this.firebaseService.uploadFile(item)),
+        files?.map(
+          async (item, key) => await this.firebaseService.uploadFile(item),
+        ),
       );
 
       imageUrls?.map((item, key) => {
