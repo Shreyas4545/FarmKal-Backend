@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
-
+import { IPaymentMode } from '../../interface/paymentMode.interface';
 @Injectable()
 export class TransactionsService {
   constructor(
@@ -11,6 +11,8 @@ export class TransactionsService {
     private transactions: Model<ITransactions>,
     @InjectModel('FarmerProfile')
     private farmerProfile: Model<IFarmerProfile>,
+    @InjectModel('paymentType')
+    private paymentType: Model<IPaymentMode>,
   ) {}
 
   async create(data: any): Promise<ITransactions | any> {
@@ -118,5 +120,21 @@ export class TransactionsService {
       });
 
     return updatedTransaction;
+  }
+
+  async addPaymentMode(data: any): Promise<IPaymentMode | any> {
+    const newPaymentMode = await new this.paymentType(data).save();
+    return newPaymentMode;
+  }
+
+  async getPaymentTypes(id: string): Promise<IPaymentMode | any> {
+    const obj: any = {
+      isActive: true,
+    };
+    if (id) {
+      obj._id = id;
+    }
+    const data = await this.paymentType.find(obj);
+    return data;
   }
 }

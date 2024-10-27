@@ -75,6 +75,7 @@ import { TransactionSchema } from './schema/transaction.schema';
 import { TransactionsService } from './service/transactions/transactions.service';
 import { FramerProfileController } from './framer-profile/framer-profile.controller';
 import { FarmerProfileSchema } from './schema/farmerProfile.schema';
+import { paymentTypeSchema } from './schema/paymentMode.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -106,6 +107,7 @@ import { FarmerProfileSchema } from './schema/farmerProfile.schema';
       { name: 'RentalImages', schema: rentalImagesSchema },
       { name: 'Transactions', schema: TransactionSchema },
       { name: 'FarmerProfile', schema: FarmerProfileSchema },
+      { name: 'paymentType', schema: paymentTypeSchema },
     ]),
   ],
   controllers: [

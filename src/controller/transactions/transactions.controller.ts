@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
+  Query,
   Res,
   UploadedFiles,
   UseInterceptors,
@@ -14,6 +16,9 @@ import { ImagesService } from '../../service/product-listing-images/product-list
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 
+interface paymentMode {
+  method: string;
+}
 @Controller('api/transactions')
 export class TransactionsController {
   constructor(
@@ -74,6 +79,57 @@ export class TransactionsController {
           message: 'Successfully Added New Transaction!',
         },
         newTransaction,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/addPaymentMode')
+  async addPaymentMode(@Res() response, @Body() data: paymentMode) {
+    const { method } = data;
+
+    try {
+      const obj = {
+        method: method,
+        isActive: true,
+      };
+
+      const newPaymentMode = await this.transactionsService.addPaymentMode(obj);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Added New Payment Mode!',
+        },
+        newPaymentMode,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getPaymentMode')
+  async getPaymentMode(@Res() response, @Query('id') id: string) {
+    try {
+      const data = await this.transactionsService.getPaymentTypes(id);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Payment Modes!',
+        },
+        data,
       );
     } catch (err) {
       console.log(err);
