@@ -19,7 +19,7 @@ import { FirebaseService } from '../../utils/imageUpload';
 interface paymentMode {
   method: string;
 }
-@Controller('api/transactions')
+@Controller('api/rental/transactions')
 export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
