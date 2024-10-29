@@ -41,6 +41,7 @@ export class TransactionsController {
         phoneNo: data?.phoneNo,
         status: 'ACTIVE',
       };
+
       const farmerProfile = await this.transactionsService.createFarmerProfile(
         farmerProfileData,
       );
@@ -79,6 +80,30 @@ export class TransactionsController {
           message: 'Successfully Added New Transaction!',
         },
         newTransaction,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getFarmerProfiles')
+  async getFarmerProfiles(@Res() response, @Query('phoneNo') phoneNo: number) {
+    try {
+      const data = await this.transactionsService.getFarmerProfile({
+        phoneNo: phoneNo,
+      });
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Farmer Profiles!',
+        },
+        data,
       );
     } catch (err) {
       console.log(err);

@@ -45,8 +45,18 @@ export class TransactionsService {
     return newTrans;
   }
 
-  async createFarmerProfile(data: any): Promise<ITransactions | any> {
+  async createFarmerProfile(data: any): Promise<IFarmerProfile | any> {
     const { name, phoneNo } = data;
+
+    const existingData: any = await this.farmerProfile
+      .find({ phone: phoneNo })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    if (existingData?.length > 0) {
+      return existingData[0];
+    }
 
     let newProfile: any = {
       name: name,
@@ -55,6 +65,17 @@ export class TransactionsService {
     };
 
     newProfile = await new this.farmerProfile(newProfile).save();
+    return newProfile;
+  }
+
+  async getFarmerProfile(data: any): Promise<IFarmerProfile | any> {
+    const { phoneNo } = data;
+
+    let newProfile: any = {
+      phoneNo: phoneNo,
+    };
+
+    newProfile = await this.farmerProfile.find(newProfile);
     return newProfile;
   }
 
