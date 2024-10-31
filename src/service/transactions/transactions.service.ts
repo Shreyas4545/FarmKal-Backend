@@ -4,6 +4,17 @@ import { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
+import { IsOptional } from 'class-validator';
+import mongoose from 'mongoose';
+import { ILocation } from 'src/interface/location.interface';
+class getAllTransactions {
+  readonly ownerId: string;
+  readonly farmerProfileId: string;
+  @IsOptional()
+  readonly paymentType: string;
+  @IsOptional()
+  readonly rentalCategoryId: string;
+}
 @Injectable()
 export class TransactionsService {
   constructor(
@@ -13,6 +24,7 @@ export class TransactionsService {
     private farmerProfile: Model<IFarmerProfile>,
     @InjectModel('paymentType')
     private paymentType: Model<IPaymentMode>,
+    @InjectModel('Location') private locationModel: Model<ILocation>,
   ) {}
 
   async create(data: any): Promise<ITransactions | any> {
@@ -26,7 +38,41 @@ export class TransactionsService {
       date,
       paymentType,
       price,
+      city,
+      state,
+      country,
     } = data;
+
+    let { locationId } = data;
+    if (!locationId) {
+      const existingLocation: any = await this.locationModel
+        .findOne({
+          city: city,
+          state: state,
+          country: country,
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      if (existingLocation) {
+        locationId = existingLocation?._id.toString();
+      } else {
+        const newLocation = {
+          city: city,
+          state: state,
+          country: country,
+          isActive: true,
+          description: 'City in Rajasthan',
+          type: 'City',
+          image:
+            'https://storage.googleapis.com/farm7-e6457.appspot.com/images/e2f2decf-986f-44b3-9377-dc7e3fbde743-.png',
+        };
+
+        const addedLocation = await new this.locationModel(newLocation).save();
+        locationId = addedLocation?._id.toString();
+      }
+    }
 
     let newTrans: any = {
       ownerId: ownerId,
@@ -34,6 +80,7 @@ export class TransactionsService {
       rentalImages: rentalImages,
       farmerProfileID: farmerProfileID,
       crop: crop,
+      locationId: locationId,
       unit: unit,
       date: date,
       paymentType: paymentType,
@@ -79,8 +126,101 @@ export class TransactionsService {
     return newProfile;
   }
 
-  async getTransactions(): Promise<ITransactions | any> {
-    const transactions = await this.transactions.find({ isActive: true });
+  async getOwnerTransactions(ownerId: string): Promise<ITransactions | any> {
+    const transactions = await this.transactions.aggregate([
+      {
+        $addFields: {
+          rentalCategoryId: { $toObjectId: '$rentalCategoryId' },
+          locationId: { $toObjectId: '$locationId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'farmerprofiles',
+          localField: 'farmerProfileID',
+          foreignField: '_id',
+          as: 'farmerProfile',
+        },
+      },
+      {
+        $lookup: {
+          from: 'rentalcategories',
+          localField: 'rentalCategoryId',
+          foreignField: '_id',
+          as: 'rentalCategory',
+        },
+      },
+      {
+        $lookup: {
+          from: 'locations',
+          localField: 'locationId',
+          foreignField: '_id',
+          as: 'locationDetails',
+        },
+      },
+      {
+        $unwind: '$rentalCategory',
+      },
+      {
+        $unwind: '$farmerProfile',
+      },
+      {
+        $unwind: '$locationDetails',
+      },
+      {
+        $match: { ownerId: ownerId },
+      },
+      {
+        $project: {
+          farmerName: '$farmerProfile.name',
+          farmerPhoneNo: '$farmerProfile.phoneNo',
+          locationDetails: 1,
+          rentalImages: 1,
+          date: 1,
+          crop: 1,
+          unit: 1,
+          price: 1,
+          paymentType: 1,
+          isActive: 1,
+        },
+      },
+    ]);
+
+    console.log(transactions);
+    return transactions;
+  }
+
+  async getAllTransactions(
+    data: getAllTransactions,
+  ): Promise<ITransactions | any> {
+    const { farmerProfileId, ownerId, paymentType, rentalCategoryId } = data;
+    const obj: any = {};
+
+    if (farmerProfileId) {
+      obj.farmerProfileID = new mongoose.Types.ObjectId(farmerProfileId);
+    }
+
+    if (ownerId) {
+      obj.ownerId = ownerId;
+    }
+
+    if (paymentType) {
+      obj.paymentType = paymentType;
+    }
+
+    if (rentalCategoryId) {
+      obj.rentalCategoryId = rentalCategoryId;
+    }
+
+    console.log(obj);
+
+    const transactions = await this.transactions
+      .find(obj)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
     return transactions;
   }
 

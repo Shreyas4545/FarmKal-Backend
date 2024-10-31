@@ -12,6 +12,9 @@ export class Transactions {
   @Prop({ type: Types.ObjectId, ref: 'farmerProfile', required: true })
   farmerProfileID: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'Location', required: true })
+  locationId: Types.ObjectId;
+
   @Prop()
   rentalImages: Array<Types.ObjectId>;
 

@@ -6,6 +6,7 @@ export interface ITransactions extends Document {
   readonly rentalImages: Array<Types.ObjectId>;
   readonly rentalCategoryId: Types.ObjectId;
   readonly farmerProfileID: Types.ObjectId;
+  readonly locationId: Types.ObjectId;
   readonly date: Date;
   readonly crop: string;
   readonly unit: string;

@@ -16,6 +16,10 @@ export class createTransactionDTO {
   readonly farmerProfileID: string;
 
   @IsString()
+  @IsOptional()
+  readonly locationId: string;
+
+  @IsString()
   @IsNotEmpty()
   readonly name: string;
 

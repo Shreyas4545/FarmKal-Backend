@@ -164,4 +164,63 @@ export class TransactionsController {
       });
     }
   }
+
+  @Get('/getOwnerTransactions')
+  async getOwnerTransactions(
+    @Res() response,
+    @Query('ownerId') ownerId: string,
+  ) {
+    try {
+      const data = await this.transactionsService.getOwnerTransactions(ownerId);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Owner Transactions!',
+        },
+        data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getAllTransactions')
+  async getAllTransactions(
+    @Res() response,
+    @Query('ownerId') ownerId: string,
+    @Query('farmerProfileId') farmerProfileId: string,
+    @Query('paymentType') paymentType: string,
+    @Query('rentalCategoryId') rentalCategoryId: string,
+  ) {
+    try {
+      const nextData = {
+        ownerId: ownerId,
+        farmerProfileId: farmerProfileId,
+        paymentType: paymentType,
+        rentalCategoryId: rentalCategoryId,
+      };
+      const data = await this.transactionsService.getAllTransactions(nextData);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent All Transactions!',
+        },
+        data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }
