@@ -95,7 +95,6 @@ export class TransactionsService {
   async createFarmerProfile(data: any): Promise<IFarmerProfile | any> {
     const { name, phoneNo } = data;
 
-    console.log(phoneNo);
     const existingData: any = await this.farmerProfile
       .find({ phoneNo: phoneNo })
       .catch((err) => {
