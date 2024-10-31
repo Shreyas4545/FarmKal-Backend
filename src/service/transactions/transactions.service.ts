@@ -7,6 +7,7 @@ import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { IsOptional } from 'class-validator';
 import mongoose from 'mongoose';
 import { ILocation } from 'src/interface/location.interface';
+import { rentalCategory } from 'src/schema/rentalCategory.Schema';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -177,6 +178,10 @@ export class TransactionsService {
           farmerProfileID: 1,
           locationDetails: 1,
           rentalImages: 1,
+          rentalCategoryName: '$rentalCategory.name',
+          city: '$locationDetails.city',
+          state: '$locationDetails.state',
+          country: '$locationDetails.country',
           date: 1,
           crop: 1,
           unit: 1,
@@ -193,6 +198,10 @@ export class TransactionsService {
         newData.push({
           farmerName: item?.farmerName,
           phoneNo: item?.farmerPhoneNo,
+          rentalCategoryName: item?.rentalCategoryName,
+          city: item?.city,
+          state: item?.state,
+          country: item?.country,
           id: item?.farmerProfileID,
         });
       }
