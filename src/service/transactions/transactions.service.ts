@@ -95,8 +95,9 @@ export class TransactionsService {
   async createFarmerProfile(data: any): Promise<IFarmerProfile | any> {
     const { name, phoneNo } = data;
 
+    console.log(phoneNo);
     const existingData: any = await this.farmerProfile
-      .find({ phone: phoneNo })
+      .find({ phoneNo: phoneNo })
       .catch((err) => {
         console.log(err);
       });
@@ -174,6 +175,7 @@ export class TransactionsService {
         $project: {
           farmerName: '$farmerProfile.name',
           farmerPhoneNo: '$farmerProfile.phoneNo',
+          farmerProfileID: 1,
           locationDetails: 1,
           rentalImages: 1,
           date: 1,
@@ -186,8 +188,17 @@ export class TransactionsService {
       },
     ]);
 
-    console.log(transactions);
-    return transactions;
+    const newData: any = [];
+    transactions?.map((item, key) => {
+      if (!newData?.find((s) => s.farmerName == item.farmerName)) {
+        newData.push({
+          farmerName: item?.farmerName,
+          phoneNo: item?.farmerPhoneNo,
+          id: item?.farmerProfileID,
+        });
+      }
+    });
+    return newData;
   }
 
   async getAllTransactions(
