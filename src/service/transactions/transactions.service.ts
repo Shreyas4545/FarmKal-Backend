@@ -189,7 +189,7 @@ export class TransactionsService {
 
     const newData: any = [];
     transactions?.map((item, key) => {
-      if (!newData?.find((s) => s.farmerName == item.farmerName)) {
+      if (!newData?.find((s) => s.id == item?.farmerProfileID.toString())) {
         newData.push({
           farmerName: item?.farmerName,
           phoneNo: item?.farmerPhoneNo,
