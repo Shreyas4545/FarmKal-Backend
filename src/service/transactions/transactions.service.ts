@@ -260,12 +260,13 @@ export class TransactionsService {
       },
       {
         $project: {
-          farmerName: '$farmerProfile.name',
-          farmerPhoneNo: '$farmerProfile.phoneNo',
-          farmerProfileID: 1,
-          locationDetails: 1,
-          rentalImages: 1,
+          // farmerName: '$farmerProfile.name',
+          // farmerPhoneNo: '$farmerProfile.phoneNo',
+          // farmerProfileID: 1,
+          // locationDetails: 1,
+          // rentalImages: 1,
           rentalCategoryName: '$rentalCategory.name',
+          locationId: '$locationDetails._id',
           city: '$locationDetails.city',
           state: '$locationDetails.state',
           country: '$locationDetails.country',
