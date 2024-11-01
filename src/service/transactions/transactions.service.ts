@@ -11,10 +11,10 @@ import { rentalCategory } from 'src/schema/rentalCategory.Schema';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
-  @IsOptional()
-  readonly paymentType: string;
-  @IsOptional()
-  readonly rentalCategoryId: string;
+  // @IsOptional()
+  // readonly paymentType: string;
+  // @IsOptional()
+  // readonly rentalCategoryId: string;
 }
 @Injectable()
 export class TransactionsService {
@@ -94,7 +94,7 @@ export class TransactionsService {
   }
 
   async createFarmerProfile(data: any): Promise<IFarmerProfile | any> {
-    const { name, phoneNo } = data;
+    const { name, phoneNo, isValidated } = data;
 
     const existingData: any = await this.farmerProfile
       .find({ phoneNo: phoneNo })
@@ -110,6 +110,7 @@ export class TransactionsService {
       name: name,
       phoneNo: phoneNo,
       status: 'ACTIVE',
+      isValidated: isValidated,
     };
 
     newProfile = await new this.farmerProfile(newProfile).save();
@@ -212,34 +213,72 @@ export class TransactionsService {
   async getAllTransactions(
     data: getAllTransactions,
   ): Promise<ITransactions | any> {
-    const { farmerProfileId, ownerId, paymentType, rentalCategoryId } = data;
-    const obj: any = {};
+    const { ownerId, farmerProfileId } = data;
+    const transactions = await this.transactions.aggregate([
+      {
+        $addFields: {
+          rentalCategoryId: { $toObjectId: '$rentalCategoryId' },
+          locationId: { $toObjectId: '$locationId' },
+          farmerProfileId: { $toString: '$farmerProfileID' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'farmerprofiles',
+          localField: 'farmerProfileID',
+          foreignField: '_id',
+          as: 'farmerProfile',
+        },
+      },
+      {
+        $lookup: {
+          from: 'rentalcategories',
+          localField: 'rentalCategoryId',
+          foreignField: '_id',
+          as: 'rentalCategory',
+        },
+      },
+      {
+        $lookup: {
+          from: 'locations',
+          localField: 'locationId',
+          foreignField: '_id',
+          as: 'locationDetails',
+        },
+      },
+      {
+        $unwind: '$rentalCategory',
+      },
+      {
+        $unwind: '$farmerProfile',
+      },
+      {
+        $unwind: '$locationDetails',
+      },
+      {
+        $match: { ownerId: ownerId, farmerProfileId: farmerProfileId },
+      },
+      {
+        $project: {
+          farmerName: '$farmerProfile.name',
+          farmerPhoneNo: '$farmerProfile.phoneNo',
+          farmerProfileID: 1,
+          locationDetails: 1,
+          rentalImages: 1,
+          rentalCategoryName: '$rentalCategory.name',
+          city: '$locationDetails.city',
+          state: '$locationDetails.state',
+          country: '$locationDetails.country',
+          // date: 1,
+          // crop: 1,
+          // unit: 1,
+          // price: 1,
+          // paymentType: 1,
+          // isActive: 1,
+        },
+      },
+    ]);
 
-    if (farmerProfileId) {
-      obj.farmerProfileID = new mongoose.Types.ObjectId(farmerProfileId);
-    }
-
-    if (ownerId) {
-      obj.ownerId = ownerId;
-    }
-
-    if (paymentType) {
-      obj.paymentType = paymentType;
-    }
-
-    if (rentalCategoryId) {
-      obj.rentalCategoryId = rentalCategoryId;
-    }
-
-    console.log(obj);
-
-    const transactions = await this.transactions
-      .find(obj)
-      .exec()
-      .catch((err) => {
-        console.log(err);
-        return err;
-      });
     return transactions;
   }
 

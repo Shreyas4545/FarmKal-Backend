@@ -40,6 +40,7 @@ export class TransactionsController {
         name: data?.name,
         phoneNo: data?.phoneNo,
         status: 'ACTIVE',
+        isValidated: false,
       };
 
       const farmerProfile = await this.transactionsService.createFarmerProfile(

@@ -5,4 +5,6 @@ export interface IFarmerProfile extends Document {
   readonly phoneNo: number;
 
   readonly status: boolean;
+
+  readonly isValidated: boolean;
 }

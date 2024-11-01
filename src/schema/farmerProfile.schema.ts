@@ -11,6 +11,9 @@ export class FarmerProfile {
 
   @Prop()
   status: string;
+
+  @Prop()
+  isValidated: boolean;
 }
 
 export const FarmerProfileSchema = SchemaFactory.createForClass(FarmerProfile);
