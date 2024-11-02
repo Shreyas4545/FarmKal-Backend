@@ -10,6 +10,10 @@ export interface ITransactions extends Document {
   readonly date: Date;
   readonly crop: string;
   readonly unit: string;
+  readonly city: string;
+  readonly state: string;
+  readonly country: string;
+
   readonly paymentType: string;
   readonly price: number;
 

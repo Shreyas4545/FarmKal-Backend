@@ -264,6 +264,7 @@ export class TransactionsService {
           farmerPhoneNo: '$farmerProfile.phoneNo',
           farmerProfileID: 1,
           rentalImages: 1,
+          // locationDetails: 1,
           rentalCategoryName: '$rentalCategory.name',
           locationId: '$locationDetails._id',
           city: '$locationDetails.city',
