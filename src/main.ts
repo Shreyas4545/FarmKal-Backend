@@ -12,8 +12,8 @@ async function bootstrap() {
   const host = '0.0.0.0';
 
   app.useGlobalPipes(new ValidationPipe());
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb' }));
+  app.use(express.json({ limit: '250mb' }));
+  app.use(express.urlencoded({ limit: '250mb' }));
   app.enableCors();
   await app.listen(port, host);
   console.log(`Application is running on: http://${host}:${port}`);
