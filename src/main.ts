@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AuthInterceptor } from './Interceptors/authentication.interceptor';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
   const host = '0.0.0.0';
 
   app.useGlobalPipes(new ValidationPipe());
+  app.use(bodyParser.json({ limit: '50mb' }));
   app.enableCors();
   await app.listen(port, host);
   console.log(`Application is running on: http://${host}:${port}`);
