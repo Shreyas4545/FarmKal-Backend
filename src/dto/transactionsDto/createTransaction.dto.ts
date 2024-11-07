@@ -27,6 +27,14 @@ export class createTransactionDTO {
   @IsNotEmpty()
   readonly phoneNo: number;
 
+  @IsNumber()
+  @IsOptional()
+  readonly noOfUnits: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly totalAmount: number;
+
   @IsString()
   @IsNotEmpty()
   readonly paymentType: string;

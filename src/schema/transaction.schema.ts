@@ -19,6 +19,12 @@ export class Transactions {
   rentalImages: Array<Types.ObjectId>;
 
   @Prop()
+  noOfUnits: number;
+
+  @Prop()
+  totalAmount: number;
+
+  @Prop()
   date: Date;
 
   @Prop()

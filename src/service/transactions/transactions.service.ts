@@ -6,8 +6,7 @@ import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { IsOptional } from 'class-validator';
 import mongoose from 'mongoose';
-import { ILocation } from 'src/interface/location.interface';
-import { rentalCategory } from 'src/schema/rentalCategory.Schema';
+import { ILocation } from '../../../src/interface/location.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -42,6 +41,8 @@ export class TransactionsService {
       city,
       state,
       country,
+      totalAmount,
+      noOfUnits,
     } = data;
 
     let { locationId } = data;
@@ -86,6 +87,8 @@ export class TransactionsService {
       date: date,
       paymentType: paymentType,
       price: price,
+      totalAmount: totalAmount,
+      noOfUnits: noOfUnits,
       isActive: true,
     };
 
