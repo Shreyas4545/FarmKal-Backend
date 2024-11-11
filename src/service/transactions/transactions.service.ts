@@ -177,8 +177,10 @@ export class TransactionsService {
       },
       {
         $project: {
-          farmerName: '$farmerProfile.name',
-          farmerPhoneNo: '$farmerProfile.phoneNo',
+          // farmerName: '$farmerProfile.name',
+          // farmerPhoneNo: '$farmerProfile.phoneNo',
+          farmerPhone: 1,
+          farmerName: 1,
           farmerProfileID: 1,
           locationDetails: 1,
           rentalImages: 1,
@@ -197,6 +199,13 @@ export class TransactionsService {
         },
       },
     ]);
+
+    for (let i of transactions) {
+      const multiData = transactions?.filter(
+        (s) => s.farmerPhone == i?.farmerPhone,
+      );
+      i.farmerName = multiData[0].farmerName;
+    }
 
     const newData: any = [];
     transactions?.map((item, key) => {

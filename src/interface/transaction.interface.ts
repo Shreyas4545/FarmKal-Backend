@@ -13,6 +13,8 @@ export interface ITransactions extends Document {
   readonly city: string;
   readonly state: string;
   readonly country: string;
+  readonly farmerName: string;
+  readonly farmerPhone: string;
   readonly noOfUnits: number;
   readonly totalAmount: number;
   readonly paymentType: string;

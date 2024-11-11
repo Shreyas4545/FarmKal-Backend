@@ -37,7 +37,13 @@ export class Transactions {
   price: number;
 
   @Prop()
+  farmerPhone: number;
+
+  @Prop()
   paymentType: string;
+
+  @Prop()
+  farmerName: string;
 
   @Prop()
   isActive: boolean;
