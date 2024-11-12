@@ -216,7 +216,7 @@ export class TransactionsService {
       if (!newData?.find((s) => s.id == item?.farmerProfileID.toString())) {
         newData.push({
           farmerName: item?.farmerName,
-          phoneNo: item?.farmerPhoneNo,
+          farmerPhone: item?.farmerPhone,
           rentalCategoryName: item?.rentalCategoryName,
           city: item?.city,
           state: item?.state,
