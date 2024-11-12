@@ -67,6 +67,8 @@ export class TransactionsController {
 
       const newData = {
         ...data,
+        farmerName: data?.name,
+        farmerPhone: data?.phoneNo,
         date: new Date(),
         farmerProfileID: farmerProfile?._id,
         rentalImages: s3ImageUrls,
