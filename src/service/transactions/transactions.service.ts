@@ -278,8 +278,8 @@ export class TransactionsService {
       },
       {
         $project: {
-          farmerName: '$farmerProfile.name',
-          farmerPhoneNo: '$farmerProfile.phoneNo',
+          farmerName: 1,
+          farmerPhone: 1,
           farmerProfileID: 1,
           rentalImages: 1,
           // locationDetails: 1,
