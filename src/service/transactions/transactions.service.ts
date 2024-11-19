@@ -48,7 +48,7 @@ export class TransactionsService {
     } = data;
 
     let { locationId } = data;
-    if (!locationId) {
+    if (!locationId && city && state && country) {
       const existingLocation: any = await this.locationModel
         .findOne({
           city: city,

@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsOptional } from 'class-validator';
 import { Types, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ versionKey: false })
@@ -12,7 +13,7 @@ export class Transactions {
   @Prop({ type: Types.ObjectId, ref: 'farmerProfile', required: true })
   farmerProfileID: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Location', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Location' })
   locationId: Types.ObjectId;
 
   @Prop()
