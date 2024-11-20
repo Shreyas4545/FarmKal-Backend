@@ -174,7 +174,10 @@ export class TransactionsService {
         $unwind: '$farmerProfile',
       },
       {
-        $unwind: '$locationDetails',
+        $unwind: {
+          path: '$locationDetails',
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $match: { ownerId: ownerId },
@@ -203,6 +206,8 @@ export class TransactionsService {
         },
       },
     ]);
+
+    console.log(transactions);
 
     for (let i of transactions) {
       const multiData = transactions?.filter(
