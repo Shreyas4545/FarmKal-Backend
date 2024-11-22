@@ -97,6 +97,7 @@ export class TransactionsService {
     };
 
     newTrans = await new this.transactions(newTrans).save();
+
     return newTrans;
   }
 

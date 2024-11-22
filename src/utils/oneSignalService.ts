@@ -1,5 +1,19 @@
 import axios from 'axios';
 
+// For Farmer -
+// Title
+//${Owner Name} has created a transaction.
+
+//Sub Title
+//${total Amount} pending.
+
+//For Owner noti -
+//Title
+//Farmer is not registered.
+
+// Subtitle
+// Please contact them to register
+
 export default async function oneSignal(
   type: string,
   title: string,

@@ -31,9 +31,13 @@ export class createTransactionDTO {
   // @IsNotEmpty()
   // readonly noOfUnits: number;
 
-  // @IsNumber()
-  // @IsOptional()
-  // readonly totalAmount: number;
+  @IsNumber()
+  @IsOptional()
+  readonly totalAmount: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly farmerPhone: number;
 
   @IsString()
   @IsNotEmpty()

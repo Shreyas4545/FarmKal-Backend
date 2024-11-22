@@ -15,6 +15,8 @@ import { ResponseCompo } from '../../utils/response';
 import { ImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
+import oneSignal from '../../utils/oneSignalService';
+import { UserService } from '../../service/userService/user.service';
 
 interface paymentMode {
   method: string;
@@ -26,6 +28,7 @@ export class TransactionsController {
     private readonly responseCompo: ResponseCompo,
     private readonly imagesService: ImagesService,
     private readonly firebaseService: FirebaseService,
+    private readonly userService: UserService,
   ) {}
 
   @Post('/create')
@@ -75,6 +78,30 @@ export class TransactionsController {
       };
 
       const newTransaction = await this.transactionsService.create(newData);
+
+      const farmer = await this.userService.getUsers({
+        phone: data?.farmerPhone,
+      });
+
+      const owner = await this.userService.getUser(data?.ownerId);
+
+      if (farmer?.length > 0) {
+        await oneSignal(
+          'message',
+          `${owner?.name} + has created a transaction.`,
+          `${data?.totalAmount} pending`,
+          '',
+          farmer[0]?._id,
+        );
+      } else {
+        await oneSignal(
+          'message',
+          'Farmer is not registered.',
+          'Please contact them to register',
+          '',
+          data?.ownerId,
+        );
+      }
 
       return this.responseCompo.successResponse(
         response,
