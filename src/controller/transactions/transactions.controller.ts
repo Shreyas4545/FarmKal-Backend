@@ -35,7 +35,7 @@ export class TransactionsController {
   @UseInterceptors(FilesInterceptor('files'))
   async createTransactions(
     @Res() response,
-    @Body() data: createTransactionDTO,
+    @Body() data: any,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     try {
@@ -88,7 +88,7 @@ export class TransactionsController {
       if (farmer?.length > 0) {
         await oneSignal(
           'message',
-          `${owner?.name} + has created a transaction.`,
+          `${owner?.name} has created a transaction.`,
           `${data?.totalAmount} pending`,
           '',
           farmer[0]?._id,
