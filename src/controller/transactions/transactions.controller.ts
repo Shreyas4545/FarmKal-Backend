@@ -89,7 +89,7 @@ export class TransactionsController {
         await oneSignal(
           'message',
           `${owner?.name} has created a transaction.`,
-          `${data?.totalAmount} pending`,
+          `${data?.totalAmount} Pending`,
           '',
           farmer[0]?._id,
         );
