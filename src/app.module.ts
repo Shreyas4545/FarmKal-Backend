@@ -21,6 +21,7 @@ import { BrandsController } from './controller/brands/brands.controller';
 import { ProductController } from './controller/product/product.controller';
 import { ProductService } from './service/product/product.service';
 import { BrandSchema } from './schema/brand.schema';
+import { TotalAmountSchema } from './schema/totalAmount.schema';
 import { FirebaseService } from './utils/imageUpload';
 import { LocationService } from './service/locations/locations.service';
 import { LocationsController } from './controller/locations/locations.controller';
@@ -76,6 +77,7 @@ import { TransactionsService } from './service/transactions/transactions.service
 import { FramerProfileController } from './framer-profile/framer-profile.controller';
 import { FarmerProfileSchema } from './schema/farmerProfile.schema';
 import { paymentTypeSchema } from './schema/paymentMode.schema';
+import { PaymentSchema } from './schema/payment.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -108,6 +110,8 @@ import { paymentTypeSchema } from './schema/paymentMode.schema';
       { name: 'Transactions', schema: TransactionSchema },
       { name: 'FarmerProfile', schema: FarmerProfileSchema },
       { name: 'paymentType', schema: paymentTypeSchema },
+      { name: 'totalAmount', schema: TotalAmountSchema },
+      { name: 'Payment', schema: PaymentSchema },
     ]),
   ],
   controllers: [

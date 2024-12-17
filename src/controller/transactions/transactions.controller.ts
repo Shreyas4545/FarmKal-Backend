@@ -103,6 +103,29 @@ export class TransactionsController {
         );
       }
 
+      const obj1: any = {
+        ownerId: data?.ownerId,
+        farmerProfileID: farmerProfile?._id,
+      };
+
+      const totalAmountData: any[] =
+        await this.transactionsService.getTotalAmount(obj1);
+
+      if (totalAmountData?.length > 0) {
+        await this.transactionsService.updateTotalAmount(
+          totalAmountData[0]?._id,
+          {
+            amount: totalAmountData[0]?.amount + data?.totalAmount,
+          },
+        );
+      } else {
+        const localObj = {
+          ...obj1,
+          amount: data?.totalAmount,
+        };
+        await this.transactionsService.addTotalAmount(localObj);
+      }
+
       return this.responseCompo.successResponse(
         response,
         {

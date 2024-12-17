@@ -4,9 +4,9 @@ import { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
-import { IsOptional } from 'class-validator';
-import mongoose from 'mongoose';
 import { ILocation } from '../../../src/interface/location.interface';
+import { ITotalAmount } from 'src/interface/totalAmount.interface';
+import { IPayment } from 'src/interface/payment.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -20,10 +20,14 @@ export class TransactionsService {
   constructor(
     @InjectModel('Transactions')
     private transactions: Model<ITransactions>,
+    @InjectModel('totalAmount')
+    private totalAmount: Model<ITotalAmount>,
     @InjectModel('FarmerProfile')
     private farmerProfile: Model<IFarmerProfile>,
     @InjectModel('paymentType')
     private paymentType: Model<IPaymentMode>,
+    @InjectModel('Payment')
+    private Payment: Model<IPayment>,
     @InjectModel('Location') private locationModel: Model<ILocation>,
   ) {}
 
@@ -208,8 +212,6 @@ export class TransactionsService {
       },
     ]);
 
-    console.log(transactions);
-
     for (let i of transactions) {
       const multiData = transactions?.filter(
         (s) => s.farmerPhone == i?.farmerPhone,
@@ -385,5 +387,71 @@ export class TransactionsService {
     }
     const data = await this.paymentType.find(obj);
     return data;
+  }
+
+  async addTotalAmount(data: any): Promise<ITotalAmount | any> {
+    const {
+      ownerId,
+      farmerProfileID,
+      amount,
+    }: { ownerId: string; farmerProfileID: string; amount: number } = data;
+
+    const obj: any = {};
+    obj.ownerId = ownerId;
+    obj.farmerProfileID = farmerProfileID;
+    obj.amount = amount;
+    obj.status = 'ACTIVE';
+
+    const newTotalAmount = await new this.totalAmount(obj).save();
+
+    return newTotalAmount;
+  }
+
+  async getTotalAmount(data: any): Promise<ITotalAmount | any> {
+    const {
+      ownerId,
+      farmerProfileID,
+    }: { ownerId: string; farmerProfileID: string } = data;
+
+    const obj: any = {};
+    obj.ownerId = ownerId;
+    obj.farmerProfileID = farmerProfileID;
+
+    const TotalAmountData = this.totalAmount
+      .find(obj)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return TotalAmountData;
+  }
+
+  async updateTotalAmount(id: string, data: any): Promise<ITotalAmount | any> {
+    const { amount, status }: { amount: number; status: string } = data;
+    const obj: any = {};
+    if (amount) {
+      obj.amount = amount;
+    }
+    if (status) {
+      obj.status = status;
+    }
+
+    const updatedData = await this.totalAmount
+      .findOneAndUpdate({ _id: id }, { $set: obj }, { new: true })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return updatedData;
+  }
+
+  async addPayment(): Promise<IPayment | any> {
+    console.log('');
+  }
+
+  async getPayment(): Promise<IPayment | any> {
+    console.log('');
   }
 }
