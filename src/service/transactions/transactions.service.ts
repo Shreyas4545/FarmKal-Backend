@@ -5,8 +5,8 @@ import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { ILocation } from '../../../src/interface/location.interface';
-import { ITotalAmount } from 'src/interface/totalAmount.interface';
-import { IPayment } from 'src/interface/payment.interface';
+import { ITotalAmount } from '../../interface/totalAmount.interface';
+import { IPayment } from '../../interface/payment.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
