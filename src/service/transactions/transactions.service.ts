@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
@@ -417,7 +417,7 @@ export class TransactionsService {
     obj.ownerId = ownerId;
     obj.farmerProfileID = farmerProfileID;
 
-    const TotalAmountData = this.totalAmount
+    const TotalAmountData = await this.totalAmount
       .find(obj)
       .exec()
       .catch((err) => {
@@ -447,11 +447,59 @@ export class TransactionsService {
     return updatedData;
   }
 
-  async addPayment(): Promise<IPayment | any> {
-    console.log('');
+  async addPayment(data: any): Promise<IPayment | any> {
+    const { amount, totalAmountId }: { amount: number; totalAmountId: number } =
+      data;
+
+    const obj: any = {};
+    obj.amount = amount;
+    obj.totalAmountId = totalAmountId;
+    obj.date = new Date();
+    obj.status = 'ACTIVE';
+
+    const newPayment = await new this.Payment(obj).save();
+    return newPayment;
   }
 
-  async getPayment(): Promise<IPayment | any> {
-    console.log('');
+  async getPayment(data: any): Promise<IPayment | any> {
+    const {
+      ownerId,
+      farmerProfileID,
+    }: { ownerId: string; farmerProfileID: string } = data;
+
+    const paymentData = await this.Payment.aggregate([
+      {
+        $addFields: { totalAmountId: { $toObjectId: '$totalAmountId' } },
+      },
+      {
+        $lookup: {
+          from: 'totalamounts',
+          localField: 'totalAmountId',
+          foreignField: '_id',
+          as: 'totalAmountDetails',
+        },
+      },
+      {
+        $unwind: '$totalAmountDetails', // Flatten totalAmountDetails to access its fields
+      },
+      {
+        $match: {
+          'totalAmountDetails.ownerId': ownerId,
+          'totalAmountDetails.farmerProfileID': new mongoose.Types.ObjectId(
+            farmerProfileID,
+          ), // Match ObjectId
+        },
+      },
+      {
+        $project: {
+          amount: 1,
+          status: 1,
+          date: 1,
+          totalAmountId: 1,
+        },
+      },
+    ]).exec();
+
+    return paymentData;
   }
 }

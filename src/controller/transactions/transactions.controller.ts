@@ -21,6 +21,11 @@ import { UserService } from '../../service/userService/user.service';
 interface paymentMode {
   method: string;
 }
+
+interface paymentData {
+  totalAmountId: string;
+  amount: number;
+}
 @Controller('api/rental/transactions')
 export class TransactionsController {
   constructor(
@@ -115,7 +120,8 @@ export class TransactionsController {
         await this.transactionsService.updateTotalAmount(
           totalAmountData[0]?._id,
           {
-            amount: totalAmountData[0]?.amount + data?.totalAmount,
+            amount:
+              Number(totalAmountData[0]?.amount) + Number(data?.totalAmount),
           },
         );
       } else {
@@ -258,13 +264,93 @@ export class TransactionsController {
         paymentType: paymentType,
         rentalCategoryId: rentalCategoryId,
       };
-      const data = await this.transactionsService.getAllTransactions(nextData);
+      const data: any[] = await this.transactionsService.getAllTransactions(
+        nextData,
+      );
 
+      const paymentObj = {
+        ownerId: ownerId,
+        farmerProfileID: farmerProfileId,
+      };
+
+      const paymentData: any[] = await this.transactionsService.getPayment(
+        paymentObj,
+      );
+
+      const returnObj = {
+        transactionData: data,
+        amountDue:
+          data?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
+          paymentData?.reduce((acc, it) => acc + Number(it.amount), 0),
+        amountPaid: paymentData?.reduce(
+          (acc, it) => acc + Number(it.amount),
+          0,
+        ),
+      };
       return this.responseCompo.successResponse(
         response,
         {
           statusCode: HttpStatus.OK,
           message: 'Successfully Sent All Transactions!',
+        },
+        returnObj,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/addPayment')
+  async addPayment(@Res() response, @Body() data: paymentData) {
+    const { amount, totalAmountId } = data;
+
+    try {
+      const obj = {
+        amount: amount,
+        totalAmountId: totalAmountId,
+      };
+
+      const newPayment = await this.transactionsService.addPayment(obj);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Added New Payment!',
+        },
+        newPayment,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getPaymentHistory')
+  async getPaymentHistory(
+    @Res() response,
+    @Query('ownerId') ownerId: string,
+    @Query('farmerProfileID') farmerProfileID: string,
+  ) {
+    try {
+      const obj: any = {
+        ownerId,
+        farmerProfileID,
+      };
+      const data = await this.transactionsService.getPayment(obj);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Payment History!',
         },
         data,
       );

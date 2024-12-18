@@ -9,6 +9,9 @@ export class Payment {
   @Prop()
   status: string;
 
+  @Prop()
+  date: Date;
+
   @Prop({ type: Types.ObjectId, ref: 'totalAmount', required: true })
   totalAmountId: Types.ObjectId;
 }
