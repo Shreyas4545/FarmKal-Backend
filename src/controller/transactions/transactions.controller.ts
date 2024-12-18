@@ -279,6 +279,7 @@ export class TransactionsController {
 
       const returnObj = {
         transactionData: data,
+        totalAmountId: paymentData[0].totalAmountId,
         amountDue:
           data?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
           paymentData?.reduce((acc, it) => acc + Number(it.amount), 0),
