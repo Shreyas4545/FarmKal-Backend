@@ -82,7 +82,7 @@ export class TransactionsController {
         rentalImages: s3ImageUrls,
       };
 
-      const newTransaction = await this.transactionsService.create(newData);
+      let newTransaction = await this.transactionsService.create(newData);
 
       const farmer = await this.userService.getUsers({
         phone: data?.farmerPhone,
@@ -116,7 +116,10 @@ export class TransactionsController {
       const totalAmountData: any[] =
         await this.transactionsService.getTotalAmount(obj1);
 
+      let newTotalAmountId: string;
+
       if (totalAmountData?.length > 0) {
+        newTotalAmountId = totalAmountData[0]?._id;
         await this.transactionsService.updateTotalAmount(
           totalAmountData[0]?._id,
           {
@@ -129,8 +132,18 @@ export class TransactionsController {
           ...obj1,
           amount: data?.totalAmount,
         };
-        await this.transactionsService.addTotalAmount(localObj);
+
+        const newTotalAmount = await this.transactionsService.addTotalAmount(
+          localObj,
+        );
+
+        newTotalAmountId = newTotalAmount?._id;
       }
+
+      newTransaction = await this.transactionsService.update(
+        newTransaction?._id,
+        { totalAmountId: newTotalAmountId },
+      );
 
       return this.responseCompo.successResponse(
         response,
@@ -273,13 +286,13 @@ export class TransactionsController {
         farmerProfileID: farmerProfileId,
       };
 
-      const paymentData: any[] = await this.transactionsService.getPayment(
-        paymentObj,
-      );
+      const paymentData: any[] =
+        await this.transactionsService.getPaymentHistory(paymentObj);
 
       const returnObj = {
         transactionData: data,
-        totalAmountId: paymentData[0].totalAmountId,
+        totalAmountId: data?.filter((s) => s.totalAmountStatus == 'ACTIVE')[0]
+          ?.totalAmountId,
         amountDue:
           data?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
           paymentData?.reduce((acc, it) => acc + Number(it.amount), 0),
@@ -317,6 +330,24 @@ export class TransactionsController {
 
       const newPayment = await this.transactionsService.addPayment(obj);
 
+      const payments: any[] = await this.transactionsService.getPayment(
+        totalAmountId,
+      );
+
+      const totalAmount: any[] = await this.transactionsService.getTotalAmount(
+        totalAmountId,
+      );
+
+      const amountDue =
+        totalAmount[0]?.amount -
+        payments?.reduce((acc, it) => acc + Number(it?.amount), 0);
+
+      if (amountDue == 0) {
+        await this.transactionsService.updateTotalAmount(totalAmount[0]._id, {
+          status: 'INACTIVE',
+        });
+      }
+
       return this.responseCompo.successResponse(
         response,
         {
@@ -345,7 +376,7 @@ export class TransactionsController {
         ownerId,
         farmerProfileID,
       };
-      const data = await this.transactionsService.getPayment(obj);
+      const data = await this.transactionsService.getPaymentHistory(obj);
 
       return this.responseCompo.successResponse(
         response,

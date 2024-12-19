@@ -13,6 +13,9 @@ export class Transactions {
   @Prop({ type: Types.ObjectId, ref: 'farmerProfile', required: true })
   farmerProfileID: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'totalamounts' })
+  totalAmountId: Types.ObjectId;
+
   @Prop({ type: Types.ObjectId, ref: 'Location' })
   locationId: Types.ObjectId;
 

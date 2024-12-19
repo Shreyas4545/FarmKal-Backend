@@ -258,6 +258,14 @@ export class TransactionsService {
       },
       {
         $lookup: {
+          from: 'totalamounts',
+          localField: 'totalAmountId',
+          foreignField: '_id',
+          as: 'totalAmountDetails',
+        },
+      },
+      {
+        $lookup: {
           from: 'rentalcategories',
           localField: 'rentalCategoryId',
           foreignField: '_id',
@@ -276,6 +284,9 @@ export class TransactionsService {
         $unwind: '$rentalCategory',
       },
       {
+        $unwind: '$totalAmountDetails',
+      },
+      {
         $unwind: '$farmerProfile',
       },
       {
@@ -285,7 +296,10 @@ export class TransactionsService {
         },
       },
       {
-        $match: { ownerId: ownerId, farmerProfileId: farmerProfileId },
+        $match: {
+          ownerId: ownerId,
+          farmerProfileId: farmerProfileId,
+        },
       },
       {
         $project: {
@@ -294,6 +308,8 @@ export class TransactionsService {
           farmerProfileID: 1,
           rentalImages: 1,
           // locationDetails: 1,
+          totalAmountId: '$totalAmountDetails._id',
+          totalAmountStatus: '$totalAmountDetails.status',
           rentalCategoryName: '$rentalCategory.name',
           locationId: '$locationDetails._id',
           city: '$locationDetails.city',
@@ -324,6 +340,7 @@ export class TransactionsService {
       rentalImages,
       farmerProfileID,
       crop,
+      totalAmountId,
       unit,
       paymentType,
       price,
@@ -333,6 +350,10 @@ export class TransactionsService {
 
     if (ownerId) {
       obj.ownerId = ownerId;
+    }
+
+    if (totalAmountId) {
+      obj.totalAmountId = totalAmountId;
     }
 
     if (rentalCategoryId) {
@@ -409,13 +430,17 @@ export class TransactionsService {
 
   async getTotalAmount(data: any): Promise<ITotalAmount | any> {
     const {
+      totalAmountId,
       ownerId,
       farmerProfileID,
-    }: { ownerId: string; farmerProfileID: string } = data;
+    }: { totalAmountId: string; ownerId: string; farmerProfileID: string } =
+      data;
 
     const obj: any = {};
-    obj.ownerId = ownerId;
-    obj.farmerProfileID = farmerProfileID;
+    if (totalAmountId) obj._id = totalAmountId;
+    if (ownerId) obj.ownerId = ownerId;
+    if (farmerProfileID) obj.farmerProfileID = farmerProfileID;
+    obj.status = 'ACTIVE';
 
     const TotalAmountData = await this.totalAmount
       .find(obj)
@@ -461,7 +486,7 @@ export class TransactionsService {
     return newPayment;
   }
 
-  async getPayment(data: any): Promise<IPayment | any> {
+  async getPaymentHistory(data: any): Promise<IPayment | any> {
     const {
       ownerId,
       farmerProfileID,
@@ -501,5 +526,16 @@ export class TransactionsService {
     ]).exec();
 
     return paymentData;
+  }
+
+  async getPayment(totalAmountId: string): Promise<IPayment | any> {
+    const payments: any[] | any = await this.Payment.find({
+      totalAmountId: totalAmountId,
+    })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+    return payments;
   }
 }
