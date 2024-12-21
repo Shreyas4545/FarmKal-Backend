@@ -7,6 +7,9 @@ export class rentalCategory {
 
   @Prop()
   isActive: boolean;
+
+  @Prop()
+  isTrip: boolean;
 }
 
 export const rentalCategorySchema =

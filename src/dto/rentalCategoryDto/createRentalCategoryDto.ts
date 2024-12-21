@@ -6,4 +6,7 @@ export class createRentalCategoryDTO {
 
   @IsBoolean()
   readonly isActive: boolean;
+
+  @IsBoolean()
+  readonly isTrip: boolean;
 }
