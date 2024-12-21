@@ -538,4 +538,49 @@ export class TransactionsService {
       });
     return payments;
   }
+
+  async getDashboardData(ownerId: string): Promise<any> {
+    const today = new Date();
+    const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
+
+    const data: any[] | any = await this.transactions.find({
+      $and: [
+        {
+          date: {
+            $gte: startOfDay,
+          },
+        },
+        {
+          date: {
+            $lt: endOfDay,
+          },
+        },
+      ],
+    });
+
+    console.log(data);
+
+    const obj = {
+      ownerId: ownerId,
+    };
+
+    const data1: any[] | any = await this.transactions
+      .find(obj)
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const returnObj = {
+      currDayEarnings: data?.reduce(
+        (acc: any, it: any) => acc + it.totalAmount,
+        0,
+      ),
+      totalEarnings: data1?.reduce(
+        (acc: any, it: any) => acc + it.totalAmount,
+        0,
+      ),
+    };
+    return returnObj;
+  }
 }
