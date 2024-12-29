@@ -291,6 +291,7 @@ export class TransactionsController {
 
       const returnObj = {
         transactionData: data,
+        farmerName: data[0].farmerName,
         totalAmountId: data?.filter((s) => s.totalAmountStatus == 'ACTIVE')[0]
           ?.totalAmountId,
         amountDue:
