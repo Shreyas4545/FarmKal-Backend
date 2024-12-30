@@ -10,7 +10,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { TransactionsService } from '../../service/transactions/transactions.service';
-import { createTransactionDTO } from '../../dto/transactionsDto/createTransaction.dto';
 import { ResponseCompo } from '../../utils/response';
 import { ImagesService } from '../../service/product-listing-images/product-listing-images.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -76,7 +75,7 @@ export class TransactionsController {
       const newData = {
         ...data,
         farmerName: data?.name,
-        farmerPhone: data?.phoneNo,
+        farmerPhone: data?.farmerPhone,
         date: new Date(),
         farmerProfileID: farmerProfile?._id,
         rentalImages: s3ImageUrls,
@@ -91,6 +90,7 @@ export class TransactionsController {
       const owner = await this.userService.getUser(data?.ownerId);
 
       if (farmer?.length > 0) {
+        console.log(farmer[0]?._id);
         await oneSignal(
           'message',
           `${owner?.name} has created a transaction.`,
