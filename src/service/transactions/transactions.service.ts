@@ -559,8 +559,6 @@ export class TransactionsService {
       ],
     });
 
-    console.log(data);
-
     const obj = {
       ownerId: ownerId,
     };
