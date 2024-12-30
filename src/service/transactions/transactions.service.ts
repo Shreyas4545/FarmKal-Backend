@@ -544,6 +544,8 @@ export class TransactionsService {
     const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
 
+    console.log(startOfDay, endOfDay);
+
     const data: any[] | any = await this.transactions.find({
       $and: [
         {
@@ -556,8 +558,16 @@ export class TransactionsService {
             $lt: endOfDay,
           },
         },
+        {
+          ownerId: ownerId,
+        },
+        {
+          status: 'ACTIVE',
+        },
       ],
     });
+
+    console.log(data);
 
     const obj = {
       ownerId: ownerId,
