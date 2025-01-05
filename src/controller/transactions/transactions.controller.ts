@@ -291,11 +291,13 @@ export class TransactionsController {
 
       const returnObj = {
         transactionData: data,
-        farmerName: data[0].farmerName,
+        farmerName: data[0]?.farmerName,
         totalAmountId: data?.filter((s) => s.totalAmountStatus == 'ACTIVE')[0]
           ?.totalAmountId,
         amountDue:
-          data?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
+          data
+            ?.filter((s) => s.paymentType == 'credit')
+            ?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
           paymentData?.reduce((acc, it) => acc + Number(it.amount), 0),
         amountPaid: paymentData?.reduce(
           (acc, it) => acc + Number(it.amount),
@@ -409,6 +411,38 @@ export class TransactionsController {
           message: 'Successfully Sent All Transactions!',
         },
         data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/sendNotificationToFarmer')
+  async sendNotification(
+    @Res() response,
+    @Query('farmerProfileID') farmerProfileID: string,
+    @Query('userName') userName: string,
+    @Query('dueAmount') dueAmount: number,
+  ) {
+    try {
+      await oneSignal(
+        'message',
+        `Reminder to pay - ₹${dueAmount} to ${userName}`,
+        `₹${dueAmount} is Pending`,
+        '',
+        farmerProfileID,
+      );
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Notification to Farmer!',
+        },
+        '',
       );
     } catch (err) {
       console.log(err);
