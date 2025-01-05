@@ -7,6 +7,7 @@ import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { ILocation } from '../../../src/interface/location.interface';
 import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
+import { start } from 'repl';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -544,8 +545,6 @@ export class TransactionsService {
     const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
 
-    console.log(startOfDay, endOfDay);
-
     const data: any[] | any = await this.transactions.find({
       $and: [
         {
@@ -588,5 +587,56 @@ export class TransactionsService {
       ),
     };
     return returnObj;
+  }
+
+  async getTripCount(ownerId: string): Promise<any> {
+    const today = new Date();
+    const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
+
+    const data: any[] | any = await this.transactions.aggregate([
+      {
+        $addFields: {
+          rentalCategoryId: { $toObjectId: '$rentalCategoryId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'rentalcategories',
+          localField: 'rentalCategoryId',
+          foreignField: '_id',
+          as: 'rentalCategory',
+        },
+      },
+      {
+        $unwind: '$rentalCategory',
+      },
+      {
+        $match: {
+          ownerId: ownerId,
+          date: {
+            $gte: startOfDay,
+            $lt: endOfDay,
+          },
+          isActive: true,
+        },
+      },
+      {
+        $project: {
+          rentalCategoryName: '$rentalCategory.name',
+        },
+      },
+    ]);
+
+    const obj: any = {};
+    data?.map((it, key) => {
+      if (!obj[it.rentalCategoryName]) {
+        obj[it.rentalCategoryName] = 1;
+      } else {
+        obj[it.rentalCategoryName] += 1;
+      }
+    });
+
+    return obj;
   }
 }

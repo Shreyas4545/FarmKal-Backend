@@ -452,4 +452,25 @@ export class TransactionsController {
       });
     }
   }
+
+  @Get('/getTripCount')
+  async getTripCount(@Res() response, @Query('ownerId') ownerId: string) {
+    try {
+      const data = await this.transactionsService.getTripCount(ownerId);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Sent Trip Count Data!',
+        },
+        data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }
