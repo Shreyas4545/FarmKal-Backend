@@ -623,6 +623,7 @@ export class TransactionsService {
       },
       {
         $project: {
+          noOfUnits: 1,
           rentalCategoryName: '$rentalCategory.name',
         },
       },
@@ -631,9 +632,9 @@ export class TransactionsService {
     const obj: any = {};
     data?.map((it, key) => {
       if (!obj[it.rentalCategoryName]) {
-        obj[it.rentalCategoryName] = 1;
+        obj[it.rentalCategoryName] = it.noOfUnits;
       } else {
-        obj[it.rentalCategoryName] += 1;
+        obj[it.rentalCategoryName] += it.noOfUnits;
       }
     });
 
