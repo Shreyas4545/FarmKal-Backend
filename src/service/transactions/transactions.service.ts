@@ -589,12 +589,13 @@ export class TransactionsService {
     return returnObj;
   }
 
-  async getTripCount(ownerId: string): Promise<any> {
+  async getTripCount(ownerId: string, phoneNo: number): Promise<any> {
+    console.log(phoneNo);
     const today = new Date();
     const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
 
-    const data: any[] | any = await this.transactions.aggregate([
+    let data: any[] | any = await this.transactions.aggregate([
       {
         $addFields: {
           rentalCategoryId: { $toObjectId: '$rentalCategoryId' },
@@ -607,6 +608,17 @@ export class TransactionsService {
           foreignField: '_id',
           as: 'rentalCategory',
         },
+      },
+      {
+        $lookup: {
+          from: 'farmerprofiles',
+          localField: 'farmerProfileID',
+          foreignField: '_id',
+          as: 'farmerProfile',
+        },
+      },
+      {
+        $unwind: '$farmerProfile',
       },
       {
         $unwind: '$rentalCategory',
@@ -624,12 +636,16 @@ export class TransactionsService {
       {
         $project: {
           noOfUnits: 1,
+          farmerPhoneNo: '$farmerProfile.phoneNo',
           rentalCategoryName: '$rentalCategory.name',
         },
       },
     ]);
 
     const obj: any = {};
+    if (phoneNo) {
+      data = data?.filter((s, key) => s.farmerPhoneNo == phoneNo);
+    }
     data?.map((it, key) => {
       if (!obj[it.rentalCategoryName]) {
         obj[it.rentalCategoryName] = it.noOfUnits;
