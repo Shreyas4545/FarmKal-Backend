@@ -457,12 +457,12 @@ export class TransactionsController {
   async getTripCount(
     @Res() response,
     @Query('ownerId') ownerId: string,
-    @Query('phoneNo') phoneNo: number,
+    @Query('phoneNumber') phoneNumber: number,
   ) {
     try {
       const data = await this.transactionsService.getTripCount(
         ownerId,
-        phoneNo,
+        phoneNumber,
       );
       return this.responseCompo.successResponse(
         response,
