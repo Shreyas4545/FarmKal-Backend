@@ -90,14 +90,23 @@ export class TransactionsController {
       const owner = await this.userService.getUser(data?.ownerId);
 
       if (farmer?.length > 0) {
-        console.log(farmer[0]?._id);
-        await oneSignal(
-          'message',
-          `${owner?.name} has created a transaction.`,
-          `${data?.totalAmount} Pending`,
-          '',
-          farmer[0]?._id,
-        );
+        if (data?.paymentType.toLowerCase() == 'credit') {
+          await oneSignal(
+            'message',
+            `${owner?.name} has created a transaction.`,
+            `${data?.totalAmount} Pending`,
+            '',
+            farmer[0]?._id,
+          );
+        } else if (data?.paymentType.toLowerCase() == 'cash') {
+          await oneSignal(
+            'message',
+            `${owner?.name} has created a transaction.`,
+            `Payment is successfull`,
+            '',
+            farmer[0]?._id,
+          );
+        }
       } else {
         await oneSignal(
           'message',
