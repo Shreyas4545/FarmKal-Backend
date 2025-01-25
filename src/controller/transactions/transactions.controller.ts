@@ -434,17 +434,30 @@ export class TransactionsController {
   async sendNotification(
     @Res() response,
     @Query('farmerProfileID') farmerProfileID: string,
+    @Query('ownerId') ownerId: string,
     @Query('userName') userName: string,
     @Query('dueAmount') dueAmount: number,
   ) {
     try {
-      await oneSignal(
-        'message',
-        `Reminder to pay - ₹${dueAmount} to ${userName}`,
-        `₹${dueAmount} is Pending`,
-        '',
-        farmerProfileID,
-      );
+      // await oneSignal(
+      //   'message',
+      //   `Reminder to pay - ₹${dueAmount} to ${userName}`,
+      //   `₹${dueAmount} is Pending`,
+      //   '',
+      //   farmerProfileID,
+      // );
+
+      const obj = {
+        ownerId,
+        farmerProfileId: farmerProfileID,
+      };
+
+      const reminderData = await this.transactionsService
+        .addOwnerReminder(obj)
+        .catch((err) => {
+          console.log(err);
+        });
+
       return this.responseCompo.successResponse(
         response,
         {

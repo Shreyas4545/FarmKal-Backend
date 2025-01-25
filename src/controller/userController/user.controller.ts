@@ -68,6 +68,7 @@ export class UserController {
       let newUser: any = {
         ...createUserDto,
         image: fileUrl,
+        createdAt: new Date(),
         referralId: referralId,
       };
 
@@ -297,4 +298,54 @@ export class UserController {
   // async handleChat(@Res() response, @Body() data: any) {
   //   this.chatService.handleMessage(data, 'A');
   // }
+
+  @Get('/getUserData')
+  async getUserData(
+    @Res() response,
+    @Query('userId') userId: string,
+    data: any,
+  ) {
+    try {
+      if (!data.phone) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_ACCEPTABLE,
+          message: 'Phone and Password are mandatory',
+        });
+      }
+
+      let user: any = await this.userService.getUsers(data);
+
+      if (!user) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'No user found with given phone number',
+        });
+      }
+
+      user = { ...user[0]?._doc, otp: data?.otp };
+      const access_token: string | boolean = await this.userService.login(user);
+
+      if (!access_token) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Incorrect Otp! Please Try Again',
+        });
+      }
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'User Logged In Successfully',
+        },
+        { accesstoken: access_token, ...user },
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }

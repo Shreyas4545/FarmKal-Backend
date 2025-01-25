@@ -34,6 +34,9 @@ export class User {
 
   @Prop()
   isActive: boolean;
+
+  @Prop()
+  createdAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

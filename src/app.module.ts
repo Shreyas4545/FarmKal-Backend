@@ -78,6 +78,7 @@ import { FramerProfileController } from './framer-profile/framer-profile.control
 import { FarmerProfileSchema } from './schema/farmerProfile.schema';
 import { paymentTypeSchema } from './schema/paymentMode.schema';
 import { PaymentSchema } from './schema/payment.schema';
+import { OwnerReminderSchema } from './schema/ownerReminder.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -112,6 +113,7 @@ import { PaymentSchema } from './schema/payment.schema';
       { name: 'paymentType', schema: paymentTypeSchema },
       { name: 'totalAmount', schema: TotalAmountSchema },
       { name: 'Payment', schema: PaymentSchema },
+      { name: 'OwnerReminder', schema: OwnerReminderSchema },
     ]),
   ],
   controllers: [

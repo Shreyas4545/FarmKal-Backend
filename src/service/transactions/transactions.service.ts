@@ -7,7 +7,7 @@ import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { ILocation } from '../../../src/interface/location.interface';
 import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
-import { start } from 'repl';
+import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -30,6 +30,8 @@ export class TransactionsService {
     @InjectModel('Payment')
     private Payment: Model<IPayment>,
     @InjectModel('Location') private locationModel: Model<ILocation>,
+    @InjectModel('OwnerReminder')
+    private OwnerReminderModel: Model<IOwnerReminder>,
   ) {}
 
   async create(data: any): Promise<ITransactions | any> {
@@ -50,6 +52,7 @@ export class TransactionsService {
       country,
       totalAmount,
       noOfUnits,
+      isVerified,
     } = data;
 
     let { locationId } = data;
@@ -91,6 +94,7 @@ export class TransactionsService {
       crop: crop,
       locationId: locationId,
       unit: unit,
+      isVerified: isVerified,
       farmerName: farmerName,
       farmerPhone: farmerPhone,
       date: date,
@@ -590,7 +594,6 @@ export class TransactionsService {
   }
 
   async getTripCount(ownerId: string, phoneNo: number): Promise<any> {
-    console.log(phoneNo);
     const today = new Date();
     const startOfDay = new Date(today.setUTCHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setUTCHours(23, 59, 59, 999));
@@ -655,5 +658,38 @@ export class TransactionsService {
     });
 
     return obj;
+  }
+
+  async addOwnerReminder(data: any): Promise<any> {
+    const { ownerId, farmerProfileId } = data;
+
+    let Obj: any = {
+      ownerId,
+      farmerProfileId,
+      isActive: 1,
+    };
+
+    const existingData: any = await this.OwnerReminderModel.find(Obj).catch(
+      (err) => {
+        console.log(err);
+      },
+    );
+
+    let reminderData;
+    if (existingData?.length > 0) {
+      reminderData = await this.OwnerReminderModel.findOneAndUpdate(
+        { _id: existingData[0]?._id },
+        { $set: { reminderCount: existingData[0]?.reminderCount + 1 } },
+      ).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      Obj.reminderCount = 1;
+      reminderData = await this.OwnerReminderModel.create(Obj).catch((err) => {
+        console.log(err);
+      });
+    }
+
+    return reminderData;
   }
 }

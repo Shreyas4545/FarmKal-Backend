@@ -51,6 +51,9 @@ export class Transactions {
 
   @Prop()
   isActive: boolean;
+
+  @Prop()
+  isVerified: boolean;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transactions);

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUser } from '../../interface/user.interface';
 import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { OtpService } from '../otp/otp.service';
@@ -160,5 +160,19 @@ export class UserService {
       });
 
     return access_token;
+  }
+
+  async getUserProfileData(userId: string): Promise<string | boolean | any> {
+    const getObj = {
+      _id: new mongoose.Types.ObjectId(userId),
+    };
+
+    const userDetails = await this.userModel.aggregate([
+      {
+        $match: getObj,
+      },
+    ]);
+
+    return userDetails;
   }
 }
