@@ -322,7 +322,6 @@ export class UserService {
       },
     ]);
 
-    console.log(userDetails);
     return userDetails;
   }
 }
