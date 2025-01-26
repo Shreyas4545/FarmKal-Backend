@@ -186,6 +186,14 @@ export class UserService {
         },
       },
       {
+        $lookup: {
+          from: 'ownerreminders',
+          localField: '_id',
+          foreignField: 'ownerId',
+          as: 'reminderDetails',
+        },
+      },
+      {
         $addFields: {
           transactionDetails: {
             $map: {
@@ -201,6 +209,9 @@ export class UserService {
                   $toObjectId: '$$transaction.ownerId',
                 },
                 farmerProfileId: '$$transaction.farmerProfileID',
+                farmerProfileId1: {
+                  $toString: '$$transaction.farmerProfileID',
+                },
                 rentalCategoryId: {
                   $toObjectId: '$$transaction.rentalCategoryId',
                 },
@@ -267,6 +278,23 @@ export class UserService {
                           $eq: [
                             '$$farmerProfile._id',
                             '$$transaction.farmerProfileId',
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                reminderDetails: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: '$reminderDetails',
+                        as: 'reminder',
+                        cond: {
+                          $eq: [
+                            '$$transaction.farmerProfileId1',
+                            '$$reminder.farmerProfileId',
                           ],
                         },
                       },
