@@ -348,4 +348,33 @@ export class UserController {
       });
     }
   }
+
+  @Get('/getUserProfileData')
+  async getUserProfileData(@Res() response, @Query('userId') userId: string) {
+    try {
+      if (!userId) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: `Provide User Id To Fetch Details`,
+        });
+      }
+      const userProfileDetails = await this.userService.getUserProfileData(
+        userId,
+      );
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'User Data Sent Successfully',
+        },
+        userProfileDetails,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }

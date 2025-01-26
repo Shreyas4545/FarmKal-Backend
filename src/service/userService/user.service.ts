@@ -5,6 +5,9 @@ import { IUser } from '../../interface/user.interface';
 import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { OtpService } from '../otp/otp.service';
 import { JwtGenerate } from '../../utils/jwt.token';
+import { get } from 'http';
+import { paymentType } from 'src/schema/paymentMode.schema';
+import { totalAmount } from 'src/schema/totalAmount.schema';
 
 interface Login extends Document {
   phone: number;
@@ -163,16 +166,135 @@ export class UserService {
   }
 
   async getUserProfileData(userId: string): Promise<string | boolean | any> {
-    const getObj = {
-      _id: new mongoose.Types.ObjectId(userId),
-    };
-
     const userDetails = await this.userModel.aggregate([
       {
-        $match: getObj,
+        $match: { _id: new mongoose.Types.ObjectId(userId) }, // Convert string ID to ObjectId
+      },
+      {
+        $addFields: {
+          _id: {
+            $toString: '$_id',
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'transactions',
+          localField: '_id', // Match with the _id of the user
+          foreignField: 'ownerId', // Field in transactions collection
+          as: 'transactionDetails', // Output array of transactions
+        },
+      },
+      {
+        $addFields: {
+          transactionDetails: {
+            $map: {
+              input: '$transactionDetails',
+              as: 'transaction',
+              in: {
+                _id: '$$transaction._id',
+                paymentType: '$$transaction.paymentType',
+                totalAmount: '$$transaction.totalAmount',
+                noOfUnits: '$$transaction.noOfUnits',
+                isVerified: '$$transaction.isVerified',
+                ownerId: {
+                  $toObjectId: '$$transaction.ownerId',
+                },
+                farmerProfileId: '$$transaction.farmerProfileID',
+                rentalCategoryId: {
+                  $toObjectId: '$$transaction.rentalCategoryId',
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'rentalcategories',
+          localField: 'transactionDetails.rentalCategoryId', // Field in transactions after $addFields
+          foreignField: '_id', // Match with _id in rentalcategories
+          as: 'rentalCategoryDetails', // Output array of rental categories
+        },
+      },
+      {
+        $lookup: {
+          from: 'farmerprofiles',
+          localField: 'transactionDetails.farmerProfileId', // Field in transactions after $addFields
+          foreignField: '_id', // Match with _id in rentalcategories
+          as: 'farmerProfileDetails', // Output array of rental categories
+        },
+      },
+      {
+        $addFields: {
+          transactionDetails: {
+            $map: {
+              input: '$transactionDetails',
+              as: 'transaction',
+              in: {
+                _id: '$$transaction._id',
+                ownerId: '$$transaction.ownerId',
+                paymentType: '$$transaction.paymentType',
+                isVerified: '$$transaction.isVerified',
+                totalAmount: '$$transaction.totalAmount',
+                noOfUnits: '$$transaction.noOfUnits',
+                farmerProfileId: '$$transaction.farmerProfileId',
+                rentalCategoryId: '$$transaction.rentalCategoryId',
+                rentalCategoryName: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: '$rentalCategoryDetails',
+                        as: 'category',
+                        cond: {
+                          $eq: [
+                            '$$category._id',
+                            '$$transaction.rentalCategoryId',
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                farmerProfileDetails: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: '$farmerProfileDetails',
+                        as: 'farmerProfile',
+                        cond: {
+                          $eq: [
+                            '$$farmerProfile._id',
+                            '$$transaction.farmerProfileId',
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          email: 1,
+          phone: 1,
+          state: 1,
+          city: 1,
+          country: 1,
+          image: 1,
+          createdAt: 1,
+          transactionDetails: 1,
+        },
       },
     ]);
 
+    console.log(userDetails);
     return userDetails;
   }
 }
