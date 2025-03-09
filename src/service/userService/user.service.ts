@@ -5,10 +5,6 @@ import { IUser } from '../../interface/user.interface';
 import { createUserDto } from '../../dto/userDto/create-user.dto';
 import { OtpService } from '../otp/otp.service';
 import { JwtGenerate } from '../../utils/jwt.token';
-import { get } from 'http';
-import { paymentType } from 'src/schema/paymentMode.schema';
-import { totalAmount } from 'src/schema/totalAmount.schema';
-
 interface Login extends Document {
   phone: number;
   isAdmin: boolean;

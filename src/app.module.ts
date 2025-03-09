@@ -79,6 +79,7 @@ import { FarmerProfileSchema } from './schema/farmerProfile.schema';
 import { paymentTypeSchema } from './schema/paymentMode.schema';
 import { PaymentSchema } from './schema/payment.schema';
 import { OwnerReminderSchema } from './schema/ownerReminder.schema';
+import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -114,6 +115,7 @@ import { OwnerReminderSchema } from './schema/ownerReminder.schema';
       { name: 'totalAmount', schema: TotalAmountSchema },
       { name: 'Payment', schema: PaymentSchema },
       { name: 'OwnerReminder', schema: OwnerReminderSchema },
+      { name: 'PrivacyPolicy', schema: PrivacyPolicySchema },
     ]),
   ],
   controllers: [
