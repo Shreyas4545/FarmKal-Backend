@@ -20,9 +20,14 @@ export class AppVersionService {
     return appVersionDetails;
   }
 
-  async getPrivacyPolicy(): Promise<IPolicy | any> {
+  async getPrivacyPolicy(data): Promise<IPolicy | any> {
+    const obj: any = {};
+    if (data.name) {
+      obj.name = data.name;
+    }
+
     const policy: any = await this.privacyPolicyModel
-      .find()
+      .find(obj)
       .exec()
       .catch((err) => {
         console.log(err);

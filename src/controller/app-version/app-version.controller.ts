@@ -1,4 +1,12 @@
-import { Controller, Get, Res, HttpStatus, Body, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  HttpStatus,
+  Body,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AppVersionService } from 'src/service/appVersion/app-version.service';
 import { ResponseCompo } from 'src/utils/response';
 
@@ -32,10 +40,14 @@ export class AppVersionController {
   }
 
   @Get('/getPrivacyPolicy')
-  async getPrivacyPolicy(@Res() response) {
+  async getPrivacyPolicy(@Res() response, @Query('name') name: string) {
     try {
-      const privacyPolicy: any =
-        await this.appVersionService.getPrivacyPolicy();
+      const obj: any = {
+        name: name,
+      };
+      const privacyPolicy: any = await this.appVersionService.getPrivacyPolicy(
+        obj,
+      );
       return this.responseCompo.successResponse(
         response,
         {
