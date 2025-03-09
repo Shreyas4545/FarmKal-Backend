@@ -31,12 +31,14 @@ export class AppVersionService {
   }
 
   async addPrivacyPolicy(data: any): Promise<IPolicy | any> {
+    const { name, policy } = data;
     const obj: any = {
-      policy: data.data,
+      policy: policy,
+      name: name,
     };
 
-    const policy: any = new this.privacyPolicyModel(obj);
+    const newPolicy: any = new this.privacyPolicyModel(obj);
 
-    return await policy.save();
+    return await newPolicy.save();
   }
 }
