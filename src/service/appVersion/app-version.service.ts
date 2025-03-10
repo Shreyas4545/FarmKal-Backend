@@ -32,7 +32,7 @@ export class AppVersionService {
       .catch((err) => {
         console.log(err);
       });
-    return policy;
+    return policy[0];
   }
 
   async addPrivacyPolicy(data: any): Promise<IPolicy | any> {
