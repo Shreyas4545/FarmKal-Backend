@@ -6,7 +6,7 @@ export default async function publishSubscribe(
 ) {
   // Connect to Ably with your API key
   const ably = new Ably.Realtime(
-    'JpheVQ.WC1J-g:qMWX32vzYVAd1_4mQ6etSbjJ3jirOWlUxe6MF6q05vs',
+    'JpheVQ.BlzHcQ:L-Q2TnuYlPd40UeXiDn7aaInl-OpKGwgotS4RJ98JW0',
   );
 
   ably.connection.once('connected', () => {
