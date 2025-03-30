@@ -502,4 +502,61 @@ export class TransactionsController {
       });
     }
   }
+
+  @Post('/addDiary')
+  async addDiary(@Res() response, @Body() data: any) {
+    try {
+      const obj = {
+        ...data,
+        isActive: true,
+        createdAt: new Date(),
+      };
+
+      const newDiary = await this.transactionsService.addDiary(obj);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Added New Diary Entry!',
+        },
+        newDiary,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getDetailedDairyEntries')
+  async getDiary(
+    @Res() response,
+    @Query('ownerId') ownerId: string,
+    @Query('date') date: Date,
+  ) {
+    try {
+      const diaryEntries = await this.transactionsService.getDetailedDiaries(
+        ownerId,
+        date,
+      );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Sent Diary Entries!',
+        },
+        diaryEntries,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }

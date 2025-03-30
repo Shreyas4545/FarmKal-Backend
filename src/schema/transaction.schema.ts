@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsOptional } from 'class-validator';
-import { Types, Schema as MongooseSchema } from 'mongoose';
+import { Types, Schema as MongooseSchema, Decimal128 } from 'mongoose';
 
 @Schema({ versionKey: false })
 export class Transactions {
@@ -34,8 +34,8 @@ export class Transactions {
   @Prop()
   crop: string;
 
-  @Prop()
-  unit: string;
+  @Prop({ type: MongooseSchema.Types.Decimal128 })
+  unit: Types.Decimal128;
 
   @Prop()
   price: number;

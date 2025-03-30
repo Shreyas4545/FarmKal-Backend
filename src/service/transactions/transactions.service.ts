@@ -7,6 +7,7 @@ import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { ILocation } from '../../../src/interface/location.interface';
 import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
+import { DiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 class getAllTransactions {
   readonly ownerId: string;
@@ -21,6 +22,8 @@ export class TransactionsService {
   constructor(
     @InjectModel('Transactions')
     private transactions: Model<ITransactions>,
+    @InjectModel('Diary')
+    private diary: Model<DiaryInterface>,
     @InjectModel('totalAmount')
     private totalAmount: Model<ITotalAmount>,
     @InjectModel('FarmerProfile')
@@ -691,5 +694,39 @@ export class TransactionsService {
     }
 
     return reminderData;
+  }
+
+  async addDiary(data: any): Promise<any> {
+    const { ownerId, type, startTime, endTime, date, createdAt, isActive } =
+      data;
+
+    const Obj: any = {
+      ownerId,
+      type,
+      startTime,
+      endTime,
+      date,
+      createdAt,
+      isActive,
+    };
+
+    const diaryData = await this.diary.create(Obj).catch((err) => {
+      console.log(err);
+    });
+
+    return diaryData;
+  }
+
+  async getDetailedDiaries(
+    ownerId: string,
+    date: Date,
+  ): Promise<IPaymentMode | any> {
+    const obj: any = {
+      ownerId: ownerId,
+      date: new Date(date),
+      isActive: true,
+    };
+    const data = await this.diary.find(obj);
+    return data;
   }
 }

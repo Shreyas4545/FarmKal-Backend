@@ -80,6 +80,7 @@ import { paymentTypeSchema } from './schema/paymentMode.schema';
 import { PaymentSchema } from './schema/payment.schema';
 import { OwnerReminderSchema } from './schema/ownerReminder.schema';
 import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
+import { DiarySchema } from './schema/diary.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -90,6 +91,7 @@ import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
+      { name: 'Diary', schema: DiarySchema },
       { name: 'rentalCategory', schema: rentalCategorySchema },
       { name: 'OTP', schema: OtpSchema },
       { name: 'Brand', schema: BrandSchema },
