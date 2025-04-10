@@ -58,6 +58,7 @@ export class TransactionsService {
       isVerified,
     } = data;
 
+    console.log(data);
     let { locationId } = data;
     if (!locationId && city && state && country) {
       const existingLocation: any = await this.locationModel
@@ -96,7 +97,7 @@ export class TransactionsService {
       farmerProfileID: farmerProfileID,
       crop: crop,
       locationId: locationId,
-      unit: unit,
+      unit: unit ? unit : 0.0,
       isVerified: isVerified,
       farmerName: farmerName,
       farmerPhone: farmerPhone,
