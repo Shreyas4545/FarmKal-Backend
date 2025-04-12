@@ -249,7 +249,7 @@ export class TransactionsService {
     data: getAllTransactions,
   ): Promise<ITransactions | any> {
     const { ownerId, farmerProfileId } = data;
-    const transactions = await this.transactions.aggregate([
+    let transactions: any = await this.transactions.aggregate([
       {
         $addFields: {
           rentalCategoryId: { $toObjectId: '$rentalCategoryId' },
@@ -336,6 +336,8 @@ export class TransactionsService {
       },
     ]);
 
+    if (transactions[0].unit)
+      transactions[0].unit = transactions[0]?.unit.toString();
     return transactions;
   }
 
