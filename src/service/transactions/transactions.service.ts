@@ -338,6 +338,7 @@ export class TransactionsService {
 
     if (transactions[0].unit)
       transactions[0].unit = transactions[0]?.unit.toString();
+    if (transactions[0].unit == '0') transactions[0].unit = '';
     return transactions;
   }
 
