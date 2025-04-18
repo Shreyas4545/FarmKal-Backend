@@ -338,7 +338,7 @@ export class TransactionsService {
 
     for (let i of transactions) {
       if (i?.unit) i.unit = i?.unit.toString();
-      if (i?.unit == '0') i.unit = '';
+      if (i?.unit == '') i.unit = '0';
     }
     return transactions;
   }
