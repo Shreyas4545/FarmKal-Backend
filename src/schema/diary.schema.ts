@@ -6,6 +6,9 @@ export class Diary {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   ownerId: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'FarmerProfile', required: true })
+  driverId: Types.ObjectId;
+
   @Prop()
   startTime: string;
 

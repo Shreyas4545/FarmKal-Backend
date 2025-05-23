@@ -81,6 +81,7 @@ import { PaymentSchema } from './schema/payment.schema';
 import { OwnerReminderSchema } from './schema/ownerReminder.schema';
 import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
 import { DiarySchema } from './schema/diary.schema';
+
 @Module({
   imports: [
     ConfigModule.forRoot({

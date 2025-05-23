@@ -1,7 +1,9 @@
 import { Document, Types } from 'mongoose';
 
-export interface DiaryInterface extends Document {
+export interface IDiaryInterface extends Document {
   readonly ownerId: Types.ObjectId;
+
+  readonly driverId: Types.ObjectId;
 
   readonly date: Date;
 

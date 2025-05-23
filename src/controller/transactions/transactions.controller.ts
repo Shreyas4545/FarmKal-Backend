@@ -506,8 +506,19 @@ export class TransactionsController {
   @Post('/addDiary')
   async addDiary(@Res() response, @Body() data: any) {
     try {
+      const farmerProfileData = {
+        name: data?.name,
+        phoneNo: data?.phoneNo,
+        status: 'ACTIVE',
+        isValidated: false,
+      };
+
+      const farmerProfile: any =
+        await this.transactionsService.createFarmerProfile(farmerProfileData);
+
       const obj = {
         ...data,
+        driverId: farmerProfile?._id,
         isActive: true,
         createdAt: new Date(),
       };
@@ -535,11 +546,13 @@ export class TransactionsController {
   async getDiary(
     @Res() response,
     @Query('ownerId') ownerId: string,
+    @Query('driverId') driverId: string,
     @Query('date') date: Date,
   ) {
     try {
       const diaryEntries = await this.transactionsService.getDetailedDiaries(
         ownerId,
+        driverId,
         date,
       );
 

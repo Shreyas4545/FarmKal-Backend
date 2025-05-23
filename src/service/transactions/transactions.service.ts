@@ -7,7 +7,7 @@ import { IPaymentMode } from '../../interface/paymentMode.interface';
 import { ILocation } from '../../../src/interface/location.interface';
 import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
-import { DiaryInterface } from '../../interface/diaryInterface';
+import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 class getAllTransactions {
   readonly ownerId: string;
@@ -23,7 +23,7 @@ export class TransactionsService {
     @InjectModel('Transactions')
     private transactions: Model<ITransactions>,
     @InjectModel('Diary')
-    private diary: Model<DiaryInterface>,
+    private diary: Model<IDiaryInterface>,
     @InjectModel('totalAmount')
     private totalAmount: Model<ITotalAmount>,
     @InjectModel('FarmerProfile')
@@ -702,14 +702,23 @@ export class TransactionsService {
   }
 
   async addDiary(data: any): Promise<any> {
-    const { ownerId, type, startTime, endTime, date, createdAt, isActive } =
-      data;
+    const {
+      ownerId,
+      driverId,
+      type,
+      startTime,
+      endTime,
+      date,
+      createdAt,
+      isActive,
+    } = data;
 
     const Obj: any = {
       ownerId,
       type,
       startTime,
       endTime,
+      driverId,
       date,
       createdAt,
       isActive,
@@ -724,6 +733,7 @@ export class TransactionsService {
 
   async getDetailedDiaries(
     ownerId: string,
+    driverId: string,
     date: Date,
   ): Promise<IPaymentMode | any> {
     const obj: any = {
@@ -731,6 +741,10 @@ export class TransactionsService {
       date: new Date(date),
       isActive: true,
     };
+
+    if (driverId) {
+      obj.driverId = new mongoose.Types.ObjectId(driverId);
+    }
     const data = await this.diary.find(obj);
     return data;
   }
