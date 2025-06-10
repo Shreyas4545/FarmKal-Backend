@@ -16,6 +16,9 @@ export class Diary {
   endTime: string;
 
   @Prop()
+  tripCount: number;
+
+  @Prop()
   type: string;
 
   @Prop()
