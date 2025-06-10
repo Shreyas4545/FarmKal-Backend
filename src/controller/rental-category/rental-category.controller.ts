@@ -8,11 +8,9 @@ import {
   HttpStatus,
   Param,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { RentalCategoryService } from '../../service/rental-category/rental-category.service';
-import { createRentalCategoryDTO } from '../../dto/rentalCategoryDto/createRentalCategoryDto';
 import { updateRentalCategoryDTO } from '../../dto/rentalCategoryDto/updateRentalCategoryDto';
 import { ResponseCompo } from '../../utils/response';
 import { FirebaseService } from '../../utils/imageUpload';
@@ -24,7 +22,7 @@ export class RentalCategoryController {
     private readonly firebaseService: FirebaseService,
   ) {}
 
-  //Api's for Rental Category
+  //Api's for Rental Category Added Here
   @Post('/create')
   async createRentalCategory(@Res() response, @Body() data: any) {
     try {

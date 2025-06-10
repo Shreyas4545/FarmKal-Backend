@@ -33,7 +33,10 @@ export class CategoryController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const fileUrl: string = await this.firebaseService.uploadFile(file);
+      let fileUrl: any = '';
+      if (file) {
+        fileUrl = await this.firebaseService.uploadFile(file);
+      }
       let newCategory: any = { ...data, image: fileUrl };
       newCategory = await this.categoryService.createCategory(newCategory);
 
