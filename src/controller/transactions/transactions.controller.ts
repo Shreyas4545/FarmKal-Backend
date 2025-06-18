@@ -16,9 +16,6 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import oneSignal from '../../utils/oneSignalService';
 import { UserService } from '../../service/userService/user.service';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { IRentalCategory } from '../../interface/rentalCategory.interface';
 
 interface paymentMode {
   method: string;
@@ -31,8 +28,6 @@ interface paymentData {
 @Controller('api/rental/transactions')
 export class TransactionsController {
   constructor(
-    @InjectModel('rentalCategory')
-    private rentalCategoryModel: Model<IRentalCategory>,
     private readonly transactionsService: TransactionsService,
     private readonly responseCompo: ResponseCompo,
     private readonly imagesService: ImagesService,
