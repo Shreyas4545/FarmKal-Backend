@@ -16,6 +16,9 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import oneSignal from '../../utils/oneSignalService';
 import { UserService } from '../../service/userService/user.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { IRentalCategory } from '../../interface/rentalCategory.interface';
 
 interface paymentMode {
   method: string;
@@ -28,6 +31,8 @@ interface paymentData {
 @Controller('api/rental/transactions')
 export class TransactionsController {
   constructor(
+    @InjectModel('rentalCategory')
+    private rentalCategoryModel: Model<IRentalCategory>,
     private readonly transactionsService: TransactionsService,
     private readonly responseCompo: ResponseCompo,
     private readonly imagesService: ImagesService,
@@ -42,6 +47,7 @@ export class TransactionsController {
     @Body() data: any,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
+    console.log('Here', data);
     try {
       const farmerProfileData = {
         name: data?.name,
@@ -301,11 +307,19 @@ export class TransactionsController {
       const returnObj = {
         transactionData: data,
         farmerName: data[0]?.farmerName,
+        noOfTrips: data
+          ?.filter((s) => s.isTrip == true)
+          ?.reduce((acc, it) => acc + it.noOfUnits, 0),
+        noOfHours: data
+          ?.filter((s) => s.isTrip == false)
+          ?.reduce((acc, it) => acc + it.noOfUnits, 0),
         totalAmountId: data?.filter((s) => s.totalAmountStatus == 'ACTIVE')[0]
           ?.totalAmountId,
         amountDue:
           data
-            ?.filter((s) => s.paymentType == 'credit')
+            ?.filter(
+              (s) => s.paymentType == 'credit' || s.paymentType == 'cash',
+            )
             ?.reduce((acc, it) => acc + Number(it.totalAmount), 0) -
           paymentData?.reduce((acc, it) => acc + Number(it.amount), 0),
         amountPaid: paymentData?.reduce(

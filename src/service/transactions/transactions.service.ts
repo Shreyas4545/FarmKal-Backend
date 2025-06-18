@@ -9,6 +9,7 @@ import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
 import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
+import { IRentalCategory } from '../../interface/rentalCategory.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -20,6 +21,8 @@ class getAllTransactions {
 @Injectable()
 export class TransactionsService {
   constructor(
+    @InjectModel('rentalCategory')
+    private rentalCategoryModel: Model<IRentalCategory>,
     @InjectModel('Transactions')
     private transactions: Model<ITransactions>,
     @InjectModel('Diary')
@@ -320,6 +323,7 @@ export class TransactionsService {
           totalAmountId: '$totalAmountDetails._id',
           totalAmountStatus: '$totalAmountDetails.status',
           rentalCategoryName: '$rentalCategory.name',
+          isTrip: '$rentalCategory.isTrip',
           locationId: '$locationDetails._id',
           city: '$locationDetails.city',
           state: '$locationDetails.state',
