@@ -706,52 +706,63 @@ export class TransactionsService {
   }
 
   async addDiary(data: any): Promise<any> {
-    const {
-      ownerId,
-      driverId,
-      type,
-      startTime,
-      tripCount,
-      endTime,
-      date,
-      createdAt,
-      isActive,
-    } = data;
-
-    const Obj: any = {
-      ownerId,
-      type,
-      startTime,
-      tripCount,
-      endTime,
-      driverId,
-      date,
-      createdAt,
-      isActive,
-    };
-
-    const diaryData = await this.diary.create(Obj).catch((err) => {
-      console.log(err);
-    });
-
-    return diaryData;
+    return await this.diary.create(data);
   }
 
-  async getDetailedDiaries(
-    ownerId: string,
-    driverId: string,
-    date: Date,
-  ): Promise<IPaymentMode | any> {
-    const obj: any = {
-      ownerId: ownerId,
-      date: new Date(date),
-      isActive: true,
-    };
+  async getDiaries(customerId?: string): Promise<any[]> {
+    const matchStage = customerId
+      ? { customerId: new mongoose.Types.ObjectId(customerId) }
+      : {};
 
-    if (driverId) {
-      obj.driverId = new mongoose.Types.ObjectId(driverId);
-    }
-    const data = await this.diary.find(obj);
-    return data;
+    return await this.diary
+      .aggregate([
+        { $match: matchStage },
+        {
+          $lookup: {
+            from: 'users', // MongoDB collection name
+            localField: 'ownerId',
+            foreignField: '_id',
+            as: 'owner',
+          },
+        },
+        { $unwind: '$owner' }, // optional: flatten the array if you expect one user
+        {
+          $project: {
+            _id: 1,
+            customerId: 1,
+            ownerId: 1,
+            ownerName: '$owner.name', // get the owner's name
+            type: 1,
+            date: 1,
+            state: 1,
+            city: 1,
+            country: 1,
+            createdAt: 1,
+            status: 1,
+          },
+        },
+      ])
+      .exec();
+  }
+
+  async updateDiaryStatus(id: string, status: string): Promise<any> {
+    return await this.diary
+      .findByIdAndUpdate(id, { status }, { new: true })
+      .exec();
+  }
+
+  async createDriver(data: Partial<any>): Promise<any> {
+    return await this.diary.create(data);
+  }
+
+  async getDrivers(diaryId?: string): Promise<any[]> {
+    const filter = diaryId ? { diaryId } : {};
+    return await this.diary.find(filter).exec();
+  }
+
+  async updateDriverStatus(id: string, status: string): Promise<any> {
+    return await this.diary
+      .findByIdAndUpdate(id, { status }, { new: true })
+      .exec();
   }
 }

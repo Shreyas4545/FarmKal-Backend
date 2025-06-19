@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
+  Put,
   Query,
   Res,
   UploadedFiles,
@@ -512,72 +514,40 @@ export class TransactionsController {
     }
   }
 
-  @Post('/addDiary')
-  async addDiary(@Res() response, @Body() data: any) {
+  @Post()
+  async createDriver(@Body() body, @Res() response) {
     try {
-      const farmerProfileData = {
-        name: data?.name,
-        phoneNo: data?.phoneNo,
-        status: 'ACTIVE',
-        isValidated: false,
-      };
-
-      const farmerProfile: any =
-        await this.transactionsService.createFarmerProfile(farmerProfileData);
-
-      const obj = {
-        ...data,
-        driverId: farmerProfile?._id,
-        isActive: true,
-        createdAt: new Date(),
-      };
-
-      const newDiary = await this.transactionsService.addDiary(obj);
-
-      return this.responseCompo.successResponse(
-        response,
-        {
-          statusCode: HttpStatus.CREATED,
-          message: 'Successfully Added New Diary Entry!',
-        },
-        newDiary,
-      );
+      const result = await this.transactionsService.createDriver(body);
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Driver created successfully',
+        data: result,
+      });
     } catch (err) {
-      console.log(err);
-      return this.responseCompo.errorResponse(response, {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `Something went wrong + ${err}`,
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create driver',
       });
     }
   }
-
-  @Get('/getDetailedDairyEntries')
-  async getDiary(
+  @Put(':id')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: string,
     @Res() response,
-    @Query('ownerId') ownerId: string,
-    @Query('driverId') driverId: string,
-    @Query('date') date: Date,
   ) {
     try {
-      const diaryEntries = await this.transactionsService.getDetailedDiaries(
-        ownerId,
-        driverId,
-        date,
+      const result = await this.transactionsService.updateDriverStatus(
+        id,
+        status,
       );
-
-      return this.responseCompo.successResponse(
-        response,
-        {
-          statusCode: HttpStatus.CREATED,
-          message: 'Successfully Sent Diary Entries!',
-        },
-        diaryEntries,
-      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Driver status updated successfully',
+        data: result,
+      });
     } catch (err) {
-      console.log(err);
-      return this.responseCompo.errorResponse(response, {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `Something went wrong + ${err}`,
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to update driver status',
       });
     }
   }

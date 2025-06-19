@@ -81,6 +81,7 @@ import { PaymentSchema } from './schema/payment.schema';
 import { OwnerReminderSchema } from './schema/ownerReminder.schema';
 import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
 import { DiarySchema } from './schema/diary.schema';
+import { Driver, DriverSchema } from './schema/driver.schema';
 
 @Module({
   imports: [
@@ -119,6 +120,7 @@ import { DiarySchema } from './schema/diary.schema';
       { name: 'Payment', schema: PaymentSchema },
       { name: 'OwnerReminder', schema: OwnerReminderSchema },
       { name: 'PrivacyPolicy', schema: PrivacyPolicySchema },
+      { name: 'Driver', schema: DriverSchema },
     ]),
   ],
   controllers: [

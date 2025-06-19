@@ -2,27 +2,24 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 
 @Schema({ versionKey: false })
-export class Diary {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  ownerId: Types.ObjectId;
+export class Driver {
+  @Prop({ type: Types.ObjectId, ref: 'Diary', required: true })
+  diaryId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  customerId: Types.ObjectId;
+  driverId: Types.ObjectId;
 
   @Prop()
-  type: string;
+  trips: number;
 
   @Prop()
-  date: Date;
+  hours: number;
 
   @Prop()
-  state: string;
+  startTime: string;
 
   @Prop()
-  city: string;
-
-  @Prop()
-  country: string;
+  endTime: string;
 
   @Prop()
   createdAt: Date;
@@ -31,4 +28,4 @@ export class Diary {
   status: string;
 }
 
-export const DiarySchema = SchemaFactory.createForClass(Diary);
+export const DriverSchema = SchemaFactory.createForClass(Driver);
