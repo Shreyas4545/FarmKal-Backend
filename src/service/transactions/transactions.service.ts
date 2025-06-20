@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, mongo } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
@@ -9,22 +9,18 @@ import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
 import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
-import { IRentalCategory } from '../../interface/rentalCategory.interface';
+import { IUser } from '../../interface/user.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
-  // @IsOptional()
-  // readonly paymentType: string;
-  // @IsOptional()
-  // readonly rentalCategoryId: string;
 }
 @Injectable()
 export class TransactionsService {
   constructor(
-    @InjectModel('rentalCategory')
-    private rentalCategoryModel: Model<IRentalCategory>,
     @InjectModel('Transactions')
     private transactions: Model<ITransactions>,
+    @InjectModel('User')
+    private user: Model<IUser>,
     @InjectModel('Diary')
     private diary: Model<IDiaryInterface>,
     @InjectModel('totalAmount')
@@ -710,9 +706,7 @@ export class TransactionsService {
   }
 
   async getDiaries(customerId?: string): Promise<any[]> {
-    const matchStage = customerId
-      ? { customerId: new mongoose.Types.ObjectId(customerId) }
-      : {};
+    const matchStage = customerId ? { customerId: customerId } : {};
 
     return await this.diary
       .aggregate([
@@ -755,14 +749,140 @@ export class TransactionsService {
     return await this.diary.create(data);
   }
 
-  async getDrivers(diaryId?: string): Promise<any[]> {
-    const filter = diaryId ? { diaryId } : {};
-    return await this.diary.find(filter).exec();
+  async getDiaryDetails(diaryId: string): Promise<any> {
+    return await this.diary
+      .aggregate([
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(diaryId),
+          },
+        },
+        {
+          $lookup: {
+            from: 'drivers',
+            localField: '_id',
+            foreignField: 'diaryId',
+            as: 'drivers',
+          },
+        },
+        {
+          $unwind: {
+            path: '$drivers',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'drivers.driverId',
+            foreignField: '_id',
+            as: 'drivers.driverInfo',
+          },
+        },
+        {
+          $unwind: {
+            path: '$drivers.driverInfo',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            ownerId: { $first: '$ownerId' },
+            type: { $first: '$type' },
+            date: { $first: '$date' },
+            state: { $first: '$state' },
+            city: { $first: '$city' },
+            country: { $first: '$country' },
+            createdAt: { $first: '$createdAt' },
+            status: { $first: '$status' },
+            drivers: {
+              $push: {
+                _id: '$drivers._id',
+                driverId: '$drivers.driverId',
+                name: '$drivers.driverInfo.name',
+                trips: '$drivers.trips',
+                hours: '$drivers.hours',
+                startTime: '$drivers.startTime',
+                endTime: '$drivers.endTime',
+                status: '$drivers.status',
+                createdAt: '$drivers.createdAt',
+              },
+            },
+          },
+        },
+      ])
+      .exec();
   }
 
-  async updateDriverStatus(id: string, status: string): Promise<any> {
+  async updateDriverDetails(
+    id: string,
+    noOfHours: number,
+    noOfTrips: number,
+    startTime: string,
+    endTime: string,
+    status: string,
+  ): Promise<any> {
+    const updateObj: any = {};
+
+    if (noOfHours) {
+      updateObj.noOfHours = noOfHours;
+    }
+    if (noOfTrips) {
+      updateObj.noOfTrips = noOfTrips;
+    }
+    if (startTime) {
+      updateObj.startTime = startTime;
+    }
+    if (endTime) {
+      updateObj.endTime = endTime;
+    }
+    if (status) {
+      updateObj.status = status;
+    }
     return await this.diary
-      .findByIdAndUpdate(id, { status }, { new: true })
+      .findByIdAndUpdate(id, updateObj, { new: true })
       .exec();
+  }
+
+  async checkUser(phoneNo: number, name: string): Promise<any> {
+    const findObj: any = {};
+    if (phoneNo) {
+      findObj.phone = phoneNo;
+    }
+    if (name) {
+      findObj.name = name;
+    }
+    const existingData: any = await this.user.find(findObj).catch((err) => {
+      console.log(err);
+    });
+
+    console.log(existingData);
+
+    if (existingData?.length > 0) {
+      const updateObj: any = {
+        phone: phoneNo || '',
+        name: name || '',
+      };
+      await this.user.findOneAndUpdate({ phone: phoneNo }, updateObj).exec();
+      return existingData[0];
+    }
+
+    let newUser: any = {
+      name: name || '',
+      phone: phoneNo ? phoneNo : '',
+      status: 'ACTIVE',
+      email: '',
+      isAdmin: false,
+      city: '',
+      state: '',
+      country: '',
+      image: '',
+      isActive: 1,
+      createdAt: new Date(),
+    };
+
+    newUser = await new this.user(newUser).save();
+    return newUser;
   }
 }

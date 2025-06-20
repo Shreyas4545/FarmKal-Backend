@@ -514,10 +514,75 @@ export class TransactionsController {
     }
   }
 
-  @Post()
-  async createDriver(@Body() body, @Res() response) {
+  @Post('/addDiary')
+  async addDiary(@Body() data: any, @Res() response) {
     try {
-      const result = await this.transactionsService.createDriver(body);
+      const existingData = await this.transactionsService.checkUser(
+        data?.phoneNo,
+        data?.name,
+      );
+
+      const dataToStore: any = { ...data, ownerId: existingData?._id };
+
+      const result = await this.transactionsService.addDiary(dataToStore);
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Diary created successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create diary',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Get('/getDiaries')
+  async getDiaries(@Query('customerId') customerId: string, @Res() response) {
+    try {
+      const result = await this.transactionsService.getDiaries(customerId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Fetched diaries successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to fetch diaries',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Put('/updateDiary/:id')
+  async updateDiaryStatus(
+    @Param('id') id: string,
+    @Query('status') status: string,
+    @Res() response,
+  ) {
+    try {
+      const result = await this.transactionsService.updateDiaryStatus(
+        id,
+        status,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Diary status updated successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to update diary status',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Post('/addDriver')
+  async createDriver(@Body() data: any, @Res() response) {
+    try {
+      const result = await this.transactionsService.createDriver(data);
       return response.status(HttpStatus.CREATED).json({
         message: 'Driver created successfully',
         data: result,
@@ -526,28 +591,56 @@ export class TransactionsController {
       console.error(err);
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Failed to create driver',
+        error: err.message || err,
       });
     }
   }
-  @Put(':id')
-  async updateStatus(
-    @Param('id') id: string,
-    @Body('status') status: string,
-    @Res() response,
-  ) {
+
+  @Get('/getDiaryDetails')
+  async getDiaryDetails(@Query('diaryId') diaryId: string, @Res() response) {
     try {
-      const result = await this.transactionsService.updateDriverStatus(
-        id,
-        status,
-      );
+      const result = await this.transactionsService.getDiaryDetails(diaryId);
       return response.status(HttpStatus.OK).json({
-        message: 'Driver status updated successfully',
+        message: 'Diary details fetched successfully',
         data: result,
       });
     } catch (err) {
       console.error(err);
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to update driver status',
+        message: 'Failed to fetch diary details',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Put('/updateDriverDetails/:id')
+  async updateDriverDetails(
+    @Param('id') id: string,
+    @Body('noOfHours') noOfHours: number,
+    @Body('noOfTrips') noOfTrips: number,
+    @Body('startTime') startTime: string,
+    @Body('endTime') endTime: string,
+    @Body('status') status: string,
+    @Res() response,
+  ) {
+    try {
+      const result = await this.transactionsService.updateDriverDetails(
+        id,
+        noOfHours,
+        noOfTrips,
+        startTime,
+        endTime,
+        status,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Driver details updated successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to update driver details',
+        error: err.message || err,
       });
     }
   }
