@@ -10,6 +10,7 @@ import { IPayment } from '../../interface/payment.interface';
 import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 import { IUser } from '../../interface/user.interface';
+import { IDriver } from '../../interface/driverInterface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -23,6 +24,8 @@ export class TransactionsService {
     private user: Model<IUser>,
     @InjectModel('Diary')
     private diary: Model<IDiaryInterface>,
+    @InjectModel('Driver')
+    private driver: Model<IDriver>,
     @InjectModel('totalAmount')
     private totalAmount: Model<ITotalAmount>,
     @InjectModel('FarmerProfile')
@@ -746,10 +749,10 @@ export class TransactionsService {
   }
 
   async createDriver(data: Partial<any>): Promise<any> {
-    return await this.diary.create(data);
+    return await this.driver.create(data);
   }
 
-  async getDiaryDetails(diaryId: string): Promise<any> {
+  async getDriverEntryDetails(diaryId: string): Promise<any> {
     return await this.diary
       .aggregate([
         {
@@ -760,55 +763,56 @@ export class TransactionsService {
         {
           $lookup: {
             from: 'drivers',
-            localField: '_id',
-            foreignField: 'diaryId',
+            let: { diaryIdStr: { $toString: '$_id' } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$diaryId', '$$diaryIdStr'] },
+                },
+              },
+              {
+                $lookup: {
+                  from: 'users',
+                  localField: 'driverId',
+                  foreignField: '_id',
+                  as: 'driverInfo',
+                },
+              },
+              {
+                $unwind: {
+                  path: '$driverInfo',
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  driverId: 1,
+                  name: '$driverInfo.name',
+                  trips: 1,
+                  hours: 1,
+                  startTime: 1,
+                  endTime: 1,
+                  status: 1,
+                  createdAt: 1,
+                },
+              },
+            ],
             as: 'drivers',
           },
         },
         {
-          $unwind: {
-            path: '$drivers',
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'drivers.driverId',
-            foreignField: '_id',
-            as: 'drivers.driverInfo',
-          },
-        },
-        {
-          $unwind: {
-            path: '$drivers.driverInfo',
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $group: {
-            _id: '$_id',
-            ownerId: { $first: '$ownerId' },
-            type: { $first: '$type' },
-            date: { $first: '$date' },
-            state: { $first: '$state' },
-            city: { $first: '$city' },
-            country: { $first: '$country' },
-            createdAt: { $first: '$createdAt' },
-            status: { $first: '$status' },
-            drivers: {
-              $push: {
-                _id: '$drivers._id',
-                driverId: '$drivers.driverId',
-                name: '$drivers.driverInfo.name',
-                trips: '$drivers.trips',
-                hours: '$drivers.hours',
-                startTime: '$drivers.startTime',
-                endTime: '$drivers.endTime',
-                status: '$drivers.status',
-                createdAt: '$drivers.createdAt',
-              },
-            },
+          $project: {
+            _id: 1,
+            ownerId: 1,
+            type: 1,
+            date: 1,
+            state: 1,
+            city: 1,
+            country: 1,
+            createdAt: 1,
+            status: 1,
+            drivers: 1,
           },
         },
       ])
@@ -817,19 +821,21 @@ export class TransactionsService {
 
   async updateDriverDetails(
     id: string,
-    noOfHours: number,
-    noOfTrips: number,
+    hours: any,
+    trips: any,
     startTime: string,
     endTime: string,
     status: string,
+    diaryId: string,
   ): Promise<any> {
     const updateObj: any = {};
 
-    if (noOfHours) {
-      updateObj.noOfHours = noOfHours;
+    if (hours !== '' && hours != null) {
+      updateObj.hours = hours;
     }
-    if (noOfTrips) {
-      updateObj.noOfTrips = noOfTrips;
+
+    if (trips != null && trips !== '') {
+      updateObj.trips = trips;
     }
     if (startTime) {
       updateObj.startTime = startTime;
@@ -840,7 +846,13 @@ export class TransactionsService {
     if (status) {
       updateObj.status = status;
     }
-    return await this.diary
+    console.log(updateObj, hours);
+    if (diaryId) {
+      return await this.driver
+        .updateMany({ diaryId: diaryId }, updateObj, { new: true })
+        .exec();
+    }
+    return await this.driver
       .findByIdAndUpdate(id, updateObj, { new: true })
       .exec();
   }

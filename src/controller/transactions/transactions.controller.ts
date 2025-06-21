@@ -562,6 +562,17 @@ export class TransactionsController {
     @Res() response,
   ) {
     try {
+      if (status == 'ACTIVE') {
+        const resultData = await this.transactionsService.updateDriverDetails(
+          '',
+          '',
+          '',
+          '',
+          '',
+          status,
+          id,
+        );
+      }
       const result = await this.transactionsService.updateDiaryStatus(
         id,
         status,
@@ -582,7 +593,13 @@ export class TransactionsController {
   @Post('/addDriver')
   async createDriver(@Body() data: any, @Res() response) {
     try {
-      const result = await this.transactionsService.createDriver(data);
+      const existingData = await this.transactionsService.checkUser(
+        data?.phoneNo,
+        data?.name,
+      );
+
+      const dataToStore: any = { ...data, driverId: existingData?._id };
+      const result = await this.transactionsService.createDriver(dataToStore);
       return response.status(HttpStatus.CREATED).json({
         message: 'Driver created successfully',
         data: result,
@@ -599,7 +616,9 @@ export class TransactionsController {
   @Get('/getDiaryDetails')
   async getDiaryDetails(@Query('diaryId') diaryId: string, @Res() response) {
     try {
-      const result = await this.transactionsService.getDiaryDetails(diaryId);
+      const result = await this.transactionsService.getDriverEntryDetails(
+        diaryId,
+      );
       return response.status(HttpStatus.OK).json({
         message: 'Diary details fetched successfully',
         data: result,
@@ -613,11 +632,11 @@ export class TransactionsController {
     }
   }
 
-  @Put('/updateDriverDetails/:id')
+  @Put('/updateDriverEntries/:id')
   async updateDriverDetails(
     @Param('id') id: string,
-    @Body('noOfHours') noOfHours: number,
-    @Body('noOfTrips') noOfTrips: number,
+    @Body('hours') hours: number,
+    @Body('trips') trips: number,
     @Body('startTime') startTime: string,
     @Body('endTime') endTime: string,
     @Body('status') status: string,
@@ -626,11 +645,12 @@ export class TransactionsController {
     try {
       const result = await this.transactionsService.updateDriverDetails(
         id,
-        noOfHours,
-        noOfTrips,
+        hours,
+        trips,
         startTime,
         endTime,
         status,
+        '',
       );
       return response.status(HttpStatus.OK).json({
         message: 'Driver details updated successfully',
