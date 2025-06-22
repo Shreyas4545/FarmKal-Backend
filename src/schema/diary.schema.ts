@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import { Types, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ versionKey: false })
 export class Diary {
@@ -17,6 +17,12 @@ export class Diary {
 
   @Prop()
   state: string;
+
+  @Prop({ type: MongooseSchema.Types.Decimal128 })
+  latitude: Types.Decimal128;
+
+  @Prop({ type: MongooseSchema.Types.Decimal128 })
+  longitude: Types.Decimal128;
 
   @Prop()
   city: string;

@@ -522,7 +522,11 @@ export class TransactionsController {
         data?.name,
       );
 
-      const dataToStore: any = { ...data, ownerId: existingData?._id };
+      const dataToStore: any = {
+        ...data,
+        ownerId: existingData?._id,
+        createdAt: new Date(),
+      };
 
       const result = await this.transactionsService.addDiary(dataToStore);
       return response.status(HttpStatus.CREATED).json({
@@ -559,6 +563,7 @@ export class TransactionsController {
   async updateDiaryStatus(
     @Param('id') id: string,
     @Query('status') status: string,
+    @Body() data: any,
     @Res() response,
   ) {
     try {
@@ -573,9 +578,11 @@ export class TransactionsController {
           id,
         );
       }
+      const updateObj: any = { status, ...data };
+
       const result = await this.transactionsService.updateDiaryStatus(
         id,
-        status,
+        updateObj,
       );
       return response.status(HttpStatus.OK).json({
         message: 'Diary status updated successfully',
@@ -598,7 +605,11 @@ export class TransactionsController {
         data?.name,
       );
 
-      const dataToStore: any = { ...data, driverId: existingData?._id };
+      const dataToStore: any = {
+        ...data,
+        driverId: existingData?._id,
+        createdAt: new Date(),
+      };
       const result = await this.transactionsService.createDriver(dataToStore);
       return response.status(HttpStatus.CREATED).json({
         message: 'Driver created successfully',

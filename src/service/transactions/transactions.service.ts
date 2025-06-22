@@ -742,9 +742,33 @@ export class TransactionsService {
       .exec();
   }
 
-  async updateDiaryStatus(id: string, status: string): Promise<any> {
+  async updateDiaryStatus(id: string, data: any): Promise<any> {
+    const updateObj: any = {};
+    const { type, city, state, country, latitude, longitude, status } = data;
+    if (status) {
+      updateObj.status = status;
+    }
+    if (city) {
+      updateObj.city = city;
+    }
+    if (state) {
+      updateObj.state = state;
+    }
+    if (country) {
+      updateObj.country = country;
+    }
+    if (latitude) {
+      updateObj.latitude = latitude;
+    }
+    if (longitude) {
+      updateObj.longitude = longitude;
+    }
+    if (type) {
+      updateObj.type = type;
+    }
+
     return await this.diary
-      .findByIdAndUpdate(id, { status }, { new: true })
+      .findByIdAndUpdate(id, updateObj, { new: true })
       .exec();
   }
 

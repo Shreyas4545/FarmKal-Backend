@@ -11,7 +11,8 @@ export interface IDiaryInterface extends Document {
   readonly city: string;
   readonly state: string;
   readonly country: string;
-
+  readonly latitude: number;
+  readonly longitude: number;
   readonly createdAt: Date;
 
   readonly type: string;
