@@ -82,6 +82,8 @@ import { OwnerReminderSchema } from './schema/ownerReminder.schema';
 import { PrivacyPolicySchema } from './schema/privacyPolicy.schema';
 import { DiarySchema } from './schema/diary.schema';
 import { Driver, DriverSchema } from './schema/driver.schema';
+import { AblyServiceMaps } from './utils/ablyServiceMaps';
+import { DriverLocationSchema } from './schema/driverLocation.schema';
 
 @Module({
   imports: [
@@ -121,6 +123,7 @@ import { Driver, DriverSchema } from './schema/driver.schema';
       { name: 'OwnerReminder', schema: OwnerReminderSchema },
       { name: 'PrivacyPolicy', schema: PrivacyPolicySchema },
       { name: 'Driver', schema: DriverSchema },
+      { name: 'DriverLocation', schema: DriverLocationSchema },
     ]),
   ],
   controllers: [
@@ -150,6 +153,7 @@ import { Driver, DriverSchema } from './schema/driver.schema';
   providers: [
     AppService,
     UserService,
+    AblyServiceMaps,
     // {
     //   provide: APP_INTERCEPTOR,
     //   scope: Scope.REQUEST,

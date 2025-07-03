@@ -15,11 +15,12 @@ export default async function publishSubscribe(
 
   // Create a channel called 'get-started' and register a listener to subscribe to all messages with the name 'first'
   const channel = ably.channels.get('get-started');
-  // await channel.subscribe(conversationId, (message) => {
-  //   console.log('Message received: ' + message.data);
-  // });
 
-  // Publish a message with the name 'first' and the contents 'Here is my first message!'
+  const channel1 = ably.channels.get(`chat-67c91f621ecf8257596a4f18`);
+
+  await channel1.subscribe('testing', (message) => {
+    console.log('Message received: ' + message.data);
+  });
 
   await channel.publish(conversationId, message);
 

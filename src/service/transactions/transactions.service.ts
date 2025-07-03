@@ -11,6 +11,7 @@ import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 import { IUser } from '../../interface/user.interface';
 import { IDriver } from '../../interface/driverInterface';
+import { IDriverLocation } from 'src/interface/driverLocation.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -26,6 +27,8 @@ export class TransactionsService {
     private diary: Model<IDiaryInterface>,
     @InjectModel('Driver')
     private driver: Model<IDriver>,
+    @InjectModel('DriverLocation')
+    private driverLocation: Model<IDriverLocation>,
     @InjectModel('totalAmount')
     private totalAmount: Model<ITotalAmount>,
     @InjectModel('FarmerProfile')
@@ -920,5 +923,9 @@ export class TransactionsService {
 
     newUser = await new this.user(newUser).save();
     return newUser;
+  }
+
+  async addDriverLocation(data: any): Promise<any> {
+    return await this.driverLocation.create(data);
   }
 }
