@@ -718,6 +718,11 @@ export class TransactionsService {
       .aggregate([
         { $match: matchStage },
         {
+          $addFields: {
+            customerId: { $toObjectId: '$customerId' },
+          },
+        },
+        {
           $lookup: {
             from: 'users', // MongoDB collection name
             localField: 'ownerId',
@@ -725,19 +730,31 @@ export class TransactionsService {
             as: 'owner',
           },
         },
+        {
+          $lookup: {
+            from: 'users', // MongoDB collection name
+            localField: 'customerId',
+            foreignField: '_id',
+            as: 'customer',
+          },
+        },
         { $unwind: '$owner' }, // optional: flatten the array if you expect one user
+        { $unwind: '$customer' }, // optional: flatten the array if you expect one user
         {
           $project: {
             _id: 1,
             customerId: 1,
             ownerId: 1,
             ownerName: '$owner.name', // get the owner's name
+            customerName: '$customer.name',
             type: 1,
             date: 1,
             state: 1,
             city: 1,
             country: 1,
             createdAt: 1,
+            latitude: 1,
+            longitude: 1,
             status: 1,
           },
         },
