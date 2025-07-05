@@ -11,7 +11,7 @@ import { IDiaryInterface } from '../../interface/diaryInterface';
 import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 import { IUser } from '../../interface/user.interface';
 import { IDriver } from '../../interface/driverInterface';
-import { IDriverLocation } from 'src/interface/driverLocation.interface';
+import { IDriverLocation } from '../../interface/driverLocation.interface';
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
