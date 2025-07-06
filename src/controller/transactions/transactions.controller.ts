@@ -524,7 +524,7 @@ export class TransactionsController {
 
       const dataToStore: any = {
         ...data,
-        ownerId: existingData?._id,
+        customerId: existingData?._id,
         createdAt: new Date(),
       };
 
@@ -578,7 +578,17 @@ export class TransactionsController {
           id,
         );
       }
-      const updateObj: any = { status, ...data };
+
+      let updateObj: any = { status, ...data };
+
+      if (data?.name && data?.phoneNo) {
+        const existingData = await this.transactionsService.checkUser(
+          data?.phoneNo,
+          data?.name,
+        );
+
+        updateObj = { ...updateObj, customerId: existingData?._id };
+      }
 
       const result = await this.transactionsService.updateDiaryStatus(
         id,

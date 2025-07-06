@@ -763,8 +763,18 @@ export class TransactionsService {
   }
 
   async updateDiaryStatus(id: string, data: any): Promise<any> {
+    console.log(data);
     const updateObj: any = {};
-    const { type, city, state, country, latitude, longitude, status } = data;
+    const {
+      type,
+      city,
+      state,
+      country,
+      latitude,
+      longitude,
+      status,
+      customerId,
+    } = data;
     if (status) {
       updateObj.status = status;
     }
@@ -776,6 +786,9 @@ export class TransactionsService {
     }
     if (country) {
       updateObj.country = country;
+    }
+    if (customerId) {
+      updateObj.customerId = customerId;
     }
     if (latitude) {
       updateObj.latitude = latitude;
@@ -912,8 +925,6 @@ export class TransactionsService {
     const existingData: any = await this.user.find(findObj).catch((err) => {
       console.log(err);
     });
-
-    console.log(existingData);
 
     if (existingData?.length > 0) {
       const updateObj: any = {
