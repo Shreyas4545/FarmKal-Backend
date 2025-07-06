@@ -18,7 +18,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import oneSignal from '../../utils/oneSignalService';
 import { UserService } from '../../service/userService/user.service';
-
+import { TimeUtils } from '../../utils/timeFunctions';
 interface paymentMode {
   method: string;
 }
@@ -637,12 +637,33 @@ export class TransactionsController {
   @Get('/getDiaryDetails')
   async getDiaryDetails(@Query('diaryId') diaryId: string, @Res() response) {
     try {
-      const result = await this.transactionsService.getDriverEntryDetails(
+      const result: any = await this.transactionsService.getDriverEntryDetails(
         diaryId,
       );
+
+      let tripCount = 0;
+      let hourCount = 0;
+      for (let i of result[0]?.drivers) {
+        if (i.type == 'trips') {
+          tripCount += Number(i?.trips);
+        } else if (i?.startTime && i?.endTime) {
+          const count: any = TimeUtils.getTimeDifferenceInMinutes(
+            i?.startTime,
+            i?.endTime,
+          );
+
+          i.totalTime = TimeUtils.formatMinutes(count);
+          hourCount += count;
+        }
+      }
+
       return response.status(HttpStatus.OK).json({
         message: 'Diary details fetched successfully',
-        data: result,
+        data: {
+          ...result,
+          tripCount: tripCount,
+          hourCount: TimeUtils.formatMinutes(hourCount),
+        },
       });
     } catch (err) {
       console.error(err);
