@@ -637,9 +637,8 @@ export class TransactionsController {
   @Get('/getDiaryDetails')
   async getDiaryDetails(@Query('diaryId') diaryId: string, @Res() response) {
     try {
-      const result: any = await this.transactionsService.getDriverEntryDetails(
-        diaryId,
-      );
+      const result: any[] =
+        await this.transactionsService.getDriverEntryDetails(diaryId);
 
       let tripCount = 0;
       let hourCount = 0;
@@ -660,7 +659,7 @@ export class TransactionsController {
       return response.status(HttpStatus.OK).json({
         message: 'Diary details fetched successfully',
         data: {
-          ...result,
+          ...result[0],
           tripCount: tripCount,
           hourCount: TimeUtils.formatMinutes(hourCount),
         },

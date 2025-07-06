@@ -813,6 +813,29 @@ export class TransactionsService {
     return await this.diary
       .aggregate([
         {
+          $addFields: {
+            customerId: { $toObjectId: '$customerId' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users', // MongoDB collection name
+            localField: 'ownerId',
+            foreignField: '_id',
+            as: 'owner',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users', // MongoDB collection name
+            localField: 'customerId',
+            foreignField: '_id',
+            as: 'customer',
+          },
+        },
+        { $unwind: '$owner' }, // optional: flatten the array if you expect one user
+        { $unwind: '$customer' }, // optional: flatten the array if you expect one user
+        {
           $match: {
             _id: new mongoose.Types.ObjectId(diaryId),
           },
@@ -864,6 +887,9 @@ export class TransactionsService {
             ownerId: 1,
             type: 1,
             date: 1,
+            ownerName: '$owner.name', // get the owner's name
+            customerName: '$customer.name',
+            customerId: 1,
             state: 1,
             city: 1,
             country: 1,
