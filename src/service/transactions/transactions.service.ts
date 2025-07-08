@@ -929,7 +929,6 @@ export class TransactionsService {
     if (status) {
       updateObj.status = status;
     }
-    console.log(updateObj, hours);
     if (diaryId) {
       return await this.driver
         .updateMany({ diaryId: diaryId }, updateObj, { new: true })

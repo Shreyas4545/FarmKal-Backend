@@ -642,17 +642,19 @@ export class TransactionsController {
 
       let tripCount = 0;
       let hourCount = 0;
-      for (let i of result[0]?.drivers) {
-        if (i.type == 'trips') {
-          tripCount += Number(i?.trips);
-        } else if (i?.startTime && i?.endTime) {
-          const count: any = TimeUtils.getTimeDifferenceInMinutes(
-            i?.startTime,
-            i?.endTime,
-          );
+      if (result?.length > 0) {
+        for (let i of result[0]?.drivers) {
+          if (i.type == 'trips') {
+            tripCount += Number(i?.trips);
+          } else if (i?.startTime && i?.endTime) {
+            const count: any = TimeUtils.getTimeDifferenceInMinutes(
+              i?.startTime,
+              i?.endTime,
+            );
 
-          i.totalTime = TimeUtils.formatMinutes(count);
-          hourCount += count;
+            i.totalTime = TimeUtils.formatMinutes(count);
+            hourCount += count;
+          }
         }
       }
 
