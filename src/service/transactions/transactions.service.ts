@@ -814,7 +814,7 @@ export class TransactionsService {
       .aggregate([
         {
           $addFields: {
-            customerId: { $toObjectId: '$customerId' },
+            ownerId: { $toObjectId: '$ownerId' },
           },
         },
         {
