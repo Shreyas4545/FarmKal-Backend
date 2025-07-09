@@ -712,14 +712,16 @@ export class TransactionsService {
   }
 
   async getDiaries(customerId?: string): Promise<any[]> {
-    const matchStage = customerId ? { customerId: customerId } : {};
+    const matchStage = customerId
+      ? { customerId: new mongoose.Types.ObjectId(customerId) }
+      : {};
 
     return await this.diary
       .aggregate([
         { $match: matchStage },
         {
           $addFields: {
-            customerId: { $toObjectId: '$customerId' },
+            ownerId: { $toObjectId: '$ownerId' },
           },
         },
         {
