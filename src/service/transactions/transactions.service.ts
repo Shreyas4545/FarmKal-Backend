@@ -663,7 +663,7 @@ export class TransactionsService {
     if (phoneNo) {
       data = data?.filter((s, key) => s.farmerPhoneNo == phoneNo);
     }
-    data?.map((it, key) => {
+    data?.map((it: any, key) => {
       if (!obj[it.rentalCategoryName]) {
         obj[it.rentalCategoryName] = it.noOfUnits;
       } else {
@@ -712,8 +712,14 @@ export class TransactionsService {
   }
 
   async getDiaries(customerId?: string): Promise<any[]> {
+    const objectId = customerId
+      ? new mongoose.Types.ObjectId(customerId)
+      : null;
+
     const matchStage = customerId
-      ? { customerId: new mongoose.Types.ObjectId(customerId) }
+      ? {
+          $or: [{ customerId: objectId }, { ownerId: customerId }],
+        }
       : {};
 
     return await this.diary
@@ -721,12 +727,12 @@ export class TransactionsService {
         { $match: matchStage },
         {
           $addFields: {
-            ownerId: { $toObjectId: '$ownerId' },
+            ownerId: { $toObjectId: '$ownerId' }, // just in case stored as string
           },
         },
         {
           $lookup: {
-            from: 'users', // MongoDB collection name
+            from: 'users',
             localField: 'ownerId',
             foreignField: '_id',
             as: 'owner',
@@ -734,20 +740,20 @@ export class TransactionsService {
         },
         {
           $lookup: {
-            from: 'users', // MongoDB collection name
+            from: 'users',
             localField: 'customerId',
             foreignField: '_id',
             as: 'customer',
           },
         },
-        { $unwind: '$owner' }, // optional: flatten the array if you expect one user
-        { $unwind: '$customer' }, // optional: flatten the array if you expect one user
+        { $unwind: { path: '$owner', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$customer', preserveNullAndEmptyArrays: true } },
         {
           $project: {
             _id: 1,
             customerId: 1,
             ownerId: 1,
-            ownerName: '$owner.name', // get the owner's name
+            ownerName: '$owner.name',
             customerName: '$customer.name',
             type: 1,
             date: 1,
@@ -765,7 +771,6 @@ export class TransactionsService {
   }
 
   async updateDiaryStatus(id: string, data: any): Promise<any> {
-    console.log(data);
     const updateObj: any = {};
     const {
       type,
