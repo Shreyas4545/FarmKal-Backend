@@ -22,6 +22,9 @@ export class Driver {
   endTime: string;
 
   @Prop()
+  rate: number;
+
+  @Prop()
   createdAt: Date;
 
   @Prop()

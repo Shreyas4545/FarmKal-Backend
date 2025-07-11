@@ -5,7 +5,7 @@ export interface IDriver extends Document {
   readonly driverId: Types.ObjectId;
 
   readonly trips: number;
-
+  readonly rate: number;
   readonly hours: number;
 
   readonly startTime: string;

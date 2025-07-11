@@ -880,6 +880,7 @@ export class TransactionsService {
                   hours: 1,
                   startTime: 1,
                   endTime: 1,
+                  rate: 1,
                   status: 1,
                   createdAt: 1,
                 },
@@ -916,6 +917,7 @@ export class TransactionsService {
     startTime: string,
     endTime: string,
     status: string,
+    rate: any,
     diaryId: string,
   ): Promise<any> {
     const updateObj: any = {};
@@ -929,6 +931,9 @@ export class TransactionsService {
     }
     if (startTime) {
       updateObj.startTime = startTime;
+    }
+    if (rate) {
+      updateObj.rate = rate;
     }
     if (endTime) {
       updateObj.endTime = endTime;

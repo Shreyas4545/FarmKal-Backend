@@ -575,6 +575,7 @@ export class TransactionsController {
           '',
           '',
           status,
+          '',
           id,
         );
       }
@@ -620,6 +621,17 @@ export class TransactionsController {
         driverId: existingData?._id,
         createdAt: new Date(),
       };
+
+      const owner: any = this.userService.getUser(data?.ownerId);
+
+      await oneSignal(
+        'message',
+        `${owner?.name} has created a transaction.`,
+        `View it`,
+        '',
+        owner._id,
+      );
+
       const result = await this.transactionsService.createDriver(dataToStore);
       return response.status(HttpStatus.CREATED).json({
         message: 'Driver created successfully',
@@ -644,7 +656,7 @@ export class TransactionsController {
       let hourCount = 0;
       if (result?.length > 0) {
         for (let i of result[0]?.drivers) {
-          if (i.type == 'trips') {
+          if (result[0]?.type == 'trip') {
             tripCount += Number(i?.trips);
           } else if (i?.startTime && i?.endTime) {
             const count: any = TimeUtils.getTimeDifferenceInMinutes(
@@ -683,6 +695,7 @@ export class TransactionsController {
     @Body('startTime') startTime: string,
     @Body('endTime') endTime: string,
     @Body('status') status: string,
+    @Body('status') rate: number,
     @Res() response,
   ) {
     try {
@@ -693,6 +706,7 @@ export class TransactionsController {
         startTime,
         endTime,
         status,
+        rate,
         '',
       );
       return response.status(HttpStatus.OK).json({

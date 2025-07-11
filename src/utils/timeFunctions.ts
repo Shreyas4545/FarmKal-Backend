@@ -1,10 +1,18 @@
 export class TimeUtils {
-  static getTimeDifferenceInMinutes(time1: string, time2: string): number {
-    const parseTime = (str: string): number => {
-      const [hours, minutes] = str.split(':').map(Number);
-      return hours * 60 + minutes;
-    };
-    return Math.abs(parseTime(time2) - parseTime(time1));
+  static getTimeDifferenceInMinutes(
+    startTime: string | Date,
+    endTime: string | Date,
+  ): number {
+    // Parse into Date objects
+    const start =
+      typeof startTime === 'string' ? new Date(startTime) : startTime;
+    const end = typeof endTime === 'string' ? new Date(endTime) : endTime;
+
+    // Compute difference in milliseconds
+    const diffMs = Math.abs(end.getTime() - start.getTime());
+
+    // Convert to total minutes
+    return Math.floor(diffMs / (1000 * 60));
   }
 
   static formatMinutes(totalMinutes: number): string {
