@@ -10,6 +10,7 @@ export interface IDiaryInterface extends Document {
 
   readonly city: string;
   readonly state: string;
+  readonly rate: number;
   readonly country: string;
   readonly latitude: number;
   readonly longitude: number;

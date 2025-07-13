@@ -13,6 +13,9 @@ export class Diary {
   type: string;
 
   @Prop()
+  rate: number;
+
+  @Prop()
   date: Date;
 
   @Prop()

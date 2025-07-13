@@ -575,7 +575,6 @@ export class TransactionsController {
           '',
           '',
           status,
-          '',
           id,
         );
       }
@@ -695,7 +694,6 @@ export class TransactionsController {
     @Body('startTime') startTime: string,
     @Body('endTime') endTime: string,
     @Body('status') status: string,
-    @Body('status') rate: number,
     @Res() response,
   ) {
     try {
@@ -706,7 +704,6 @@ export class TransactionsController {
         startTime,
         endTime,
         status,
-        rate,
         '',
       );
       return response.status(HttpStatus.OK).json({
