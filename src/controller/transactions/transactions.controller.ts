@@ -721,4 +721,26 @@ export class TransactionsController {
       });
     }
   }
+
+  @Get('/getDriverOnlyEntries')
+  async getDriverOnlyEntries(
+    @Query('driverId') driverId: string,
+    @Res() response,
+  ) {
+    try {
+      const data = await this.transactionsService.getDriverOnlyEntries(
+        driverId,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Driver Only details sent successfully',
+        data: data,
+      });
+    } catch (err) {
+      console.log(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to update driver details',
+        error: err.message || err,
+      });
+    }
+  }
 }

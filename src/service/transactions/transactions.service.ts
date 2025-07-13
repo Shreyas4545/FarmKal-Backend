@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, mongo } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
@@ -908,6 +908,38 @@ export class TransactionsService {
         },
       ])
       .exec();
+  }
+
+  async getDriverOnlyEntries(driverId?: string): Promise<any> {
+    const incomingDriverId = new mongoose.Types.ObjectId(driverId);
+
+    // Part 1: Diaries linked via driver entries
+    const diariesLinkedByDriver: any = await this.driver.aggregate([
+      { $match: { driverId: incomingDriverId } },
+      { $group: { _id: '$diaryId' } },
+      {
+        $addFields: {
+          _id: { $toObjectId: '$_id' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'diaries',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'diary',
+        },
+      },
+      { $unwind: '$diary' },
+      { $replaceRoot: { newRoot: '$diary' } },
+    ]);
+
+    // Part 2: Diaries directly owned
+    const diariesByOwner: any[] = await this.diary.find({
+      ownerId: driverId,
+    });
+
+    return { diariesLinkedByDriver, diariesByOwner };
   }
 
   async updateDriverDetails(
