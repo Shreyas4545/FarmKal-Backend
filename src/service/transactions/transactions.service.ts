@@ -781,6 +781,7 @@ export class TransactionsService {
       longitude,
       status,
       customerId,
+      date,
       rate,
     } = data;
     if (status) {
@@ -788,6 +789,9 @@ export class TransactionsService {
     }
     if (city) {
       updateObj.city = city;
+    }
+    if (date) {
+      updateObj.date = date;
     }
     if (rate) {
       updateObj.rate = rate;
@@ -905,6 +909,7 @@ export class TransactionsService {
             city: 1,
             country: 1,
             createdAt: 1,
+            rate: 1,
             status: 1,
             drivers: 1,
           },
