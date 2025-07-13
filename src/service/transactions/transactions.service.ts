@@ -932,12 +932,104 @@ export class TransactionsService {
       },
       { $unwind: '$diary' },
       { $replaceRoot: { newRoot: '$diary' } },
+
+      // 🔥 Convert ownerId and customerId to ObjectId to match users._id
+      {
+        $addFields: {
+          ownerObjectId: { $toObjectId: '$ownerId' },
+          customerObjectId: { $toObjectId: '$customerId' },
+        },
+      },
+
+      // 🔗 Join with users to get owner info
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'ownerObjectId',
+          foreignField: '_id',
+          as: 'owner',
+        },
+      },
+      { $unwind: { path: '$owner', preserveNullAndEmptyArrays: true } },
+
+      // 🔗 Join with users to get customer info
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'customerObjectId',
+          foreignField: '_id',
+          as: 'customer',
+        },
+      },
+      { $unwind: { path: '$customer', preserveNullAndEmptyArrays: true } },
+
+      // 🔥 Finally project to add just ownerName & customerName, keeping all diary fields
+      {
+        $addFields: {
+          ownerName: '$owner.name',
+          customerName: '$customer.name',
+        },
+      },
+
+      {
+        $project: {
+          owner: 0,
+          customer: 0,
+          ownerObjectId: 0,
+          customerObjectId: 0,
+        },
+      },
     ]);
 
+    const matchStage = { ownerId: driverId };
+
     // Part 2: Diaries directly owned
-    const diariesByOwner: any[] = await this.diary.find({
-      ownerId: driverId,
-    });
+    const diariesByOwner: any[] = await this.diary
+      .aggregate([
+        { $match: matchStage },
+        {
+          $addFields: {
+            ownerId: { $toObjectId: '$ownerId' }, // just in case stored as string
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'ownerId',
+            foreignField: '_id',
+            as: 'owner',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'customerId',
+            foreignField: '_id',
+            as: 'customer',
+          },
+        },
+        { $unwind: { path: '$owner', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$customer', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            _id: 1,
+            customerId: 1,
+            ownerId: 1,
+            ownerName: '$owner.name',
+            customerName: '$customer.name',
+            type: 1,
+            date: 1,
+            state: 1,
+            city: 1,
+            country: 1,
+            createdAt: 1,
+            latitude: 1,
+            longitude: 1,
+            status: 1,
+          },
+        },
+      ])
+      .exec();
 
     return { diariesLinkedByDriver, diariesByOwner };
   }
