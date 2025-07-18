@@ -1039,7 +1039,7 @@ export class TransactionsService {
       ])
       .exec();
 
-    return { diariesLinkedByDriver, diariesByOwner };
+    return [...diariesLinkedByDriver, ...diariesByOwner];
   }
 
   async updateDriverDetails(

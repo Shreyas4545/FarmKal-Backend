@@ -543,13 +543,28 @@ export class TransactionsController {
   }
 
   @Get('/getDiaries')
-  async getDiaries(@Query('customerId') customerId: string, @Res() response) {
+  async getDiaries(
+    @Query('customerId') customerId: string,
+    @Query('type') type: string,
+    @Query('driverId') driverId: string,
+    @Res() response,
+  ) {
     try {
-      const result = await this.transactionsService.getDiaries(customerId);
-      return response.status(HttpStatus.OK).json({
-        message: 'Fetched diaries successfully',
-        data: result,
-      });
+      if (type == 'owner') {
+        const result = await this.transactionsService.getDiaries(customerId);
+        return response.status(HttpStatus.OK).json({
+          message: 'Fetched diaries successfully',
+          data: result,
+        });
+      } else if (type == 'driver') {
+        const data = await this.transactionsService.getDriverOnlyEntries(
+          driverId,
+        );
+        return response.status(HttpStatus.OK).json({
+          message: 'Driver Only details sent successfully',
+          data: data,
+        });
+      }
     } catch (err) {
       console.error(err);
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
