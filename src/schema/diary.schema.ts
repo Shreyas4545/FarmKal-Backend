@@ -38,6 +38,9 @@ export class Diary {
 
   @Prop()
   status: string;
+
+  @Prop()
+  customerName: string;
 }
 
 export const DiarySchema = SchemaFactory.createForClass(Diary);

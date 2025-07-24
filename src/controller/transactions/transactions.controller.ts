@@ -524,6 +524,7 @@ export class TransactionsController {
 
       const dataToStore: any = {
         ...data,
+        customerName: data?.name,
         customerId: existingData?._id,
         createdAt: new Date(),
       };
@@ -594,7 +595,7 @@ export class TransactionsController {
         );
       }
 
-      let updateObj: any = { status, ...data };
+      let updateObj: any = { status, ...data, customerName: data?.name };
 
       if (data?.name && data?.phoneNo) {
         const existingData = await this.transactionsService.checkUser(
@@ -602,7 +603,11 @@ export class TransactionsController {
           data?.name,
         );
 
-        updateObj = { ...updateObj, customerId: existingData?._id };
+        updateObj = {
+          ...updateObj,
+          customerName: data?.name,
+          customerId: existingData?._id,
+        };
       }
 
       const result = await this.transactionsService.updateDiaryStatus(
@@ -632,6 +637,7 @@ export class TransactionsController {
 
       const dataToStore: any = {
         ...data,
+        driverName: data?.name,
         driverId: existingData?._id,
         createdAt: new Date(),
       };

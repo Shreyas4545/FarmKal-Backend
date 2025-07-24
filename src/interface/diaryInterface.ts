@@ -17,4 +17,6 @@ export interface IDiaryInterface extends Document {
   readonly createdAt: Date;
 
   readonly type: string;
+
+  readonly customerName: string;
 }

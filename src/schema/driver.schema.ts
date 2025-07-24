@@ -26,6 +26,9 @@ export class Driver {
 
   @Prop()
   status: string;
+
+  @Prop()
+  driverName: string;
 }
 
 export const DriverSchema = SchemaFactory.createForClass(Driver);

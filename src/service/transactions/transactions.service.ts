@@ -754,7 +754,7 @@ export class TransactionsService {
             customerId: 1,
             ownerId: 1,
             ownerName: '$owner.name',
-            customerName: '$customer.name',
+            customerName: 1,
             type: 1,
             date: 1,
             state: 1,
@@ -781,6 +781,7 @@ export class TransactionsService {
       longitude,
       status,
       customerId,
+      customerName,
       date,
       rate,
     } = data;
@@ -792,6 +793,9 @@ export class TransactionsService {
     }
     if (date) {
       updateObj.date = date;
+    }
+    if (customerName) {
+      updateObj.customerName = customerName;
     }
     if (rate) {
       updateObj.rate = rate;
@@ -883,7 +887,7 @@ export class TransactionsService {
                 $project: {
                   _id: 1,
                   driverId: 1,
-                  name: '$driverInfo.name',
+                  driverName: 1,
                   trips: 1,
                   hours: 1,
                   startTime: 1,
@@ -924,7 +928,9 @@ export class TransactionsService {
     // Part 1: Diaries linked via driver entries
     const diariesLinkedByDriver: any = await this.driver.aggregate([
       { $match: { driverId: incomingDriverId } },
-      { $group: { _id: '$diaryId' } },
+      {
+        $group: { _id: '$diaryId', driverName: { $first: '$driverName' } },
+      },
       {
         $addFields: {
           _id: { $toObjectId: '$_id' },
@@ -939,7 +945,14 @@ export class TransactionsService {
         },
       },
       { $unwind: '$diary' },
-      { $replaceRoot: { newRoot: '$diary' } },
+      // { $replaceRoot: { newRoot: '$diary' } },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ['$diary', { driverName: '$driverName' }],
+          },
+        },
+      },
 
       // 🔥 Convert ownerId and customerId to ObjectId to match users._id
       {
@@ -948,7 +961,6 @@ export class TransactionsService {
           customerObjectId: { $toObjectId: '$customerId' },
         },
       },
-
       // 🔗 Join with users to get owner info
       {
         $lookup: {
@@ -1084,19 +1096,12 @@ export class TransactionsService {
     if (phoneNo) {
       findObj.phone = phoneNo;
     }
-    if (name) {
-      findObj.name = name;
-    }
+
     const existingData: any = await this.user.find(findObj).catch((err) => {
       console.log(err);
     });
 
     if (existingData?.length > 0) {
-      const updateObj: any = {
-        phone: phoneNo || '',
-        name: name || '',
-      };
-      await this.user.findOneAndUpdate({ phone: phoneNo }, updateObj).exec();
       return existingData[0];
     }
 

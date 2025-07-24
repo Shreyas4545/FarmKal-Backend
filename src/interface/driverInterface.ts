@@ -12,4 +12,5 @@ export interface IDriver extends Document {
   readonly createdAt: Date;
 
   readonly status: string;
+  readonly driverName: string;
 }

@@ -18,7 +18,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../../utils/imageUpload';
 import { createLoginDTO } from '../../dto/userDto/loginUser.dto';
 import { ReferralsService } from '../../service/referrals/referrals.service';
-import { IReferrals } from '../../interface/referrals.interface';
 import { IUser } from '../../interface/user.interface';
 // import { ChatGateway } from 'src/utils/chat.gateway';
 @Controller('api/user')
