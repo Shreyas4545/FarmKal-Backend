@@ -828,7 +828,8 @@ export class TransactionsService {
     return await this.driver.create(data);
   }
 
-  async getDriverEntryDetails(diaryId: string): Promise<any> {
+  async getDriverEntryDetails(diaryId: string, driverId: string): Promise<any> {
+    console.log(diaryId, driverId);
     return await this.diary
       .aggregate([
         {
@@ -862,11 +863,24 @@ export class TransactionsService {
         {
           $lookup: {
             from: 'drivers',
-            let: { diaryIdStr: { $toString: '$_id' } },
+            let: {
+              diaryIdStr: { $toString: '$_id' },
+              ...(driverId && {
+                incomingDriverId: new mongoose.Types.ObjectId(driverId),
+              }),
+            },
+
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ['$diaryId', '$$diaryIdStr'] },
+                  $expr: {
+                    $and: [
+                      { $eq: ['$diaryId', '$$diaryIdStr'] },
+                      ...(driverId
+                        ? [{ $eq: ['$_id', '$$incomingDriverId'] }]
+                        : []),
+                    ],
+                  },
                 },
               },
               {

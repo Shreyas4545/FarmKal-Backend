@@ -275,6 +275,27 @@ export class UserController {
     }
   }
 
+  @Post('/deleteUser')
+  async deleteUser(@Res() response, @Query('id') id: string) {
+    try {
+      await this.userService.deleteUser(id);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: 200,
+          message: 'Success',
+        },
+        {},
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
   @Post('/uploadFile')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@Res() response, @UploadedFile() file: Express.Multer.File) {

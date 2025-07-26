@@ -667,10 +667,14 @@ export class TransactionsController {
   }
 
   @Get('/getDiaryDetails')
-  async getDiaryDetails(@Query('diaryId') diaryId: string, @Res() response) {
+  async getDiaryDetails(
+    @Query('diaryId') diaryId: string,
+    @Query('driverId') driverId: string,
+    @Res() response,
+  ) {
     try {
       const result: any[] =
-        await this.transactionsService.getDriverEntryDetails(diaryId);
+        await this.transactionsService.getDriverEntryDetails(diaryId, driverId);
 
       let tripCount = 0;
       let hourCount = 0;

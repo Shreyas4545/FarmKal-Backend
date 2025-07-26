@@ -66,6 +66,17 @@ export class UserService {
     return users;
   }
 
+  async deleteUser(id: string): Promise<any> {
+    await this.userModel
+      .findByIdAndDelete(id)
+      .exec()
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+    return true;
+  }
+
   async updateUsers(id: string, data: any): Promise<IUser | any> {
     const obj: any = {};
     const {
