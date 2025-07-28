@@ -877,7 +877,7 @@ export class TransactionsService {
                     $and: [
                       { $eq: ['$diaryId', '$$diaryIdStr'] },
                       ...(driverId
-                        ? [{ $eq: ['$_id', '$$incomingDriverId'] }]
+                        ? [{ $eq: ['$driverId', '$$incomingDriverId'] }]
                         : []),
                     ],
                   },
