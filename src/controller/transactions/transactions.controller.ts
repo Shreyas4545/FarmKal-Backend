@@ -673,9 +673,12 @@ export class TransactionsController {
     @Res() response,
   ) {
     try {
-      const result: any[] =
-        await this.transactionsService.getDriverEntryDetails(diaryId, driverId);
+      const result: any = await this.transactionsService.getDriverEntryDetails(
+        diaryId,
+        driverId,
+      );
 
+      console.log(result);
       let tripCount = 0;
       let hourCount = 0;
       if (result?.length > 0) {
@@ -694,13 +697,20 @@ export class TransactionsController {
         }
       }
 
+      let returnObj: any = {
+        ...result?.diaryData[0],
+        locationTrackReqPresent: result?.locationTrackReqPresent,
+        tripCount: tripCount,
+        hourCount: TimeUtils.formatMinutes(hourCount),
+      };
+
+      if (result?.locationTrackReqPresent) {
+        returnObj.locationTrackDataId = result?.locationTrackDataId;
+      }
+
       return response.status(HttpStatus.OK).json({
         message: 'Diary details fetched successfully',
-        data: {
-          ...result[0],
-          tripCount: tripCount,
-          hourCount: TimeUtils.formatMinutes(hourCount),
-        },
+        data: returnObj,
       });
     } catch (err) {
       console.error(err);

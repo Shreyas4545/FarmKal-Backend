@@ -833,8 +833,7 @@ export class TransactionsService {
   }
 
   async getDriverEntryDetails(diaryId: string, driverId: string): Promise<any> {
-    console.log(diaryId, driverId);
-    return await this.diary
+    const diaryData = await this.diary
       .aggregate([
         {
           $addFields: {
@@ -938,6 +937,18 @@ export class TransactionsService {
         },
       ])
       .exec();
+
+    const locationTrackData = await this.locationTracking
+      .findOne({ status: 'PENDING', driverId: driverId, diaryId: diaryId })
+      .exec();
+
+    const returnObj: any = {
+      diaryData: diaryData,
+      locationTrackReqPresent: locationTrackData ? true : false,
+      locationTrackDataId: locationTrackData?._id,
+    };
+
+    return returnObj;
   }
 
   async getDriverOnlyEntries(driverId?: string): Promise<any> {
