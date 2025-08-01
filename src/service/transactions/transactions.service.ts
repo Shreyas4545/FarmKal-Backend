@@ -12,6 +12,8 @@ import { IOwnerReminder } from '../../interface/ownerReminder.interface';
 import { IUser } from '../../interface/user.interface';
 import { IDriver } from '../../interface/driverInterface';
 import { IDriverLocation } from '../../interface/driverLocation.interface';
+import { ILocationTracking } from '../../interface/locationTrackingInterface';
+
 class getAllTransactions {
   readonly ownerId: string;
   readonly farmerProfileId: string;
@@ -40,6 +42,8 @@ export class TransactionsService {
     @InjectModel('Location') private locationModel: Model<ILocation>,
     @InjectModel('OwnerReminder')
     private OwnerReminderModel: Model<IOwnerReminder>,
+    @InjectModel('LocationTracking')
+    private locationTracking: Model<ILocationTracking>,
   ) {}
 
   async create(data: any): Promise<ITransactions | any> {
@@ -1139,5 +1143,15 @@ export class TransactionsService {
 
   async addDriverLocation(data: any): Promise<any> {
     return await this.driverLocation.create(data);
+  }
+
+  async addTrackingReq(data: any): Promise<any> {
+    return await this.locationTracking.create(data);
+  }
+
+  async updateTrackingRequest(id: string, data: any): Promise<any> {
+    return await this.locationTracking
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec();
   }
 }

@@ -765,4 +765,61 @@ export class TransactionsController {
       });
     }
   }
+
+  @Post('/addTrackingRequest')
+  async addTrackingRequest(@Body() data: any, @Res() response) {
+    try {
+      const result = await this.transactionsService.addTrackingReq(data);
+
+      await oneSignal(
+        'message',
+        `${data?.ownerName} has requested to track your location.`,
+        `View it`,
+        '',
+        data?.driverId,
+      );
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Tracking Request Added Successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create driver',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Put('/updateTrackingRequest/:id')
+  async updateTrackingRequest(
+    @Body() data: any,
+    @Param('id') id: string,
+    @Res() response,
+  ) {
+    try {
+      const result = await this.transactionsService.updateTrackingRequest(
+        id,
+        data,
+      );
+
+      await oneSignal(
+        'message',
+        `${data?.ownerName} has requested to track your location.`,
+        `View it`,
+        '',
+        data?.driverId,
+      );
+      return response.status(HttpStatus.CREATED).json({
+        message: 'Tracking Request Added Successfully',
+        data: result,
+      });
+    } catch (err) {
+      console.error(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create driver',
+        error: err.message || err,
+      });
+    }
+  }
 }

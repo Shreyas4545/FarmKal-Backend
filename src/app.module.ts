@@ -84,7 +84,7 @@ import { DiarySchema } from './schema/diary.schema';
 import { Driver, DriverSchema } from './schema/driver.schema';
 import { AblyServiceMaps } from './utils/ablyServiceMaps';
 import { DriverLocationSchema } from './schema/driverLocation.schema';
-
+import { LocationTrackingSchema } from './schema/locationTrackingSchema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -124,6 +124,7 @@ import { DriverLocationSchema } from './schema/driverLocation.schema';
       { name: 'PrivacyPolicy', schema: PrivacyPolicySchema },
       { name: 'Driver', schema: DriverSchema },
       { name: 'DriverLocation', schema: DriverLocationSchema },
+      { name: 'LocationTracking', schema: LocationTrackingSchema },
     ]),
   ],
   controllers: [
