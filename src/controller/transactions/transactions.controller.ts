@@ -694,7 +694,6 @@ export class TransactionsController {
         driverId,
       );
 
-      console.log(result);
       let tripCount = 0;
       let hourCount = 0;
       if (result?.length > 0) {

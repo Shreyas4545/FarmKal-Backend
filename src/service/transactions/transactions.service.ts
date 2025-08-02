@@ -939,7 +939,11 @@ export class TransactionsService {
       .exec();
 
     const locationTrackData = await this.locationTracking
-      .findOne({ status: 'PENDING', driverId: driverId, diaryId: diaryId })
+      .findOne({
+        status: 'PENDING',
+        driverId: new mongoose.Types.ObjectId(driverId),
+        diaryId: diaryId,
+      })
       .exec();
 
     const returnObj: any = {
