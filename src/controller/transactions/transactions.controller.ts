@@ -653,6 +653,22 @@ export class TransactionsController {
       );
 
       const result = await this.transactionsService.createDriver(dataToStore);
+
+      const obj: any = {
+        diaryId: data?.diaryId,
+        driverId: existingData?._id,
+        status: 'PENDING',
+      };
+
+      await this.transactionsService.addTrackingReq(obj);
+
+      await oneSignal(
+        'message',
+        `${owner?.name} has requested to track your location.`,
+        `View it`,
+        '',
+        data?.driverId,
+      );
       return response.status(HttpStatus.CREATED).json({
         message: 'Driver created successfully',
         data: result,
