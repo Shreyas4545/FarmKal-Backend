@@ -932,6 +932,8 @@ export class TransactionsService {
             createdAt: 1,
             rate: 1,
             status: 1,
+            latitude: 1,
+            longitude: 1,
             drivers: 1,
           },
         },
