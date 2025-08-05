@@ -21,11 +21,11 @@ export class Diary {
   @Prop()
   state: string;
 
-  @Prop({ type: MongooseSchema.Types.Decimal128 })
-  latitude: Types.Decimal128;
+  @Prop()
+  latitude: number;
 
-  @Prop({ type: MongooseSchema.Types.Decimal128 })
-  longitude: Types.Decimal128;
+  @Prop()
+  longitude: number;
 
   @Prop()
   city: string;
