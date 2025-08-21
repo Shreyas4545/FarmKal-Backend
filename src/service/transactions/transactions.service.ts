@@ -1142,7 +1142,6 @@ export class TransactionsService {
       updateObj.status = status;
     }
     if (diaryId) {
-      console.log(diaryId);
       await this.driver
         .updateMany({ diaryId }, { status: 'ACTIVE' }, { new: true })
         .exec();

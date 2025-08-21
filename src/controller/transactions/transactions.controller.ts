@@ -713,7 +713,6 @@ export class TransactionsController {
                 tripCount += Number(entry.trips);
               }
             } else {
-              console.log('He');
               // sum duration from startTime/endTime
               if (entry?.startTime && entry?.endTime) {
                 const count: any = TimeUtils.getTimeDifferenceInMinutes(
