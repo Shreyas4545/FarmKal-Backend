@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -584,15 +585,16 @@ export class TransactionsController {
   ) {
     try {
       if (status == 'ACTIVE') {
-        const resultData = await this.transactionsService.updateDriverDetails(
-          '',
-          '',
-          '',
-          '',
-          '',
-          status,
-          id,
-        );
+        const resultData =
+          await this.transactionsService.updateDriverEntryDetails(
+            '',
+            '',
+            '',
+            '',
+            '',
+            status,
+            id,
+          );
       }
 
       let updateObj: any = { status, ...data, customerName: data?.name };
@@ -736,26 +738,54 @@ export class TransactionsController {
     }
   }
 
-  @Put('/updateDriverEntries/:id')
-  async updateDriverDetails(
-    @Param('id') id: string,
-    @Body('hours') hours: number,
-    @Body('trips') trips: number,
+  @Post('/addUpdateDriverEntries')
+  async addUpdateDriverEntries(
+    @Query('id') id: string,
+    @Query('driverDiaryId') driverDiaryId: string,
+    @Body('hours') hours: any,
+    @Body('trips') trips: any,
     @Body('startTime') startTime: string,
     @Body('endTime') endTime: string,
     @Body('status') status: string,
     @Res() response,
   ) {
     try {
-      const result = await this.transactionsService.updateDriverDetails(
-        id,
-        hours,
-        trips,
-        startTime,
-        endTime,
-        status,
-        '',
-      );
+      let result: any = [];
+      if (startTime) {
+        let obj: any = {};
+
+        if (driverDiaryId) {
+          obj.driverDiaryId = driverDiaryId;
+        }
+
+        if (hours !== '' && hours != null) {
+          obj.hours = hours;
+        }
+
+        if (trips != null && trips !== '') {
+          obj.trips = trips;
+        }
+        if (startTime) {
+          obj.startTime = startTime;
+        }
+        if (endTime) {
+          obj.endTime = endTime;
+        }
+        if (status) {
+          obj.status = status;
+        }
+        result = await this.transactionsService.addDriverEntryDetails(obj);
+      } else {
+        result = await this.transactionsService.updateDriverEntryDetails(
+          id,
+          hours,
+          trips,
+          startTime,
+          endTime,
+          status,
+          '',
+        );
+      }
       return response.status(HttpStatus.OK).json({
         message: 'Driver details updated successfully',
         data: result,
@@ -844,6 +874,76 @@ export class TransactionsController {
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Failed to create driver',
         error: err.message || err,
+      });
+    }
+  }
+
+  @Get('/getDriverLocations')
+  async getDriverLocations(
+    @Query('driverId') driverId: string,
+    @Query('driverId') diaryId: string,
+    @Res() response,
+  ) {
+    try {
+      const data = await this.transactionsService.getDriverLocationEntries(
+        diaryId,
+        driverId,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Driver Location Entries sent successfully',
+        data: data,
+      });
+    } catch (err) {
+      console.log(err);
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to send driver location entries',
+        error: err.message || err,
+      });
+    }
+  }
+
+  @Post('/deleteDriverEntries')
+  async deleteDriverEntries(@Res() response, @Query('id') id: string) {
+    try {
+      console.log(id);
+      const deletedDriverEntry =
+        await this.transactionsService.deleteDriverEntry(id);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Deleted Driver Entry',
+        },
+        deletedDriverEntry,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/deleteDriverDetails')
+  async deleteDriverDetails(@Res() response, @Query('id') id: string) {
+    try {
+      console.log(id);
+      const deletedDriverEntry =
+        await this.transactionsService.deleteDriverDetails(id);
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Deleted Driver Details',
+        },
+        deletedDriverEntry,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
       });
     }
   }

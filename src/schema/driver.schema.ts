@@ -10,18 +10,6 @@ export class Driver {
   driverId: Types.ObjectId;
 
   @Prop()
-  trips: number;
-
-  @Prop()
-  hours: number;
-
-  @Prop()
-  startTime: string;
-
-  @Prop()
-  endTime: string;
-
-  @Prop()
   createdAt: Date;
 
   @Prop()

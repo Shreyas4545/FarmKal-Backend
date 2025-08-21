@@ -1,0 +1,28 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
+
+@Schema({ versionKey: false })
+export class DriverEntry {
+  @Prop({ type: Types.ObjectId, ref: 'Driver', required: true })
+  driverDiaryId: Types.ObjectId;
+
+  @Prop()
+  trips: number;
+
+  @Prop()
+  hours: number;
+
+  @Prop()
+  startTime: string;
+
+  @Prop()
+  endTime: string;
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  status: string;
+}
+
+export const DriverEntrySchema = SchemaFactory.createForClass(DriverEntry);

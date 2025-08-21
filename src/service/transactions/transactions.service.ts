@@ -13,6 +13,7 @@ import { IUser } from '../../interface/user.interface';
 import { IDriver } from '../../interface/driverInterface';
 import { IDriverLocation } from '../../interface/driverLocation.interface';
 import { ILocationTracking } from '../../interface/locationTrackingInterface';
+import { IDriverEntry } from '../../interface/driverEntry.interface';
 
 class getAllTransactions {
   readonly ownerId: string;
@@ -29,6 +30,8 @@ export class TransactionsService {
     private diary: Model<IDiaryInterface>,
     @InjectModel('Driver')
     private driver: Model<IDriver>,
+    @InjectModel('DriverEntry')
+    private driverEntry: Model<IDriverEntry>,
     @InjectModel('DriverLocation')
     private driverLocation: Model<IDriverLocation>,
     @InjectModel('totalAmount')
@@ -872,7 +875,6 @@ export class TransactionsService {
                 incomingDriverId: new mongoose.Types.ObjectId(driverId),
               }),
             },
-
             pipeline: [
               {
                 $match: {
@@ -900,17 +902,40 @@ export class TransactionsService {
                   preserveNullAndEmptyArrays: true,
                 },
               },
+              // 🔹 New lookup into driverEntries (all docs for one driver)
+              {
+                $lookup: {
+                  from: 'driverentries',
+                  let: { driverIdStr: { $toString: '$_id' } }, // convert driver._id to string
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $eq: ['$driverDiaryId', '$$driverIdStr'], // match string field
+                        },
+                      },
+                    },
+                  ],
+                  as: 'driverEntries',
+                },
+              },
               {
                 $project: {
                   _id: 1,
                   driverId: 1,
                   driverName: 1,
-                  trips: 1,
-                  hours: 1,
-                  startTime: 1,
-                  endTime: 1,
                   status: 1,
                   createdAt: 1,
+                  // keep driverEntries array intact
+                  driverEntries: {
+                    _id: 1,
+                    trips: 1,
+                    hours: 1,
+                    startTime: 1,
+                    endTime: 1,
+                    status: 1,
+                    createdAt: 1,
+                  },
                 },
               },
             ],
@@ -943,7 +968,7 @@ export class TransactionsService {
     const locationTrackData = await this.locationTracking
       .findOne({
         status: 'PENDING',
-        driverId: new mongoose.Types.ObjectId(driverId),
+        driverId: driverId,
         diaryId: diaryId,
       })
       .exec();
@@ -1089,7 +1114,7 @@ export class TransactionsService {
     return [...diariesLinkedByDriver, ...diariesByOwner];
   }
 
-  async updateDriverDetails(
+  async updateDriverEntryDetails(
     id: string,
     hours: any,
     trips: any,
@@ -1117,13 +1142,25 @@ export class TransactionsService {
       updateObj.status = status;
     }
     if (diaryId) {
-      return await this.driver
-        .updateMany({ diaryId: diaryId }, updateObj, { new: true })
+      await this.driver
+        .updateMany({ diaryId }, { status: 'ACTIVE' }, { new: true })
         .exec();
+
+      const allRecords: any[] = await this.driver
+        .find({ diaryId })
+        .select('_id');
+
+      const ids: any[] = allRecords?.map((r) => r._id);
+      return await this.driverEntry.updateMany(
+        { driverDiaryId: { $in: ids } },
+        { $set: { status: 'ACTIVE' } },
+        { new: true },
+      );
     }
-    return await this.driver
-      .findByIdAndUpdate(id, updateObj, { new: true })
-      .exec();
+
+    return await this.driverEntry.findByIdAndUpdate(id, updateObj, {
+      new: true,
+    });
   }
 
   async checkUser(phoneNo: number, name: string): Promise<any> {
@@ -1158,8 +1195,21 @@ export class TransactionsService {
     return newUser;
   }
 
+  async addDriverEntryDetails(data: any): Promise<any> {
+    return await this.driverEntry.create(data);
+  }
+
   async addDriverLocation(data: any): Promise<any> {
     return await this.driverLocation.create(data);
+  }
+
+  async getDriverLocationEntries(
+    diaryId: string,
+    driverId: string,
+  ): Promise<any> {
+    return await this.driverLocation
+      .find({ diaryId: diaryId, driverId: driverId })
+      .exec();
   }
 
   async addTrackingReq(data: any): Promise<any> {
@@ -1170,5 +1220,33 @@ export class TransactionsService {
     return await this.locationTracking
       .findByIdAndUpdate(id, data, { new: true })
       .exec();
+  }
+
+  async deleteDriverEntry(id: string) {
+    await this.driverEntry
+      .findOneAndDelete({ _id: id })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+    return true;
+  }
+
+  async deleteDriverDetails(id: string) {
+    await this.driver
+      .findOneAndDelete({ _id: id })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    await this.driverEntry
+      .findOneAndDelete({ driverDiaryId: id })
+      .exec()
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return true;
   }
 }
