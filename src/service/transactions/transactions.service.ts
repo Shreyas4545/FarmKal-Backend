@@ -1142,6 +1142,7 @@ export class TransactionsService {
       updateObj.status = status;
     }
     if (diaryId) {
+      console.log(diaryId);
       await this.driver
         .updateMany({ diaryId }, { status: 'ACTIVE' }, { new: true })
         .exec();
@@ -1150,7 +1151,8 @@ export class TransactionsService {
         .find({ diaryId })
         .select('_id');
 
-      const ids: any[] = allRecords?.map((r) => r._id);
+      const ids: any[] = allRecords?.map((r) => r._id.toString());
+
       return await this.driverEntry.updateMany(
         { driverDiaryId: { $in: ids } },
         { $set: { status: 'ACTIVE' } },

@@ -13,10 +13,10 @@ export class DriverEntry {
   hours: number;
 
   @Prop()
-  startTime: string;
+  startTime: Date;
 
   @Prop()
-  endTime: string;
+  endTime: Date;
 
   @Prop()
   createdAt: Date;

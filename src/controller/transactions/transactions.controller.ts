@@ -684,6 +684,7 @@ export class TransactionsController {
     }
   }
 
+  // ...existing code...
   @Get('/getDiaryDetails')
   async getDiaryDetails(
     @Query('diaryId') diaryId: string,
@@ -698,18 +699,32 @@ export class TransactionsController {
 
       let tripCount = 0;
       let hourCount = 0;
-      if (result?.length > 0) {
-        for (let i of result[0]?.drivers) {
-          if (result[0]?.type == 'trip') {
-            tripCount += Number(i?.trips);
-          } else if (i?.startTime && i?.endTime) {
-            const count: any = TimeUtils.getTimeDifferenceInMinutes(
-              i?.startTime,
-              i?.endTime,
-            );
+      console.log(result);
 
-            i.totalTime = TimeUtils.formatMinutes(count);
-            hourCount += count;
+      if (result?.diaryData?.length > 0) {
+        const diary = result?.diaryData[0];
+        const diaryType = diary?.type;
+
+        for (let driver of diary?.drivers || []) {
+          for (let entry of driver?.driverEntries || []) {
+            if (diaryType === 'trip') {
+              // sum trips from driverEntries
+              if (entry?.trips != null) {
+                tripCount += Number(entry.trips);
+              }
+            } else {
+              console.log('He');
+              // sum duration from startTime/endTime
+              if (entry?.startTime && entry?.endTime) {
+                const count: any = TimeUtils.getTimeDifferenceInMinutes(
+                  entry?.startTime,
+                  entry?.endTime,
+                );
+
+                entry.totalTime = TimeUtils.formatMinutes(count);
+                hourCount += count;
+              }
+            }
           }
         }
       }
@@ -737,6 +752,7 @@ export class TransactionsController {
       });
     }
   }
+  //
 
   @Post('/addUpdateDriverEntries')
   async addUpdateDriverEntries(
@@ -881,7 +897,7 @@ export class TransactionsController {
   @Get('/getDriverLocations')
   async getDriverLocations(
     @Query('driverId') driverId: string,
-    @Query('driverId') diaryId: string,
+    @Query('diaryId') diaryId: string,
     @Res() response,
   ) {
     try {
