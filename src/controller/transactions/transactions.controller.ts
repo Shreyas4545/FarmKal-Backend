@@ -699,7 +699,6 @@ export class TransactionsController {
 
       let tripCount = 0;
       let hourCount = 0;
-      console.log(result);
 
       if (result?.diaryData?.length > 0) {
         const diary = result?.diaryData[0];
