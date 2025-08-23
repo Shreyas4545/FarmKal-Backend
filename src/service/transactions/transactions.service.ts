@@ -1249,7 +1249,7 @@ export class TransactionsService {
   async getDriverLocationEntries(
     diaryId: string,
     driverId: string,
-    driverEntryId: string,
+    driverEntryId?: string,
   ): Promise<any> {
     const matchStage: any = {
       diaryId: diaryId,
@@ -1260,9 +1260,10 @@ export class TransactionsService {
       matchStage.driverEntryId = driverEntryId;
     }
 
-    const result = await this.driverLocation
+    const agg = await this.driverLocation
       .aggregate([
         { $match: matchStage },
+        // convert driverEntryId (string) to ObjectId when present
         {
           $addFields: {
             driverEntryOid: {
@@ -1296,16 +1297,45 @@ export class TransactionsService {
             latitude: 1,
             longitude: 1,
             createdAt: 1,
-            // pull tripLabel (may be undefined) and other driverEntry fields
             tripLabel: '$driverEntry.tripLabel',
             trips: '$driverEntry.trips',
             driverEntryId: '$driverEntry._id',
           },
         },
+        // group by tripLabel (use 'Unassigned' when no label)
+        {
+          $group: {
+            _id: { $ifNull: ['$tripLabel', 'Unassigned'] },
+            items: { $push: '$$ROOT' },
+          },
+        },
+        // convert each group doc to { k, v } pair
+        {
+          $project: {
+            _id: 0,
+            k: '$_id',
+            v: '$items',
+          },
+        },
+        // collect pairs into an array
+        {
+          $group: {
+            _id: null,
+            pairs: { $push: { k: '$k', v: '$v' } },
+          },
+        },
+        // convert array of pairs to an object { "Trip 1": [...], ... }
+        {
+          $project: {
+            _id: 0,
+            result: { $arrayToObject: '$pairs' },
+          },
+        },
       ])
       .exec();
 
-    return result;
+    // return object mapping tripLabel => [locations]
+    return agg && agg[0] && agg[0].result ? agg[0].result : {};
   }
 
   async addTrackingReq(data: any): Promise<any> {

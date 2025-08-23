@@ -836,6 +836,7 @@ export class TransactionsController {
           if (status) {
             obj.status = status;
           }
+          obj.tripStatus = 'STARTED';
           result = await this.transactionsService.addDriverEntryDetails(obj);
         } else {
           result = await this.transactionsService.updateDriverEntryDetails(
@@ -846,7 +847,7 @@ export class TransactionsController {
             endTime,
             status,
             '',
-            '',
+            'ENDED',
           );
         }
       }
