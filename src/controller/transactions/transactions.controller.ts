@@ -703,13 +703,17 @@ export class TransactionsController {
       if (result?.diaryData?.length > 0) {
         const diary = result?.diaryData[0];
         const diaryType = diary?.type;
+        const rate = Number(diary?.rate ?? diary?.ratePerUnit ?? 0);
 
         for (let driver of diary?.drivers || []) {
+          let individualDriverCount: any = 0;
           for (let entry of driver?.driverEntries || []) {
             if (diaryType === 'trip') {
               // sum trips from driverEntries
               if (entry?.trips != null) {
-                tripCount += Number(entry.trips);
+                const t = Number(entry?.trips);
+                tripCount += t;
+                individualDriverCount += t;
               }
             } else {
               // sum duration from startTime/endTime
@@ -720,28 +724,45 @@ export class TransactionsController {
                 );
 
                 entry.totalTime = TimeUtils.formatMinutes(count);
+
+                individualDriverCount += count;
                 hourCount += count;
               }
             }
           }
+          if (diaryType === 'trip') {
+            driver.totalTrips = individualDriverCount;
+          } else {
+            driver.totalHours = TimeUtils.formatMinutes(individualDriverCount);
+          }
         }
+
+        const roundedHours = Math.ceil(hourCount / 60);
+        const totalAmount =
+          diaryType === 'trip' ? tripCount * rate : roundedHours * rate;
+
+        let returnObj: any = {
+          ...result?.diaryData[0],
+          locationTrackReqPresent: result?.locationTrackReqPresent,
+          totalTripCount: tripCount,
+          totalHourCount: TimeUtils.formatMinutes(hourCount),
+          roundedHourCount: String(roundedHours),
+          totalAmount: totalAmount,
+        };
+
+        if (result?.locationTrackReqPresent) {
+          returnObj.locationTrackDataId = result?.locationTrackDataId;
+        }
+
+        return response.status(HttpStatus.OK).json({
+          message: 'Diary details fetched successfully',
+          data: returnObj,
+        });
+      } else {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: 'Diary not found',
+        });
       }
-
-      let returnObj: any = {
-        ...result?.diaryData[0],
-        locationTrackReqPresent: result?.locationTrackReqPresent,
-        tripCount: tripCount,
-        hourCount: TimeUtils.formatMinutes(hourCount),
-      };
-
-      if (result?.locationTrackReqPresent) {
-        returnObj.locationTrackDataId = result?.locationTrackDataId;
-      }
-
-      return response.status(HttpStatus.OK).json({
-        message: 'Diary details fetched successfully',
-        data: returnObj,
-      });
     } catch (err) {
       console.error(err);
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -750,7 +771,6 @@ export class TransactionsController {
       });
     }
   }
-  //
 
   @Post('/addUpdateDriverEntries')
   async addUpdateDriverEntries(

@@ -22,7 +22,7 @@ export class AblyServiceMaps implements OnModuleInit {
     const channel = ably.channels.get(`get-started`);
 
     channel.subscribe('testing', async (message) => {
-      console.log('Message received: ' + message.data);
+      // console.log('Message received: ' + message.data);
       messageToPublish = message.data;
       ownerId = message.data.ownerId;
       customerId = message.data.customerId;
