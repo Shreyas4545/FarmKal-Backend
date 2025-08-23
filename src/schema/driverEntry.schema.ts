@@ -19,6 +19,9 @@ export class DriverEntry {
   endTime: Date;
 
   @Prop()
+  tripStatus: string;
+
+  @Prop()
   createdAt: Date;
 
   @Prop()

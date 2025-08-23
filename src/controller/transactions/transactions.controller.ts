@@ -594,6 +594,7 @@ export class TransactionsController {
             '',
             status,
             id,
+            '',
           );
       }
 
@@ -709,14 +710,12 @@ export class TransactionsController {
           let individualDriverCount: any = 0;
           for (let entry of driver?.driverEntries || []) {
             if (diaryType === 'trip') {
-              // sum trips from driverEntries
               if (entry?.trips != null) {
                 const t = Number(entry?.trips);
                 tripCount += t;
                 individualDriverCount += t;
               }
             } else {
-              // sum duration from startTime/endTime
               if (entry?.startTime && entry?.endTime) {
                 const count: any = TimeUtils.getTimeDifferenceInMinutes(
                   entry?.startTime,
@@ -781,44 +780,75 @@ export class TransactionsController {
     @Body('startTime') startTime: string,
     @Body('endTime') endTime: string,
     @Body('status') status: string,
+    @Body('diaryType') diaryType: string,
+    @Body('tripStatus') tripStatus: string,
     @Res() response,
   ) {
     try {
       let result: any = [];
-      if (startTime) {
-        let obj: any = {};
 
-        if (driverDiaryId) {
-          obj.driverDiaryId = driverDiaryId;
-        }
+      if (diaryType == 'trips') {
+        if (tripStatus == 'STARTED') {
+          let obj: any = {};
 
-        if (hours !== '' && hours != null) {
-          obj.hours = hours;
+          if (driverDiaryId) {
+            obj.driverDiaryId = driverDiaryId;
+          }
+          obj.trips = 1;
+          if (status) {
+            obj.status = status;
+          }
+          obj.tripStatus = tripStatus;
+          result = await this.transactionsService.addDriverEntryDetails(obj);
+        } else {
+          result = await this.transactionsService.updateDriverEntryDetails(
+            id,
+            hours,
+            trips,
+            startTime,
+            endTime,
+            status,
+            '',
+            'ENDED',
+          );
         }
-
-        if (trips != null && trips !== '') {
-          obj.trips = trips;
-        }
-        if (startTime) {
-          obj.startTime = startTime;
-        }
-        if (endTime) {
-          obj.endTime = endTime;
-        }
-        if (status) {
-          obj.status = status;
-        }
-        result = await this.transactionsService.addDriverEntryDetails(obj);
       } else {
-        result = await this.transactionsService.updateDriverEntryDetails(
-          id,
-          hours,
-          trips,
-          startTime,
-          endTime,
-          status,
-          '',
-        );
+        if (startTime) {
+          let obj: any = {};
+
+          if (driverDiaryId) {
+            obj.driverDiaryId = driverDiaryId;
+          }
+
+          if (hours !== '' && hours != null) {
+            obj.hours = hours;
+          }
+
+          if (trips != null && trips !== '') {
+            obj.trips = trips;
+          }
+          if (startTime) {
+            obj.startTime = startTime;
+          }
+          if (endTime) {
+            obj.endTime = endTime;
+          }
+          if (status) {
+            obj.status = status;
+          }
+          result = await this.transactionsService.addDriverEntryDetails(obj);
+        } else {
+          result = await this.transactionsService.updateDriverEntryDetails(
+            id,
+            hours,
+            trips,
+            startTime,
+            endTime,
+            status,
+            '',
+            '',
+          );
+        }
       }
       return response.status(HttpStatus.OK).json({
         message: 'Driver details updated successfully',

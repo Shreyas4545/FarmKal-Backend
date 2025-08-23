@@ -10,6 +10,9 @@ export class DriverLocation {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   driverId: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'DriverEntry', required: true })
+  driverEntryId: Types.ObjectId;
+
   @Prop({ type: Number, required: true })
   latitude: number;
 

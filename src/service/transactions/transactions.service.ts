@@ -934,6 +934,7 @@ export class TransactionsService {
                     startTime: 1,
                     endTime: 1,
                     status: 1,
+                    tripStatus: 1,
                     createdAt: 1,
                   },
                 },
@@ -1122,6 +1123,7 @@ export class TransactionsService {
     endTime: string,
     status: string,
     diaryId: string,
+    tripStatus: string,
   ): Promise<any> {
     const updateObj: any = {};
 
@@ -1140,6 +1142,9 @@ export class TransactionsService {
     }
     if (status) {
       updateObj.status = status;
+    }
+    if (tripStatus) {
+      updateObj.tripStatus = tripStatus;
     }
     if (diaryId) {
       await this.driver
