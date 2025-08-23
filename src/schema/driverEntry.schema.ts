@@ -22,6 +22,9 @@ export class DriverEntry {
   tripStatus: string;
 
   @Prop()
+  tripLabel: string;
+
+  @Prop()
   createdAt: Date;
 
   @Prop()

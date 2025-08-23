@@ -8,6 +8,7 @@ export interface IDriverEntry extends Document {
 
   readonly startTime: string;
   readonly endTime: string;
+  readonly tripLabel: string;
   readonly createdAt: Date;
 
   readonly status: string;

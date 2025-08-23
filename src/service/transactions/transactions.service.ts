@@ -1201,9 +1201,46 @@ export class TransactionsService {
     return newUser;
   }
 
+  // ...existing code...
   async addDriverEntryDetails(data: any): Promise<any> {
+    // Ensure driverDiaryId is provided
+    const driverDiaryId = data?.driverDiaryId;
+
+    // Fetch existing trip labels for this driverDiaryId
+    const existingEntries: any[] = await this.driverEntry
+      .find({ driverDiaryId: driverDiaryId })
+      .select('tripLabel')
+      .lean()
+      .catch((err) => {
+        console.log(
+          'Error fetching existing driver entries for label generation',
+          err,
+        );
+        return [];
+      });
+
+    // Determine the highest numeric suffix from labels like "Trip 1", "Trip 2", ...
+    let maxNum = 0;
+    for (const e of existingEntries) {
+      const label = (e?.tripLabel || '').toString();
+      const m = label.match(/Trip\s*(\d+)/i);
+      if (m && m[1]) {
+        const n = parseInt(m[1], 10);
+        if (!isNaN(n) && n > maxNum) maxNum = n;
+      }
+    }
+
+    // Next label
+    const nextNum = maxNum + 1;
+    // Use a descriptive field name 'tripLabel' to store the generated value.
+    // If callers already provide a tripLabel, do not override.
+    if (!data.tripLabel) {
+      data.tripLabel = `Trip ${nextNum}`;
+    }
+
     return await this.driverEntry.create(data);
   }
+  // ...existing code...
 
   async addDriverLocation(data: any): Promise<any> {
     return await this.driverLocation.create(data);
@@ -1213,9 +1250,56 @@ export class TransactionsService {
     diaryId: string,
     driverId: string,
   ): Promise<any> {
-    return await this.driverLocation
-      .find({ diaryId: diaryId, driverId: driverId })
+    const matchStage: any = {
+      diaryId: diaryId,
+      driverId: driverId,
+    };
+
+    const result = await this.driverLocation
+      .aggregate([
+        { $match: matchStage },
+        {
+          $addFields: {
+            driverEntryOid: {
+              $cond: [
+                {
+                  $and: [
+                    { $ne: ['$driverEntryId', null] },
+                    { $ne: ['$driverEntryId', ''] },
+                  ],
+                },
+                { $toObjectId: '$driverEntryId' },
+                null,
+              ],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'driverentries',
+            localField: 'driverEntryOid',
+            foreignField: '_id',
+            as: 'driverEntry',
+          },
+        },
+        { $unwind: { path: '$driverEntry', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            // driverDiaryId: 1,
+            // diaryId: 1,
+            // driverId: 1,
+            latitude: 1,
+            longitude: 1,
+            createdAt: 1,
+            tripLabel: '$driverEntry.tripLabel',
+            // trips: '$driverEntry.trips',
+            // driverEntryId: '$driverEntry._id',
+          },
+        },
+      ])
       .exec();
+
+    return result;
   }
 
   async addTrackingReq(data: any): Promise<any> {

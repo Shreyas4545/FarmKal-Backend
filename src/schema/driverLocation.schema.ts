@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { DriverSchema } from './driver.schema';
 
 @Schema({ versionKey: false, timestamps: true })
 export class DriverLocation {
@@ -10,7 +9,7 @@ export class DriverLocation {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   driverId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'DriverEntry', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'driverEntry', required: true })
   driverEntryId: Types.ObjectId;
 
   @Prop({ type: Number, required: true })
