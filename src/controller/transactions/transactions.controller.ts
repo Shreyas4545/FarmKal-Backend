@@ -946,12 +946,14 @@ export class TransactionsController {
   async getDriverLocations(
     @Query('driverId') driverId: string,
     @Query('diaryId') diaryId: string,
+    @Query('driverEntryId') driverEntryId: string,
     @Res() response,
   ) {
     try {
       const data = await this.transactionsService.getDriverLocationEntries(
         diaryId,
         driverId,
+        driverEntryId,
       );
       return response.status(HttpStatus.OK).json({
         message: 'Driver Location Entries sent successfully',

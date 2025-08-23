@@ -1249,11 +1249,16 @@ export class TransactionsService {
   async getDriverLocationEntries(
     diaryId: string,
     driverId: string,
+    driverEntryId: string,
   ): Promise<any> {
     const matchStage: any = {
       diaryId: diaryId,
       driverId: driverId,
     };
+
+    if (driverEntryId) {
+      matchStage.driverEntryId = driverEntryId;
+    }
 
     const result = await this.driverLocation
       .aggregate([
@@ -1285,15 +1290,16 @@ export class TransactionsService {
         { $unwind: { path: '$driverEntry', preserveNullAndEmptyArrays: true } },
         {
           $project: {
-            // driverDiaryId: 1,
-            // diaryId: 1,
-            // driverId: 1,
+            driverDiaryId: 1,
+            diaryId: 1,
+            driverId: 1,
             latitude: 1,
             longitude: 1,
             createdAt: 1,
+            // pull tripLabel (may be undefined) and other driverEntry fields
             tripLabel: '$driverEntry.tripLabel',
-            // trips: '$driverEntry.trips',
-            // driverEntryId: '$driverEntry._id',
+            trips: '$driverEntry.trips',
+            driverEntryId: '$driverEntry._id',
           },
         },
       ])
