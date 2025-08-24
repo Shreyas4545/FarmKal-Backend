@@ -710,7 +710,7 @@ export class TransactionsController {
           let individualDriverCount: any = 0;
           for (let entry of driver?.driverEntries || []) {
             if (diaryType === 'trip') {
-              if (entry?.trips != null) {
+              if (entry?.trips != null && entry?.tripStatus === 'ENDED') {
                 const t = Number(entry?.trips);
                 tripCount += t;
                 individualDriverCount += t;

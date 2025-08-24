@@ -1297,45 +1297,35 @@ export class TransactionsService {
             latitude: 1,
             longitude: 1,
             createdAt: 1,
-            tripLabel: '$driverEntry.tripLabel',
+            // ensure there's a label to group on
+            tripLabel: { $ifNull: ['$driverEntry.tripLabel', 'Unassigned'] },
             trips: '$driverEntry.trips',
             driverEntryId: '$driverEntry._id',
           },
         },
-        // group by tripLabel (use 'Unassigned' when no label)
+        // group all locations by tripLabel; keep items array for each trip
         {
           $group: {
-            _id: { $ifNull: ['$tripLabel', 'Unassigned'] },
+            _id: '$tripLabel',
             items: { $push: '$$ROOT' },
+            firstCreatedAt: { $min: '$createdAt' },
           },
         },
-        // convert each group doc to { k, v } pair
+        // optional: order trips by earliest location time (so Trip 1/2 ordering is natural)
+        {
+          $sort: { firstCreatedAt: 1, _id: 1 },
+        },
+        // return only the items array per group
         {
           $project: {
             _id: 0,
-            k: '$_id',
-            v: '$items',
-          },
-        },
-        // collect pairs into an array
-        {
-          $group: {
-            _id: null,
-            pairs: { $push: { k: '$k', v: '$v' } },
-          },
-        },
-        // convert array of pairs to an object { "Trip 1": [...], ... }
-        {
-          $project: {
-            _id: 0,
-            result: { $arrayToObject: '$pairs' },
+            items: 1,
           },
         },
       ])
       .exec();
 
-    // return object mapping tripLabel => [locations]
-    return agg && agg[0] && agg[0].result ? agg[0].result : {};
+    return Array.isArray(agg) ? agg.map((g) => g.items || []) : [];
   }
 
   async addTrackingReq(data: any): Promise<any> {
