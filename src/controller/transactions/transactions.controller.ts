@@ -956,9 +956,10 @@ export class TransactionsController {
         driverId,
         driverEntryId,
       );
+
       return response.status(HttpStatus.OK).json({
         message: 'Driver Location Entries sent successfully',
-        data: data,
+        data: data?.data,
       });
     } catch (err) {
       console.log(err);

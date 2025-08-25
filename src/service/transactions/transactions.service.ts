@@ -1291,41 +1291,41 @@ export class TransactionsService {
         { $unwind: { path: '$driverEntry', preserveNullAndEmptyArrays: true } },
         {
           $project: {
-            driverDiaryId: 1,
+            _id: 1,
             diaryId: 1,
             driverId: 1,
             latitude: 1,
             longitude: 1,
             createdAt: 1,
-            // ensure there's a label to group on
             tripLabel: { $ifNull: ['$driverEntry.tripLabel', 'Unassigned'] },
             trips: '$driverEntry.trips',
             driverEntryId: '$driverEntry._id',
           },
         },
-        // group all locations by tripLabel; keep items array for each trip
+        // group all locations by tripLabel
         {
           $group: {
             _id: '$tripLabel',
-            items: { $push: '$$ROOT' },
+            tripLabel: { $first: '$tripLabel' },
+            latlong: { $push: '$$ROOT' },
             firstCreatedAt: { $min: '$createdAt' },
           },
         },
-        // optional: order trips by earliest location time (so Trip 1/2 ordering is natural)
+        // sort by earliest location time so trips are in natural order
         {
-          $sort: { firstCreatedAt: 1, _id: 1 },
+          $sort: { firstCreatedAt: 1 },
         },
-        // return only the items array per group
         {
           $project: {
             _id: 0,
-            items: 1,
+            tripLabel: 1,
+            latlong: 1,
           },
         },
       ])
       .exec();
 
-    return Array.isArray(agg) ? agg.map((g) => g.items || []) : [];
+    return { data: agg };
   }
 
   async addTrackingReq(data: any): Promise<any> {
