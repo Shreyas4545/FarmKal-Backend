@@ -738,7 +738,9 @@ export class TransactionsController {
 
         const roundedHours = Math.ceil(hourCount / 60);
         const totalAmount =
-          diaryType === 'trip' ? tripCount * rate : roundedHours * rate;
+          diaryType === 'trip'
+            ? tripCount * rate
+            : TimeUtils.calculateRate(rate, hourCount);
 
         let returnObj: any = {
           ...result?.diaryData[0],

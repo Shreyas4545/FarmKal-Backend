@@ -22,4 +22,12 @@ export class TimeUtils {
       .toString()
       .padStart(2, '0')}`;
   }
+
+  static calculateRate(ratePerHour: number, totalMinutes: number) {
+    console.log(ratePerHour, totalMinutes);
+    if (!ratePerHour || !totalMinutes) return 0;
+
+    const ratePerMinute = ratePerHour / 60;
+    return Math.round(ratePerMinute * totalMinutes);
+  }
 }
