@@ -950,7 +950,7 @@ export class TransactionsService {
             type: 1,
             date: 1,
             ownerName: '$owner.name', // get the owner's name
-            customerName: '$customer.name',
+            customerName: 1,
             customerId: 1,
             state: 1,
             city: 1,
