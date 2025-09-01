@@ -10,7 +10,7 @@ export class DriverEntry {
   trips: number;
 
   @Prop()
-  hours: number;
+  hours: string;
 
   @Prop()
   startTime: Date;

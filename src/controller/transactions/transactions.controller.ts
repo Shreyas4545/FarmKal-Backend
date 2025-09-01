@@ -723,9 +723,12 @@ export class TransactionsController {
                 );
 
                 entry.totalTime = TimeUtils.formatMinutes(count);
-
                 individualDriverCount += count;
                 hourCount += count;
+              } else if (entry?.hours != null && entry?.hours != undefined) {
+                entry.totalTime = entry?.hours;
+                individualDriverCount += TimeUtils.timeToMinutes(entry?.hours);
+                hourCount += TimeUtils.timeToMinutes(entry?.hours);
               }
             }
           }
@@ -815,7 +818,7 @@ export class TransactionsController {
           );
         }
       } else {
-        if (startTime) {
+        if (startTime && driverDiaryId) {
           let obj: any = {};
 
           if (driverDiaryId) {

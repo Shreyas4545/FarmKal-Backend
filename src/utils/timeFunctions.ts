@@ -30,4 +30,10 @@ export class TimeUtils {
     const ratePerMinute = ratePerHour / 60;
     return Math.round(ratePerMinute * totalMinutes);
   }
+
+  static timeToMinutes(timeStr: string) {
+    if (!timeStr) return 0;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
 }
