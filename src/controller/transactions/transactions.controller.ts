@@ -869,6 +869,34 @@ export class TransactionsController {
     }
   }
 
+  @Get('/getCompleteUserDetails')
+  async getCompleteUserDetails(
+    @Query('phoneNo') phoneNo: number,
+    @Res() response,
+  ) {
+    try {
+      const data =
+        await this.transactionsService.getCompleteUserDetailsByPhoneSimplified(
+          phoneNo,
+        );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully retrieved complete user details!',
+        },
+        data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
   @Get('/getDriverOnlyEntries')
   async getDriverOnlyEntries(
     @Query('driverId') driverId: string,

@@ -7,8 +7,34 @@ This guide will help you deploy your NestJS application on AWS EC2 Free Tier, el
 ## 📋 Prerequisites
 
 - AWS Account (Free Tier eligible)
+- **Valid credit/debit card** (required for AWS account verification)
 - Your application code ready
 - Environment variables from current deployment
+
+---
+
+## 💳 Step 0: AWS Account Setup (If Not Done)
+
+### 0.1 Create AWS Account
+
+1. Go to [AWS Sign Up](https://aws.amazon.com)
+2. Click **Create an AWS Account**
+3. Enter email and account name
+4. Choose **Personal** account type
+
+### 0.2 Add Payment Information
+
+1. **Credit/Debit Card Required** - Don't worry, you won't be charged for Free Tier usage
+2. Add your card details
+3. Verify phone number
+4. Choose **Basic Support Plan** (Free)
+
+### 0.3 Set Up Billing Alerts (Recommended)
+
+1. Go to **Billing Dashboard**
+2. Enable **Receive Billing Alerts**
+3. Create alert for **$1** to monitor any unexpected charges
+4. Set up **Free Tier Usage Alerts**
 
 ---
 

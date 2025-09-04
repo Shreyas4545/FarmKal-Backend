@@ -1365,4 +1365,45 @@ export class TransactionsService {
 
     return true;
   }
+
+  async getCompleteUserDetailsByPhoneSimplified(phoneNo: number): Promise<any> {
+    // 1. Get User Details
+    const user = await this.user.findOne({ phone: phoneNo }).exec();
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // 2. Get Diary Details (as owner)
+    const ownedDiaries = await this.getDiaries(user._id.toString());
+
+    // 3. Get Diary Details (as customer)
+    const customerDiaries = await this.diary
+      .find({
+        customerId: user._id,
+      })
+      .exec();
+
+    // 4. Get Driver Details
+    const driverAssignments = await this.driver
+      .find({
+        driverId: user._id,
+      })
+      .exec();
+
+    // 5. Get Driver Entries
+    const driverEntries = await this.driverEntry
+      .find({
+        driverDiaryId: { $in: driverAssignments.map((d) => d._id.toString()) },
+      })
+      .exec();
+
+    return {
+      userDetails: user,
+      ownedDiaries,
+      customerDiaries,
+      driverAssignments,
+      driverEntries,
+    };
+  }
 }
