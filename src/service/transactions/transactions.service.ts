@@ -4,7 +4,7 @@ import mongoose, { Model } from 'mongoose';
 import { ITransactions } from '../../interface/transaction.interface';
 import { IFarmerProfile } from '../../interface/farmerProfile.interface';
 import { IPaymentMode } from '../../interface/paymentMode.interface';
-import { ILocation } from '../../../src/interface/location.interface';
+import { ILocation } from '../../interface/location.interface';
 import { ITotalAmount } from '../../interface/totalAmount.interface';
 import { IPayment } from '../../interface/payment.interface';
 import { IDiaryInterface } from '../../interface/diaryInterface';

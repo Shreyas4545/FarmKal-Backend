@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IAppVersion } from 'src/interface/appVersion.interface';
-import { IPolicy } from 'src/interface/policy.interface';
+import { IAppVersion } from '../../interface/appVersion.interface';
+import { IPolicy } from '../../interface/policy.interface';
 @Injectable()
 export class AppVersionService {
   constructor(

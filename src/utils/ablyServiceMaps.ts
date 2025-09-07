@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import Ably from 'ably';
-import { TransactionsService } from 'src/service/transactions/transactions.service';
+import { TransactionsService } from '../service/transactions/transactions.service';
 
 @Injectable()
 export class AblyServiceMaps implements OnModuleInit {

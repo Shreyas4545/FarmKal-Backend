@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { createModelDTO } from 'src/dto/modelDto/create-model.dto';
-import { updateModelDTO } from 'src/dto/modelDto/update-model.to';
+import { createModelDTO } from '../../dto/modelDto/create-model.dto';
+import { updateModelDTO } from '../../dto/modelDto/update-model.to';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IModel } from 'src/interface/model.interface';
+import { IModel } from '../../interface/model.interface';
 
 @Injectable()
 export class ModelsService {
