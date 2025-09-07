@@ -7,8 +7,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { AppVersionService } from 'src/service/appVersion/app-version.service';
-import { ResponseCompo } from 'src/utils/response';
+import { AppVersionService } from '../../service/appVersion/app-version.service';
+import { ResponseCompo } from '../../utils/response';
 
 @Controller('api/app-version')
 export class AppVersionController {
