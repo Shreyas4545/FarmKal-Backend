@@ -818,7 +818,7 @@ export class TransactionsController {
           );
         }
       } else {
-        if (startTime && driverDiaryId) {
+        if (driverDiaryId) {
           let obj: any = {};
 
           if (driverDiaryId) {
