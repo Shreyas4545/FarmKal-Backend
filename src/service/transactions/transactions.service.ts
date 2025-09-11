@@ -1238,9 +1238,10 @@ export class TransactionsService {
       data.tripLabel = `Trip ${nextNum}`;
     }
 
+    data.createdAt = new Date();
+
     return await this.driverEntry.create(data);
   }
-  // ...existing code...
 
   async addDriverLocation(data: any): Promise<any> {
     return await this.driverLocation.create(data);
