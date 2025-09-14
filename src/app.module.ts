@@ -36,7 +36,9 @@ import { AppVersionSchema } from './schema/appVersion.schema';
 import { SocialContentController } from './controller/social-content/social-content.controller';
 import { SocialContentService } from './service/social-content/social-content.service';
 import { SocialContentSchema } from './schema/socialContent.schema';
-import { WebsocketsGateway } from './utils/chat.gateway';
+import { LocationTrackingGateway } from './utils/location-tracking.gateway';
+import { LocationTrackingService } from './service/location-tracking/location-tracking.service';
+import { WebSocketTestController } from './controller/websocket-test/websocket-test.controller';
 import { ProductImagesSchema } from './schema/productListingImagesSchema';
 import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
 import { ImagesService } from './service/product-listing-images/product-listing-images.service';
@@ -152,11 +154,12 @@ import { DriverEntrySchema } from './schema/driverEntry.schema';
     UnitMeasurementController,
     TransactionsController,
     FramerProfileController,
+    WebSocketTestController,
   ],
   providers: [
     AppService,
     UserService,
-    AblyServiceMaps,
+    // AblyServiceMaps, // Deprecated - replaced with LocationTrackingService
     // {
     //   provide: APP_INTERCEPTOR,
     //   scope: Scope.REQUEST,
@@ -176,7 +179,8 @@ import { DriverEntrySchema } from './schema/driverEntry.schema';
     ModelsService,
     AppVersionService,
     SocialContentService,
-    WebsocketsGateway,
+    LocationTrackingGateway,
+    LocationTrackingService,
     ImagesService,
     ConversationsService,
     MessagesService,
