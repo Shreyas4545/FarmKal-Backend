@@ -1048,4 +1048,24 @@ export class TransactionsController {
       });
     }
   }
+
+  @Post('/checkEC2Life')
+  async checkEC2Life(@Res() response) {
+    try {
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'EC2 Zinda Hai !!',
+        },
+        '',
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
 }
