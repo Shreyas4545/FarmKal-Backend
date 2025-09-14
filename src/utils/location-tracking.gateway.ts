@@ -224,6 +224,7 @@ export class LocationTrackingGateway
             driverId: locationData?.driverId,
             diaryId: driverRoom?.diaryId,
             latitude: locationData?.latitude,
+            driverEntryId: locationData.driverEntryId,
             longitude: locationData?.longitude,
             speed: locationData?.speed,
             bearing: locationData?.bearing,
