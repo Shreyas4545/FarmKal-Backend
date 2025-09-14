@@ -38,7 +38,6 @@ import { SocialContentService } from './service/social-content/social-content.se
 import { SocialContentSchema } from './schema/socialContent.schema';
 import { LocationTrackingGateway } from './utils/location-tracking.gateway';
 import { LocationTrackingService } from './service/location-tracking/location-tracking.service';
-import { WebSocketTestController } from './controller/websocket-test/websocket-test.controller';
 import { ProductImagesSchema } from './schema/productListingImagesSchema';
 import { ProductListingImagesController } from './controller/product-listing-images/product-listing-images.controller';
 import { ImagesService } from './service/product-listing-images/product-listing-images.service';
@@ -154,7 +153,6 @@ import { DriverEntrySchema } from './schema/driverEntry.schema';
     UnitMeasurementController,
     TransactionsController,
     FramerProfileController,
-    WebSocketTestController,
   ],
   providers: [
     AppService,
