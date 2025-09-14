@@ -1049,7 +1049,7 @@ export class TransactionsController {
     }
   }
 
-  @Post('/checkEC2Life')
+  @Get('/checkEC2Life')
   async checkEC2Life(@Res() response) {
     try {
       return this.responseCompo.successResponse(
