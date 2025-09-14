@@ -33,6 +33,7 @@ interface DriverRoom {
 }
 
 @WebSocketGateway({
+  port: 9000,
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
@@ -57,12 +58,7 @@ export class LocationTrackingGateway
   }
 
   handleConnection(client: Socket) {
-    // this.logger.log(`Client connected to location tracking: ${client.id}`);
     console.log('CLIENT CONNECTED:', client.id);
-    // this.logger.debug(`Client handshake: ${JSON.stringify(client.handshake)}`);
-    // this.logger.debug(
-    //   `Client query: ${JSON.stringify(client.handshake.query)}`,
-    // );
 
     // Emit connected event with a small delay to ensure client is ready
     setTimeout(() => {
