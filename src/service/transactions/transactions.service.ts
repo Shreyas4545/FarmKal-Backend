@@ -1048,7 +1048,6 @@ export class TransactionsService {
       {
         $addFields: {
           ownerName: '$owner.name',
-          customerName: '$customer.name',
         },
       },
 
