@@ -554,6 +554,12 @@ export class TransactionsController {
     try {
       if (type == 'owner') {
         const result = await this.transactionsService.getDiaries(customerId);
+        if (Array.isArray(result)) {
+          result.sort(
+            (a: any, b: any) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+        }
         return response.status(HttpStatus.OK).json({
           message: 'Fetched diaries successfully',
           data: result,
@@ -562,6 +568,12 @@ export class TransactionsController {
         const data = await this.transactionsService.getDriverOnlyEntries(
           driverId,
         );
+        if (Array.isArray(data)) {
+          data.sort(
+            (a: any, b: any) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+        }
         return response.status(HttpStatus.OK).json({
           message: 'Driver Only details sent successfully',
           data: data,
