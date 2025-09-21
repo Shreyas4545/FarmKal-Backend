@@ -557,7 +557,7 @@ export class TransactionsController {
         if (Array.isArray(result)) {
           result.sort(
             (a: any, b: any) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           );
         }
         return response.status(HttpStatus.OK).json({
