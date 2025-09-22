@@ -37,9 +37,10 @@ export class RentalCategoryService {
       obj._id = id;
     }
 
-    if (isActive != undefined) {
-      obj.isActive = isActive;
-    }
+    // if (isActive != undefined) {
+    //   obj.isActive = isActive;
+    // }
+    obj.isActive = true;
 
     if (name) {
       obj.name = name;
