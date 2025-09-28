@@ -915,6 +915,44 @@ export class TransactionsService {
                         },
                       },
                     },
+                    // 🔹 Lookup last location for each driverEntry
+                    {
+                      $lookup: {
+                        from: 'driverlocations',
+                        let: { entryIdStr: { $toString: '$_id' } }, // convert driverEntry._id to string
+                        pipeline: [
+                          {
+                            $match: {
+                              $expr: {
+                                $eq: ['$driverEntryId', '$$entryIdStr'],
+                              },
+                            },
+                          },
+                          { $sort: { createdAt: -1 } }, // latest first
+                          { $limit: 1 }, // only last one
+                        ],
+                        as: 'lastLocation',
+                      },
+                    },
+                    {
+                      $unwind: {
+                        path: '$lastLocation',
+                        preserveNullAndEmptyArrays: true,
+                      },
+                    },
+                    {
+                      $project: {
+                        _id: 1,
+                        trips: 1,
+                        hours: 1,
+                        startTime: 1,
+                        endTime: 1,
+                        status: 1,
+                        tripStatus: 1,
+                        createdAt: 1,
+                        lastLocation: 1, // keep only the last location doc
+                      },
+                    },
                   ],
                   as: 'driverEntries',
                 },
@@ -936,6 +974,7 @@ export class TransactionsService {
                     status: 1,
                     tripStatus: 1,
                     createdAt: 1,
+                    lastLocation: 1,
                   },
                 },
               },
@@ -1145,6 +1184,8 @@ export class TransactionsService {
     if (tripStatus) {
       updateObj.tripStatus = tripStatus;
     }
+
+    console.log(id, updateObj);
     if (diaryId) {
       await this.driver
         .updateMany({ diaryId }, { status: 'ACTIVE' }, { new: true })
