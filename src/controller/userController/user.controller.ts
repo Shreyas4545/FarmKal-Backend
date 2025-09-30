@@ -240,7 +240,8 @@ export class UserController {
 
       let user: any = await this.userService.getUsers(data);
 
-      if (!user) {
+      console.log(user);
+      if (!user || user?.length == 0) {
         return this.responseCompo.errorResponse(response, {
           statusCode: HttpStatus.NOT_FOUND,
           message: 'No user found with given phone number',
@@ -313,11 +314,6 @@ export class UserController {
       console.log(err);
     }
   }
-
-  // @Get('/getChat')
-  // async handleChat(@Res() response, @Body() data: any) {
-  //   this.chatService.handleMessage(data, 'A');
-  // }
 
   @Get('/getUserData')
   async getUserData(
