@@ -240,7 +240,6 @@ export class UserController {
 
       let user: any = await this.userService.getUsers(data);
 
-      console.log(user);
       if (!user || user?.length == 0) {
         return this.responseCompo.errorResponse(response, {
           statusCode: HttpStatus.NOT_FOUND,

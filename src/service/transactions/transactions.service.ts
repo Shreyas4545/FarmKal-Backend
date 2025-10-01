@@ -902,6 +902,36 @@ export class TransactionsService {
                   preserveNullAndEmptyArrays: true,
                 },
               },
+              {
+                $lookup: {
+                  from: 'driverlocations',
+                  pipeline: [
+                    {
+                      $match: {
+                        $expr: {
+                          $and: [
+                            {
+                              $eq: ['$diaryId', diaryId],
+                            },
+                            {
+                              $eq: ['$driverId', driverId],
+                            },
+                          ],
+                        },
+                      },
+                    },
+                    { $sort: { createdAt: -1 } }, // latest first
+                    { $limit: 1 }, // only last one
+                  ],
+                  as: 'lastLocation',
+                },
+              },
+              {
+                $unwind: {
+                  path: '$lastLocation',
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
               // 🔹 New lookup into driverEntries (all docs for one driver)
               {
                 $lookup: {
@@ -915,31 +945,7 @@ export class TransactionsService {
                         },
                       },
                     },
-                    // 🔹 Lookup last location for each driverEntry
-                    {
-                      $lookup: {
-                        from: 'driverlocations',
-                        let: { entryIdStr: { $toString: '$_id' } }, // convert driverEntry._id to string
-                        pipeline: [
-                          {
-                            $match: {
-                              $expr: {
-                                $eq: ['$driverEntryId', '$$entryIdStr'],
-                              },
-                            },
-                          },
-                          { $sort: { createdAt: -1 } }, // latest first
-                          { $limit: 1 }, // only last one
-                        ],
-                        as: 'lastLocation',
-                      },
-                    },
-                    {
-                      $unwind: {
-                        path: '$lastLocation',
-                        preserveNullAndEmptyArrays: true,
-                      },
-                    },
+
                     {
                       $project: {
                         _id: 1,
@@ -950,7 +956,6 @@ export class TransactionsService {
                         status: 1,
                         tripStatus: 1,
                         createdAt: 1,
-                        lastLocation: 1, // keep only the last location doc
                       },
                     },
                   ],
@@ -964,6 +969,7 @@ export class TransactionsService {
                   driverName: 1,
                   status: 1,
                   createdAt: 1,
+                  lastLocation: 1,
                   // keep driverEntries array intact
                   driverEntries: {
                     _id: 1,
@@ -974,7 +980,6 @@ export class TransactionsService {
                     status: 1,
                     tripStatus: 1,
                     createdAt: 1,
-                    lastLocation: 1,
                   },
                 },
               },
