@@ -914,7 +914,7 @@ export class TransactionsService {
                               $eq: ['$diaryId', diaryId],
                             },
                             {
-                              $eq: ['$driverId', driverId],
+                              $eq: ['$driverId', '$driverId'],
                             },
                           ],
                         },
