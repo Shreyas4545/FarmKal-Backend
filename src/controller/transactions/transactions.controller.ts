@@ -34,6 +34,7 @@ interface farmerExpenseData {
   amount: string;
   modeOfPayment: string;
   ownerId: string;
+  otherDetails: string;
 }
 @Controller('api/rental/transactions')
 export class TransactionsController {
@@ -1090,7 +1091,7 @@ export class TransactionsController {
 
   @Post('/addFarmerExpense')
   async addFarmerExpense(@Res() response, @Body() data: farmerExpenseData) {
-    const { typeOfAmount, amount, modeOfPayment, ownerId } = data;
+    const { typeOfAmount, amount, modeOfPayment, ownerId, otherDetails } = data;
 
     try {
       const obj = {
@@ -1098,6 +1099,7 @@ export class TransactionsController {
         amount: amount,
         modeOfPayment: modeOfPayment,
         ownerId: ownerId,
+        otherDetails: otherDetails,
       };
 
       const newExpense = await this.transactionsService.createFarmerExpense(

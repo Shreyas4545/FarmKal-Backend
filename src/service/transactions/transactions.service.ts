@@ -1459,7 +1459,7 @@ export class TransactionsService {
   }
 
   async createFarmerExpense(data: any): Promise<IFarmerExpenses | any> {
-    const { typeOfAmount, amount, modeOfPayment, ownerId } = data;
+    const { typeOfAmount, amount, modeOfPayment, ownerId, otherDetails } = data;
 
     const newExpense: any = {
       typeOfAmount: typeOfAmount,
@@ -1467,6 +1467,7 @@ export class TransactionsService {
       modeOfPayment: modeOfPayment,
       ownerId: ownerId,
       isActive: true,
+      otherDetails: otherDetails,
     };
 
     const createdExpense = await new this.farmerExpenses(newExpense).save();

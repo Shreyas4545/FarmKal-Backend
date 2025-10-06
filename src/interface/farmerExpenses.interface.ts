@@ -5,6 +5,7 @@ export interface IFarmerExpenses extends Document {
   readonly amount: string;
   readonly modeOfPayment: string;
   readonly ownerId: string;
+  readonly otherDetails: string;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
   readonly isActive?: boolean;

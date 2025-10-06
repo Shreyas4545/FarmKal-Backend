@@ -6,6 +6,9 @@ export const FarmerExpensesSchema = new Schema(
       type: String,
       required: true,
     },
+    otherDetails: {
+      type: String,
+    },
     amount: {
       type: String,
       required: true,
