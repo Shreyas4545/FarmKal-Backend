@@ -210,8 +210,6 @@ export class TransactionsService {
       },
       {
         $project: {
-          // farmerName: '$farmerProfile.name',
-          // farmerPhoneNo: '$farmerProfile.phoneNo',
           farmerPhone: 1,
           farmerName: 1,
           farmerProfileID: 1,
@@ -230,6 +228,9 @@ export class TransactionsService {
           paymentType: 1,
           isActive: 1,
         },
+      },
+      {
+        $sort: { date: -1 },
       },
     ]);
 
@@ -251,6 +252,7 @@ export class TransactionsService {
           state: item?.state,
           country: item?.country,
           id: item?.farmerProfileID,
+          date: item?.date,
         });
       }
     });
