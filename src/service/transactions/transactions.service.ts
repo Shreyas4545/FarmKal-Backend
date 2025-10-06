@@ -1475,7 +1475,6 @@ export class TransactionsService {
   }
 
   async getFarmerExpenses(ownerId: string): Promise<IFarmerExpenses[] | any> {
-    console.log(ownerId);
     const expenses = await this.farmerExpenses
       .find({ isActive: true, ownerId })
       .sort({ createdAt: -1 })
