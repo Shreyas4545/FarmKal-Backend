@@ -14,6 +14,7 @@ import { IDriver } from '../../interface/driverInterface';
 import { IDriverLocation } from '../../interface/driverLocation.interface';
 import { ILocationTracking } from '../../interface/locationTrackingInterface';
 import { IDriverEntry } from '../../interface/driverEntry.interface';
+import { IFarmerExpenses } from '../../interface/farmerExpenses.interface';
 
 class getAllTransactions {
   readonly ownerId: string;
@@ -47,6 +48,8 @@ export class TransactionsService {
     private OwnerReminderModel: Model<IOwnerReminder>,
     @InjectModel('LocationTracking')
     private locationTracking: Model<ILocationTracking>,
+    @InjectModel('FarmerExpenses')
+    private farmerExpenses: Model<IFarmerExpenses>,
   ) {}
 
   async create(data: any): Promise<ITransactions | any> {
@@ -1453,5 +1456,29 @@ export class TransactionsService {
       driverAssignments,
       driverEntries,
     };
+  }
+
+  async createFarmerExpense(data: any): Promise<IFarmerExpenses | any> {
+    const { typeOfAmount, amount, modeOfPayment, ownerId } = data;
+
+    const newExpense: any = {
+      typeOfAmount: typeOfAmount,
+      amount: amount,
+      modeOfPayment: modeOfPayment,
+      ownerId: ownerId,
+      isActive: true,
+    };
+
+    const createdExpense = await new this.farmerExpenses(newExpense).save();
+    return createdExpense;
+  }
+
+  async getFarmerExpenses(ownerId: string): Promise<IFarmerExpenses[] | any> {
+    console.log(ownerId);
+    const expenses = await this.farmerExpenses
+      .find({ isActive: true, ownerId })
+      .sort({ createdAt: -1 })
+      .exec();
+    return expenses;
   }
 }

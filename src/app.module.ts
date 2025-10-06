@@ -87,6 +87,7 @@ import { AblyServiceMaps } from './utils/ablyServiceMaps';
 import { DriverLocationSchema } from './schema/driverLocation.schema';
 import { LocationTrackingSchema } from './schema/locationTrackingSchema';
 import { DriverEntrySchema } from './schema/driverEntry.schema';
+import { FarmerExpensesSchema } from './schema/farmerExpenses.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -128,6 +129,7 @@ import { DriverEntrySchema } from './schema/driverEntry.schema';
       { name: 'DriverLocation', schema: DriverLocationSchema },
       { name: 'LocationTracking', schema: LocationTrackingSchema },
       { name: 'DriverEntry', schema: DriverEntrySchema },
+      { name: 'FarmerExpenses', schema: FarmerExpensesSchema },
     ]),
   ],
   controllers: [

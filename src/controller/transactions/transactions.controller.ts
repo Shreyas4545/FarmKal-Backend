@@ -28,6 +28,13 @@ interface paymentData {
   totalAmountId: string;
   amount: number;
 }
+
+interface farmerExpenseData {
+  typeOfAmount: string;
+  amount: string;
+  modeOfPayment: string;
+  ownerId: string;
+}
 @Controller('api/rental/transactions')
 export class TransactionsController {
   constructor(
@@ -1071,6 +1078,61 @@ export class TransactionsController {
           message: 'EC2 Zinda Hai !!',
         },
         '',
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Post('/addFarmerExpense')
+  async addFarmerExpense(@Res() response, @Body() data: farmerExpenseData) {
+    const { typeOfAmount, amount, modeOfPayment, ownerId } = data;
+
+    try {
+      const obj = {
+        typeOfAmount: typeOfAmount,
+        amount: amount,
+        modeOfPayment: modeOfPayment,
+        ownerId: ownerId,
+      };
+
+      const newExpense = await this.transactionsService.createFarmerExpense(
+        obj,
+      );
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.CREATED,
+          message: 'Successfully Added New Farmer Expense!',
+        },
+        newExpense,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Get('/getFarmerExpenses')
+  async getFarmerExpenses(@Res() response, @Query('ownerId') ownerId: string) {
+    try {
+      const data = await this.transactionsService.getFarmerExpenses(ownerId);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Retrieved Farmer Expenses!',
+        },
+        data,
       );
     } catch (err) {
       console.log(err);
