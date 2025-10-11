@@ -129,6 +129,20 @@ export class TransactionsService {
     return newTrans;
   }
 
+  // New: delete a transaction by _id
+  async deleteTransaction(id: string): Promise<boolean | any> {
+    if (!id) return false;
+    try {
+      const deleted = await this.transactions
+        .findOneAndDelete({ _id: id })
+        .exec();
+      return deleted || true;
+    } catch (err) {
+      console.log('Error deleting transaction', err);
+      throw err;
+    }
+  }
+
   async createFarmerProfile(data: any): Promise<IFarmerProfile | any> {
     const { name, phoneNo, isValidated } = data;
 
@@ -1480,5 +1494,23 @@ export class TransactionsService {
       .sort({ createdAt: -1 })
       .exec();
     return expenses;
+  }
+
+  // New: delete a farmer expense by _id
+  async deleteFarmerExpense(id: string): Promise<boolean | any> {
+    if (!id) return false;
+    try {
+      const deleted = await this.farmerExpenses
+        .findOneAndDelete({ _id: id })
+        .exec()
+        .catch((err) => {
+          console.log('Error deleting farmer expense', err);
+          throw err;
+        });
+      return deleted || true;
+    } catch (err) {
+      console.log('Error in deleteFarmerExpense', err);
+      throw err;
+    }
   }
 }

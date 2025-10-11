@@ -53,7 +53,6 @@ export class TransactionsController {
     @Body() data: any,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log('Here', data);
     try {
       const farmerProfileData = {
         name: data?.name,
@@ -182,6 +181,37 @@ export class TransactionsController {
       });
     }
   }
+
+  // New: delete a transaction by its _id
+  @Delete('/deleteTransaction')
+  async deleteTransaction(@Res() response, @Query('id') id: string) {
+    try {
+      if (!id) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Transaction id is required',
+        });
+      }
+
+      const deleted = await this.transactionsService.deleteTransaction(id);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Deleted Transaction',
+        },
+        deleted,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+  // ...existing code...
 
   @Get('/getFarmerProfiles')
   async getFarmerProfiles(@Res() response, @Query('phoneNo') phoneNo: number) {
@@ -1135,6 +1165,35 @@ export class TransactionsController {
           message: 'Successfully Retrieved Farmer Expenses!',
         },
         data,
+      );
+    } catch (err) {
+      console.log(err);
+      return this.responseCompo.errorResponse(response, {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong + ${err}`,
+      });
+    }
+  }
+
+  @Delete('/deleteFarmerExpense')
+  async deleteFarmerExpense(@Res() response, @Query('id') id: string) {
+    try {
+      if (!id) {
+        return this.responseCompo.errorResponse(response, {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Expense id is required',
+        });
+      }
+
+      const deleted = await this.transactionsService.deleteFarmerExpense(id);
+
+      return this.responseCompo.successResponse(
+        response,
+        {
+          statusCode: HttpStatus.OK,
+          message: 'Successfully Deleted Farmer Expense',
+        },
+        deleted,
       );
     } catch (err) {
       console.log(err);
